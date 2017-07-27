@@ -1,0 +1,3 @@
+cn.ms.neural.sequence.MicroSequence
+cn.ms.neural.sequence.SnowflakeSequence
+cn.ms.neural.sequence.UuidSequence
