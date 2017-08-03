@@ -10,12 +10,12 @@ import java.util.Map;
 public class LimiterRule {
 
 	private String keys;
-	private Map<TimeGranularity, Long> balance;
+	private Map<String, Long> balance;
 
 	public LimiterRule() {
 	}
 	
-	public LimiterRule(String keys, Map<TimeGranularity, Long> balance) {
+	public LimiterRule(String keys, Map<String, Long> balance) {
 		this.keys = keys;
 		this.balance = balance;
 	}
@@ -28,11 +28,11 @@ public class LimiterRule {
 		this.keys = keys;
 	}
 
-	public Map<TimeGranularity, Long> getBalance() {
+	public Map<String, Long> getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Map<TimeGranularity, Long> balance) {
+	public void setBalance(Map<String, Long> balance) {
 		this.balance = balance;
 	}
 

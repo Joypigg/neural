@@ -147,10 +147,10 @@ public class RedisLimiter implements Limiter {
 			jedis = this.getJedisPool().getResource();
 			Set<String> ruleKeys = jedis.keys("rate_limiter_rule:*" + keywords + "*");
 			for (String ruleKey:ruleKeys) {
-				Map<TimeGranularity, Long> balance = new HashMap<TimeGranularity, Long>();
+				Map<String, Long> balance = new HashMap<String, Long>();
 				Map<String, String> map = jedis.hgetAll(ruleKey);
 				for (Map.Entry<String, String> entry:map.entrySet()) {
-					balance.put(TimeGranularity.valueOf(entry.getKey()), Long.parseLong(entry.getValue()));
+					balance.put(entry.getKey(), Long.parseLong(entry.getValue()));
 				}
 				list.add(new LimiterRule(ruleKey.substring("rate_limiter_rule:".length()), balance));
 			}
@@ -173,16 +173,13 @@ public class RedisLimiter implements Limiter {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
-			
 			for (LimiterRule limiterRule:limiterRules) {
-				for (Map.Entry<TimeGranularity,Long> entry:limiterRule.getBalance().entrySet()) {
+				List<LimiterRes> limiterRes = new ArrayList<LimiterRes>();
+				for (Map.Entry<String,Long> entry:limiterRule.getBalance().entrySet()) {
 					String value = jedis.get("rate_limiter_incr:" + limiterRule.getKeys() + ":"+entry.getKey().toString());
-					String keys = limiterRule.getKeys();
-					String timeGranularity = entry.getKey().toString();
-					Long maxAmount = entry.getValue();
-					Long nowAmount = value==null?0:Long.parseLong(value);
-					list.add(new LimiterStatistics(keys, timeGranularity, maxAmount, nowAmount));
+					limiterRes.add(new LimiterRes(entry.getKey(), entry.getValue(), value==null?0:Long.parseLong(value)));
 				}
+				list.add(new LimiterStatistics(limiterRule.getKeys(), limiterRes));
 			}
 		} catch (Exception e) {
 			logger.error("The do increment is exception.", e);

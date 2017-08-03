@@ -1,5 +1,7 @@
 package cn.ms.neural.limiter;
 
+import java.util.List;
+
 /**
  * 限流统计
  * 
@@ -8,19 +10,14 @@ package cn.ms.neural.limiter;
 public class LimiterStatistics {
 
 	private String keys;
-	private String timeGranularity;
-	private Long maxAmount;
-	private Long nowAmount;
+	private List<LimiterRes> limiterRes;
 
 	public LimiterStatistics() {
 	}
-	
-	public LimiterStatistics(String keys, String timeGranularity,
-			Long maxAmount, Long nowAmount) {
+
+	public LimiterStatistics(String keys, List<LimiterRes> limiterRes) {
 		this.keys = keys;
-		this.timeGranularity = timeGranularity;
-		this.maxAmount = maxAmount;
-		this.nowAmount = nowAmount;
+		this.limiterRes = limiterRes;
 	}
 
 	public String getKeys() {
@@ -31,35 +28,18 @@ public class LimiterStatistics {
 		this.keys = keys;
 	}
 
-	public String getTimeGranularity() {
-		return timeGranularity;
+	public List<LimiterRes> getLimiterRes() {
+		return limiterRes;
 	}
 
-	public void setTimeGranularity(String timeGranularity) {
-		this.timeGranularity = timeGranularity;
-	}
-
-	public Long getMaxAmount() {
-		return maxAmount;
-	}
-
-	public void setMaxAmount(Long maxAmount) {
-		this.maxAmount = maxAmount;
-	}
-
-	public Long getNowAmount() {
-		return nowAmount;
-	}
-
-	public void setNowAmount(Long nowAmount) {
-		this.nowAmount = nowAmount;
+	public void setLimiterRes(List<LimiterRes> limiterRes) {
+		this.limiterRes = limiterRes;
 	}
 
 	@Override
 	public String toString() {
-		return "LimiterStatistics [keys=" + keys + ", timeGranularity="
-				+ timeGranularity + ", maxAmount=" + maxAmount + ", nowAmount="
-				+ nowAmount + "]";
+		return "LimiterStatistics [keys=" + keys + ", limiterRes=" + limiterRes
+				+ "]";
 	}
 
 }
