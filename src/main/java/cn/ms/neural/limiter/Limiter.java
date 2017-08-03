@@ -25,15 +25,10 @@ public interface Limiter {
 	boolean start(URL url);
 
 	boolean increment(String... keys);
-
-	boolean increment(List<String> keys);
-
 	boolean increment(Long expire, String... keys);
 
-	boolean increment(Long expire, List<String> keys);
-
+	boolean setRule(LimiterRule limiterRule);
 	List<LimiterRule> queryRules(String keywords);
-
 	List<LimiterStatistics> queryStatistics(String keywords);
 
 	void shutdown();

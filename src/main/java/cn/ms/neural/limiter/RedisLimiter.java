@@ -32,12 +32,13 @@ import com.google.common.io.CharStreams;
 public class RedisLimiter implements Limiter {
 
 	public static final String LIMITER_NAME = "limiter.lua";
+	public static final String LIMITER_BATCH_SETRULE_NAME = "limiter_batch_setrule.lua";
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(RedisLimiter.class);
+	private static final Logger logger = LoggerFactory.getLogger(RedisLimiter.class);
 
 	private static JedisPool jedisPool;
-	private String script;
+	private String mainScript;
+	private String batchSetRuleScript;
 
 	public synchronized JedisPool getJedisPool() {
 		return jedisPool;
@@ -52,43 +53,38 @@ public class RedisLimiter implements Limiter {
 
 			jedisPool = new JedisPool(config, url.getHost(), url.getPort());
 
-			// 加载Lua代码
-			Reader reader = null;
-			InputStream inputStream = null;
-			try {
-				inputStream = this.getClass().getClassLoader()
-						.getResourceAsStream(LIMITER_NAME);
-				reader = new InputStreamReader(inputStream);
-				script = CharStreams.toString(reader);
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
-			}
+			mainScript = getScript(LIMITER_NAME);
+			batchSetRuleScript = getScript(LIMITER_BATCH_SETRULE_NAME);
 		} catch (Exception e) {
 			logger.error("The start " + this.getClass().getSimpleName() + " is exception.", e);
 		}
 		return false;
 	}
 
+	// 加载Lua代码
+	private String getScript(String name) {
+		try {
+			Reader reader = null;
+			InputStream inputStream = null;
+			try {
+				inputStream = this.getClass().getClassLoader().getResourceAsStream(name);
+				reader = new InputStreamReader(inputStream);
+				return CharStreams.toString(reader);
+			} finally {
+				if (reader != null) {
+					reader.close();
+				}
+			}
+		} catch (Exception e) {
+			logger.error("The getScript " + this.getClass().getSimpleName() + " is exception.", e);
+		}
+		
+		return "";
+	}
+
 	@Override
 	public boolean increment(String... keys) {
 		return this.increment(null, keys);
-	}
-
-	@Override
-	public boolean increment(List<String> keys) {
-		return this.increment(null, keys);
-	}
-
-	@Override
-	public boolean increment(Long expire, List<String> keys) {
-		if (keys == null || keys.size() == 0) {
-			return this.increment(expire);
-		} else {
-			String[] tempKeys = new String[keys.size()];
-			return this.increment(expire, keys.toArray(tempKeys));
-		}
 	}
 
 	@Override
@@ -110,7 +106,7 @@ public class RedisLimiter implements Limiter {
 				argValues.add(String.valueOf(expire));
 			}
 
-			Object resultObject = jedis.eval(script, argKeys, argValues);
+			Object resultObject = jedis.eval(mainScript, argKeys, argValues);
 			logger.debug("The jedis eval result is: ", resultObject);
 			if (resultObject == null || !(resultObject instanceof List<?>)) {
 				throw new UnknownError("resultObject=" + resultObject);
@@ -138,7 +134,48 @@ public class RedisLimiter implements Limiter {
 			}
 		}
 	}
-
+	
+	public static void main(String[] args) {
+		LimiterRule limiterRule = new LimiterRule();
+		limiterRule.setKeys("app");
+		Map<String, Long> balance = new HashMap<String, Long>();
+		balance.put("HOUR", 100l);
+		balance.put("MINUTE", 20l);
+		balance.put("SECOND", 6l);
+		limiterRule.setBalance(balance);
+		
+		RedisLimiter redisLimiter = new RedisLimiter();
+		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
+		redisLimiter.setRule(limiterRule);
+	}
+	
+	@Override
+	public boolean setRule(LimiterRule limiterRule) {
+		Jedis jedis = null;
+		try {
+			jedis = this.getJedisPool().getResource();
+			
+			List<String> argKeys = new ArrayList<String>();
+			argKeys.addAll(limiterRule.getBalance().keySet());
+			List<String> argValues = new ArrayList<String>();
+			argValues.add(limiterRule.getKeys());
+			for (Long val:limiterRule.getBalance().values()) {
+				argValues.add(String.valueOf(val));
+			}
+			
+			Object result = jedis.eval(batchSetRuleScript, argKeys, argValues);
+			return Boolean.valueOf(String.valueOf(result));
+		} catch (Exception e) {
+			logger.error("The do setRule is exception.", e);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public List<LimiterRule> queryRules(String keywords) {
 		List<LimiterRule> list = new ArrayList<LimiterRule>();
@@ -155,7 +192,7 @@ public class RedisLimiter implements Limiter {
 				list.add(new LimiterRule(ruleKey.substring("rate_limiter_rule:".length()), balance));
 			}
 		} catch (Exception e) {
-			logger.error("The do increment is exception.", e);
+			logger.error("The do queryRules is exception.", e);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
@@ -182,7 +219,7 @@ public class RedisLimiter implements Limiter {
 				list.add(new LimiterStatistics(limiterRule.getKeys(), limiterRes));
 			}
 		} catch (Exception e) {
-			logger.error("The do increment is exception.", e);
+			logger.error("The do queryStatistics is exception.", e);
 		} finally {
 			if (jedis != null) {
 				jedis.close();

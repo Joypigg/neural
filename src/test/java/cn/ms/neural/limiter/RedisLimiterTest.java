@@ -8,7 +8,7 @@ public class RedisLimiterTest {
 		RedisLimiter redisLimiter = new RedisLimiter();
 		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
 		for (int i = 0; i < 5; i++) {
-			redisLimiter.increment("weixin");
+			redisLimiter.increment("app");
 		}
 		
 		System.out.println(redisLimiter.queryStatistics(""));;
