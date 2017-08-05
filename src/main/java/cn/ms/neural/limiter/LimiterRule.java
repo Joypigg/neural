@@ -10,13 +10,15 @@ import java.util.List;
 public class LimiterRule {
 
 	private String keys;
+	private Long time;
 	private List<Granularity> granularity;
 
 	public LimiterRule() {
 	}
 
-	public LimiterRule(String keys, List<Granularity> granularity) {
+	public LimiterRule(String keys, Long time, List<Granularity> granularity) {
 		this.keys = keys;
+		this.time = time;
 		this.granularity = granularity;
 	}
 
@@ -26,6 +28,14 @@ public class LimiterRule {
 
 	public void setKeys(String keys) {
 		this.keys = keys;
+	}
+
+	public Long getTime() {
+		return time;
+	}
+
+	public void setTime(Long time) {
+		this.time = time;
 	}
 
 	public List<Granularity> getLimiterRes() {
@@ -38,8 +48,8 @@ public class LimiterRule {
 
 	@Override
 	public String toString() {
-		return "LimiterStatistics [keys=" + keys + ", limiterRes=" + granularity
-				+ "]";
+		return "LimiterRule [keys=" + keys + ", time=" + time
+				+ ", granularity=" + granularity + "]";
 	}
 
 }

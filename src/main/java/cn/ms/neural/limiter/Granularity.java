@@ -41,7 +41,7 @@ public class Granularity {
 
 	@Override
 	public String toString() {
-		return "LimiterRes [category=" + category + ", maxAmount=" + maxAmount
+		return "Granularity [category=" + category + ", maxAmount=" + maxAmount
 				+ ", nowAmount=" + nowAmount + "]";
 	}
 

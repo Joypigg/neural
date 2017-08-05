@@ -5,9 +5,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -31,13 +32,15 @@ import com.google.common.io.CharStreams;
 public class RedisLimiter implements Limiter {
 
 	public static final String LIMITER_NAME = "limiter.lua";
-	public static final String LIMITER_BATCH_SETRULE_NAME = "limiter_batch_setrule.lua";
-
+	public static final String LIMITER_RULE_BATCH_SET_NAME = "limiter_rule_batch_set.lua";
+	public static final String LIMITER_RULE_QUERY_NAME = "limiter_rule_query.lua";
+	
 	private static final Logger logger = LoggerFactory.getLogger(RedisLimiter.class);
 
 	private static JedisPool jedisPool;
 	private String mainScript;
 	private String batchSetRuleScript;
+	private String LIMITER_RULE_QUERY_SCRIPT;
 
 	public synchronized JedisPool getJedisPool() {
 		return jedisPool;
@@ -53,7 +56,8 @@ public class RedisLimiter implements Limiter {
 			jedisPool = new JedisPool(config, url.getHost(), url.getPort());
 
 			mainScript = getScript(LIMITER_NAME);
-			batchSetRuleScript = getScript(LIMITER_BATCH_SETRULE_NAME);
+			batchSetRuleScript = getScript(LIMITER_RULE_BATCH_SET_NAME);
+			LIMITER_RULE_QUERY_SCRIPT = this.getScript(LIMITER_RULE_QUERY_NAME);
 		} catch (Exception e) {
 			logger.error("The start " + this.getClass().getSimpleName() + " is exception.", e);
 		}
@@ -161,45 +165,69 @@ public class RedisLimiter implements Limiter {
 		return false;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LimiterRule> queryLimiterRules(String keywords) {
 		List<LimiterRule> limiterRules = new ArrayList<LimiterRule>();
+		
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
-			List<LimiterRule> tempLimiterRules = new ArrayList<LimiterRule>();
 			
-			Set<String> ruleKeys = jedis.keys("rate_limiter_rule:*" + keywords + "*");
-			for (String ruleKey:ruleKeys) {
-				List<Granularity> granularity = new ArrayList<Granularity>();
-				Map<String, String> map = jedis.hgetAll(ruleKey);
-				for (Map.Entry<String, String> entry:map.entrySet()) {
-					granularity.add(new Granularity(entry.getKey(), Long.parseLong(entry.getValue()), 0l));
-				}
-				tempLimiterRules.add(new LimiterRule(ruleKey.substring("rate_limiter_rule:".length()), granularity));
+			List<String> argKeys = new ArrayList<String>();
+			List<String> argValues = new ArrayList<String>();
+			argValues.add(keywords);
+			
+			Object result = jedis.eval(LIMITER_RULE_QUERY_SCRIPT, argKeys, argValues);
+			logger.debug("执行结果：{}", result);
+			
+			if(result == null || !(result instanceof List)){
+				return limiterRules;
+			}
+			List list = (List)result;
+			if(list.size()%2==0){
+				throw new IllegalArgumentException();
 			}
 			
-			
-			for (LimiterRule tempLimiterRule:tempLimiterRules) {
-				List<Granularity> granularity = new ArrayList<Granularity>();
-				for (Granularity entry:tempLimiterRule.getLimiterRes()) {
-					String value = jedis.get("rate_limiter_incr:" + tempLimiterRule.getKeys() + ":"+entry.getCategory());
-					granularity.add(new Granularity(entry.getCategory(), entry.getMaxAmount(), value==null?0:Long.parseLong(value)));
+			Long time = Long.valueOf(String.valueOf(list.get(0)));
+			for (int i = 1; i < list.size(); i+=2) {
+				String key = String.valueOf(list.get(i));
+				Object value = list.get(i+1);
+				if(value instanceof List){
+					List<Granularity> granularitys = new ArrayList<Granularity>();
+					List<List<Object>> granularityList = (List<List<Object>>)value;
+					for (List<Object> granularity:granularityList) {
+						String category = String.valueOf(granularity.get(0));
+						Long maxAmount = Long.valueOf(String.valueOf(granularity.get(1)));
+						Long nowAmount = Long.valueOf(String.valueOf(granularity.get(2)));
+						granularitys.add(new Granularity(category, maxAmount, nowAmount));
+					}
+					Collections.sort(granularitys, new Comparator<Granularity>() {
+						@Override
+						public int compare(Granularity o1, Granularity o2) {
+							return Integer.valueOf(String.valueOf(o1.getMaxAmount() - o2.getMaxAmount()));
+						}
+					});
+					limiterRules.add(new LimiterRule(key, time, granularitys));
 				}
-				limiterRules.add(new LimiterRule(tempLimiterRule.getKeys(), granularity));
 			}
 		} catch (Exception e) {
-			logger.error("The do queryStatistics is exception.", e);
+			logger.error("The do setRule is exception.", e);
 		} finally {
 			if (jedis != null) {
 				jedis.close();
 			}
 		}
-
+		
 		return limiterRules;
-	
 	}
-
+	
+	public static void main(String[] args) {
+		RedisLimiter redisLimiter = new RedisLimiter();
+		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
+		System.out.println(redisLimiter.queryLimiterRules(""));;
+	}
+	
 	@Override
 	public void shutdown() {
 		if (this.getJedisPool() != null) {
