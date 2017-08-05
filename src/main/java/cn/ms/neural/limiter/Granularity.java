@@ -1,15 +1,15 @@
 package cn.ms.neural.limiter;
 
-public class LimiterRes {
+public class Granularity {
 
 	private String category;
 	private Long maxAmount;
 	private Long nowAmount;
 
-	public LimiterRes() {
+	public Granularity() {
 	}
 
-	public LimiterRes(String category, Long maxAmount, Long nowAmount) {
+	public Granularity(String category, Long maxAmount, Long nowAmount) {
 		this.category = category;
 		this.maxAmount = maxAmount;
 		this.nowAmount = nowAmount;

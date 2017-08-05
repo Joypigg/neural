@@ -1,31 +1,42 @@
 package cn.ms.neural.limiter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import cn.ms.micro.common.URL;
 
 public class RedisLimiterTest {
-	
-//	public static void main(String[] args) {
-//		LimiterRule limiterRule = new LimiterRule();
-//		limiterRule.setKeys("app");
-//		Map<String, Long> balance = new HashMap<String, Long>();
-//		balance.put("HOUR", 100l);
-//		balance.put("MINUTE", 20l);
-//		balance.put("SECOND", 6l);
-//		limiterRule.setBalance(balance);
-//		
-//		RedisLimiter redisLimiter = new RedisLimiter();
-//		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
-//		redisLimiter.setRule(limiterRule);
-//	}
-	
-	public static void main(String[] args) {
-		RedisLimiter redisLimiter = new RedisLimiter();
+
+	RedisLimiter redisLimiter = new RedisLimiter();
+
+	public RedisLimiterTest() {
 		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
+	}
+
+	@Test
+	public void setLimiterRulesTest() {
+		LimiterRule limiterRule = new LimiterRule();
+		limiterRule.setKeys("app");
+		List<Granularity> list = new ArrayList<Granularity>();
+		list.add(new Granularity("HOUR", 100l, 0l));
+		list.add(new Granularity("MINUTE", 20l, 0l));
+		list.add(new Granularity("SECOND", 6l, 0l));
+		limiterRule.setLimiterRes(list);
+		redisLimiter.setLimiterRules(limiterRule);
+	}
+
+	@Test
+	public void incrementTest() {
 		for (int i = 0; i < 5; i++) {
 			redisLimiter.increment("app");
 		}
-		
-		System.out.println(redisLimiter.queryStatistics(""));;
 	}
-	
+
+	@Test
+	public void queryLimiterRulesTest() {
+		System.out.println(redisLimiter.queryLimiterRules(""));
+	}
+
 }

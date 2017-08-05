@@ -135,7 +135,7 @@ public class RedisLimiter implements Limiter {
 	}
 	
 	@Override
-	public boolean setRule(LimiterStatistics limiterStatistics) {
+	public boolean setLimiterRules(LimiterRule limiterRule) {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
@@ -143,9 +143,9 @@ public class RedisLimiter implements Limiter {
 			List<String> argKeys = new ArrayList<String>();
 			
 			List<String> argValues = new ArrayList<String>();
-			for (LimiterRes limiterRes:limiterStatistics.getLimiterRes()) {
-				argKeys.add(limiterRes.getCategory());
-				argValues.add(String.valueOf(limiterRes.getMaxAmount()));
+			for (Granularity granularity:limiterRule.getLimiterRes()) {
+				argKeys.add(granularity.getCategory());
+				argValues.add(String.valueOf(granularity.getMaxAmount()));
 			}
 			
 			Object result = jedis.eval(batchSetRuleScript, argKeys, argValues);
@@ -162,30 +162,31 @@ public class RedisLimiter implements Limiter {
 	}
 	
 	@Override
-	public List<LimiterStatistics> queryStatistics(String keywords) {
-		List<LimiterStatistics> limiterStatistics = new ArrayList<LimiterStatistics>();
-		List<LimiterStatistics> list = new ArrayList<LimiterStatistics>();
+	public List<LimiterRule> queryLimiterRules(String keywords) {
+		List<LimiterRule> limiterRules = new ArrayList<LimiterRule>();
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
+			List<LimiterRule> tempLimiterRules = new ArrayList<LimiterRule>();
+			
 			Set<String> ruleKeys = jedis.keys("rate_limiter_rule:*" + keywords + "*");
 			for (String ruleKey:ruleKeys) {
-				List<LimiterRes> limiterRes = new ArrayList<LimiterRes>();
+				List<Granularity> granularity = new ArrayList<Granularity>();
 				Map<String, String> map = jedis.hgetAll(ruleKey);
 				for (Map.Entry<String, String> entry:map.entrySet()) {
-					limiterRes.add(new LimiterRes(entry.getKey(), Long.parseLong(entry.getValue()), 0l));
+					granularity.add(new Granularity(entry.getKey(), Long.parseLong(entry.getValue()), 0l));
 				}
-				list.add(new LimiterStatistics(ruleKey.substring("rate_limiter_rule:".length()), limiterRes));
+				tempLimiterRules.add(new LimiterRule(ruleKey.substring("rate_limiter_rule:".length()), granularity));
 			}
 			
 			
-			for (LimiterStatistics limiterRule:list) {
-				List<LimiterRes> limiterRes = new ArrayList<LimiterRes>();
-				for (LimiterRes entry:limiterRule.getLimiterRes()) {
-					String value = jedis.get("rate_limiter_incr:" + limiterRule.getKeys() + ":"+entry.getCategory());
-					limiterRes.add(new LimiterRes(entry.getCategory(), entry.getMaxAmount(), value==null?0:Long.parseLong(value)));
+			for (LimiterRule tempLimiterRule:tempLimiterRules) {
+				List<Granularity> granularity = new ArrayList<Granularity>();
+				for (Granularity entry:tempLimiterRule.getLimiterRes()) {
+					String value = jedis.get("rate_limiter_incr:" + tempLimiterRule.getKeys() + ":"+entry.getCategory());
+					granularity.add(new Granularity(entry.getCategory(), entry.getMaxAmount(), value==null?0:Long.parseLong(value)));
 				}
-				limiterStatistics.add(new LimiterStatistics(limiterRule.getKeys(), limiterRes));
+				limiterRules.add(new LimiterRule(tempLimiterRule.getKeys(), granularity));
 			}
 		} catch (Exception e) {
 			logger.error("The do queryStatistics is exception.", e);
@@ -195,7 +196,7 @@ public class RedisLimiter implements Limiter {
 			}
 		}
 
-		return limiterStatistics;
+		return limiterRules;
 	
 	}
 

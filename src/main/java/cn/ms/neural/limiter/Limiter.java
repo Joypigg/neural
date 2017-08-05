@@ -27,8 +27,8 @@ public interface Limiter {
 	boolean increment(String... keys);
 	boolean increment(Long expire, String... keys);
 
-	boolean setRule(LimiterStatistics limiterStatistics);
-	List<LimiterStatistics> queryStatistics(String keywords);
+	boolean setLimiterRules(LimiterRule limiterRule);
+	List<LimiterRule> queryLimiterRules(String keywords);
 
 	void shutdown();
 }
