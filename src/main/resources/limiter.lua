@@ -18,16 +18,28 @@ local max_res_key = 'rate_limiter_rule:'..KEYS[1]
 if redis.call('EXISTS', max_res_key) == 0 then -- 没有设置规则
   return {'NORULE', max_res_key, -1}
 else
+  local granularity_table_key = {}
+  local granularity_table_value = {}
   -- 定义时间粒度(Time Granularity),CUSTOM表示自定义过期时间
-  local time_granularity_table = {['SECOND']=1, ['MINUTE']=60, ['HOUR']=3600, ['DAY']=86400, ['MONTH']=2592000, ['YEAR']=31104000, ['CUSTOM']=-1}
+  local time_granularity_table_key = {'SECOND', 'MINUTE', 'HOUR', 'DAY', 'MONTH', 'YEAR', 'CUSTOM'}
+  local time_granularity_table_value = {1, 60, 3600, 86400, 2592000, 31104000, -1}
   local fields = redis.call('hkeys', max_res_key) -- 获取所有时间粒度集合
-  for key, value in ipairs(fields) do
+  for k1, v1 in ipairs(time_granularity_table_key) do
+     for k2, v2 in ipairs(fields) do
+      if v1 == v2 then
+        table.insert(granularity_table_key, v1)
+        table.insert(granularity_table_value, time_granularity_table_value[k1])
+      end
+    end
+  end
+  
+  for key, value in ipairs(granularity_table_key) do
     -- 获取过期时间,若为自定义时间粒度,则使用ARGV[1]进行填充
-    local expire_time = time_granularity_table[value]
+    local expire_time = granularity_table_value[key]
     if expire_time == -1 then
       expire_time = ARGV[1]
     end
-
+    
     -- 获取最大允许资源数
     local max_res_num = redis.call('hget', max_res_key, value)
     local now_res_key = 'rate_limiter_incr:'..KEYS[1]..':'..value
@@ -49,6 +61,6 @@ else
       end
     end
   end-- for循环结束
-  
+
   return {'OK', resule_key_table, resule_value_table}
 end--if-else结束

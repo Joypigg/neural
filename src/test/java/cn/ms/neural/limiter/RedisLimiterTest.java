@@ -28,9 +28,10 @@ public class RedisLimiterTest {
 	}
 
 	@Test
-	public void incrementTest() {
-		for (int i = 0; i < 5; i++) {
+	public void incrementTest() throws Exception {
+		for (int i = 0; i < 20; i++) {
 			redisLimiter.increment("app");
+			Thread.sleep(600);
 		}
 	}
 

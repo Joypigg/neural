@@ -110,12 +110,15 @@ public class RedisLimiter implements Limiter {
 			}
 
 			Object resultObject = jedis.eval(mainScript, argKeys, argValues);
-			logger.debug("The jedis eval result is: ", resultObject);
+			logger.debug("The jedis eval result is: {}", resultObject);
 			if (resultObject == null || !(resultObject instanceof List<?>)) {
 				throw new UnknownError("resultObject=" + resultObject);
 			}
 
 			List<?> result = (List<?>) resultObject;
+			if (result.isEmpty()) {
+				throw new UnknownError("The result is empty: " + resultObject);
+			}
 			switch (String.valueOf(result.get(0))) {
 			case "OK":
 				break;
