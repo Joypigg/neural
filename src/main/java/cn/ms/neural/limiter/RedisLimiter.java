@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -135,32 +134,18 @@ public class RedisLimiter implements Limiter {
 		}
 	}
 	
-	public static void main(String[] args) {
-		LimiterRule limiterRule = new LimiterRule();
-		limiterRule.setKeys("app");
-		Map<String, Long> balance = new HashMap<String, Long>();
-		balance.put("HOUR", 100l);
-		balance.put("MINUTE", 20l);
-		balance.put("SECOND", 6l);
-		limiterRule.setBalance(balance);
-		
-		RedisLimiter redisLimiter = new RedisLimiter();
-		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
-		redisLimiter.setRule(limiterRule);
-	}
-	
 	@Override
-	public boolean setRule(LimiterRule limiterRule) {
+	public boolean setRule(LimiterStatistics limiterStatistics) {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
 			
 			List<String> argKeys = new ArrayList<String>();
-			argKeys.addAll(limiterRule.getBalance().keySet());
+			
 			List<String> argValues = new ArrayList<String>();
-			argValues.add(limiterRule.getKeys());
-			for (Long val:limiterRule.getBalance().values()) {
-				argValues.add(String.valueOf(val));
+			for (LimiterRes limiterRes:limiterStatistics.getLimiterRes()) {
+				argKeys.add(limiterRes.getCategory());
+				argValues.add(String.valueOf(limiterRes.getMaxAmount()));
 			}
 			
 			Object result = jedis.eval(batchSetRuleScript, argKeys, argValues);
@@ -177,46 +162,30 @@ public class RedisLimiter implements Limiter {
 	}
 	
 	@Override
-	public List<LimiterRule> queryRules(String keywords) {
-		List<LimiterRule> list = new ArrayList<LimiterRule>();
+	public List<LimiterStatistics> queryStatistics(String keywords) {
+		List<LimiterStatistics> limiterStatistics = new ArrayList<LimiterStatistics>();
+		List<LimiterStatistics> list = new ArrayList<LimiterStatistics>();
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
 			Set<String> ruleKeys = jedis.keys("rate_limiter_rule:*" + keywords + "*");
 			for (String ruleKey:ruleKeys) {
-				Map<String, Long> balance = new HashMap<String, Long>();
+				List<LimiterRes> limiterRes = new ArrayList<LimiterRes>();
 				Map<String, String> map = jedis.hgetAll(ruleKey);
 				for (Map.Entry<String, String> entry:map.entrySet()) {
-					balance.put(entry.getKey(), Long.parseLong(entry.getValue()));
+					limiterRes.add(new LimiterRes(entry.getKey(), Long.parseLong(entry.getValue()), 0l));
 				}
-				list.add(new LimiterRule(ruleKey.substring("rate_limiter_rule:".length()), balance));
+				list.add(new LimiterStatistics(ruleKey.substring("rate_limiter_rule:".length()), limiterRes));
 			}
-		} catch (Exception e) {
-			logger.error("The do queryRules is exception.", e);
-		} finally {
-			if (jedis != null) {
-				jedis.close();
-			}
-		}
-
-		return list;
-	}
-
-	@Override
-	public List<LimiterStatistics> queryStatistics(String keywords) {
-		List<LimiterRule> limiterRules = this.queryRules(keywords);
-		
-		List<LimiterStatistics> list = new ArrayList<LimiterStatistics>();
-		Jedis jedis = null;
-		try {
-			jedis = this.getJedisPool().getResource();
-			for (LimiterRule limiterRule:limiterRules) {
+			
+			
+			for (LimiterStatistics limiterRule:list) {
 				List<LimiterRes> limiterRes = new ArrayList<LimiterRes>();
-				for (Map.Entry<String,Long> entry:limiterRule.getBalance().entrySet()) {
-					String value = jedis.get("rate_limiter_incr:" + limiterRule.getKeys() + ":"+entry.getKey().toString());
-					limiterRes.add(new LimiterRes(entry.getKey(), entry.getValue(), value==null?0:Long.parseLong(value)));
+				for (LimiterRes entry:limiterRule.getLimiterRes()) {
+					String value = jedis.get("rate_limiter_incr:" + limiterRule.getKeys() + ":"+entry.getCategory());
+					limiterRes.add(new LimiterRes(entry.getCategory(), entry.getMaxAmount(), value==null?0:Long.parseLong(value)));
 				}
-				list.add(new LimiterStatistics(limiterRule.getKeys(), limiterRes));
+				limiterStatistics.add(new LimiterStatistics(limiterRule.getKeys(), limiterRes));
 			}
 		} catch (Exception e) {
 			logger.error("The do queryStatistics is exception.", e);
@@ -226,7 +195,7 @@ public class RedisLimiter implements Limiter {
 			}
 		}
 
-		return list;
+		return limiterStatistics;
 	
 	}
 
