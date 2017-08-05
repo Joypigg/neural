@@ -23,9 +23,11 @@ import cn.ms.micro.extension.SpiMeta;
 import com.google.common.io.CharStreams;
 
 /**
- * 限流规则：Map<limiter:[KEY], [SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [最大资源数量]>
- * 限流统计<limiter:[KEY]:[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [当前已被使用的资源数量]>
- * 
+ * 基于Redis实现分布式限流<br>
+ * <br>
+ * 1.限流规则：Hash<rate_limiter_rule:[KEY], [SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [最大资源数量]><br>
+ * 2.限流统计：String<rate_limiter_incr:[KEY]:[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [已用资源数量]><br>
+ * <br>
  * @author lry
  */
 @SpiMeta(name = "redis")
@@ -37,9 +39,10 @@ public class RedisLimiter implements Limiter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RedisLimiter.class);
 
-	private static JedisPool jedisPool;
-	private String mainScript;
-	private String batchSetRuleScript;
+	private JedisPool jedisPool;
+	
+	private String LIMITER_SCRIPT;
+	private String LIMITER_RULE_BATCH_SET_SCRIPT;
 	private String LIMITER_RULE_QUERY_SCRIPT;
 
 	public synchronized JedisPool getJedisPool() {
@@ -55,34 +58,13 @@ public class RedisLimiter implements Limiter {
 
 			jedisPool = new JedisPool(config, url.getHost(), url.getPort());
 
-			mainScript = getScript(LIMITER_NAME);
-			batchSetRuleScript = getScript(LIMITER_RULE_BATCH_SET_NAME);
+			LIMITER_SCRIPT = getScript(LIMITER_NAME);
+			LIMITER_RULE_BATCH_SET_SCRIPT = getScript(LIMITER_RULE_BATCH_SET_NAME);
 			LIMITER_RULE_QUERY_SCRIPT = this.getScript(LIMITER_RULE_QUERY_NAME);
 		} catch (Exception e) {
 			logger.error("The start " + this.getClass().getSimpleName() + " is exception.", e);
 		}
 		return false;
-	}
-
-	// 加载Lua代码
-	private String getScript(String name) {
-		try {
-			Reader reader = null;
-			InputStream inputStream = null;
-			try {
-				inputStream = this.getClass().getClassLoader().getResourceAsStream(name);
-				reader = new InputStreamReader(inputStream);
-				return CharStreams.toString(reader);
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
-			}
-		} catch (Exception e) {
-			logger.error("The getScript " + this.getClass().getSimpleName() + " is exception.", e);
-		}
-		
-		return "";
 	}
 
 	@Override
@@ -109,7 +91,7 @@ public class RedisLimiter implements Limiter {
 				argValues.add(String.valueOf(expire));
 			}
 
-			Object resultObject = jedis.eval(mainScript, argKeys, argValues);
+			Object resultObject = jedis.eval(LIMITER_SCRIPT, argKeys, argValues);
 			logger.debug("The jedis eval result is: {}", resultObject);
 			if (resultObject == null || !(resultObject instanceof List<?>)) {
 				throw new UnknownError("resultObject=" + resultObject);
@@ -142,7 +124,7 @@ public class RedisLimiter implements Limiter {
 	}
 	
 	@Override
-	public boolean setLimiterRules(LimiterRule limiterRule) {
+	public boolean setLimiterRule(LimiterRule limiterRule) {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
@@ -155,7 +137,7 @@ public class RedisLimiter implements Limiter {
 				argValues.add(String.valueOf(granularity.getMaxAmount()));
 			}
 			
-			Object result = jedis.eval(batchSetRuleScript, argKeys, argValues);
+			Object result = jedis.eval(LIMITER_RULE_BATCH_SET_SCRIPT, argKeys, argValues);
 			return Boolean.valueOf(String.valueOf(result));
 		} catch (Exception e) {
 			logger.error("The do setRule is exception.", e);
@@ -225,17 +207,37 @@ public class RedisLimiter implements Limiter {
 		return limiterRules;
 	}
 	
-	public static void main(String[] args) {
-		RedisLimiter redisLimiter = new RedisLimiter();
-		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
-		System.out.println(redisLimiter.queryLimiterRules(""));;
-	}
-	
 	@Override
 	public void shutdown() {
 		if (this.getJedisPool() != null) {
 			this.getJedisPool().close();
 		}
+	}
+	
+	/**
+	 * 加载Lua代码
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private String getScript(String name) {
+		try {
+			Reader reader = null;
+			InputStream inputStream = null;
+			try {
+				inputStream = this.getClass().getClassLoader().getResourceAsStream(name);
+				reader = new InputStreamReader(inputStream);
+				return CharStreams.toString(reader);
+			} finally {
+				if (reader != null) {
+					reader.close();
+				}
+			}
+		} catch (Exception e) {
+			logger.error("The getScript " + this.getClass().getSimpleName() + " is exception.", e);
+		}
+		
+		return "";
 	}
 
 }

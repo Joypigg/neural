@@ -24,7 +24,7 @@ public class RedisLimiterTest {
 		list.add(new Granularity("MINUTE", 20l, 0l));
 		list.add(new Granularity("SECOND", 6l, 0l));
 		limiterRule.setLimiterRes(list);
-		redisLimiter.setLimiterRules(limiterRule);
+		redisLimiter.setLimiterRule(limiterRule);
 	}
 
 	@Test
