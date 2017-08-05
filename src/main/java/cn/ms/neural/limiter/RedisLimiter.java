@@ -25,8 +25,9 @@ import com.google.common.io.CharStreams;
 /**
  * 基于Redis实现分布式限流<br>
  * <br>
- * 1.限流规则：Hash<rate_limiter_rule:[KEY], [SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [最大资源数量]><br>
- * 2.限流统计：String<rate_limiter_incr:[KEY]:[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR], [已用资源数量]><br>
+ * 1.限流规则：Hash<rate_limiter_rule:[KEY], Map<[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR/CUSTOM], [最大资源数量]>><br>
+ * 2.限流统计：String<rate_limiter_incr:[KEY]:[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR/CUSTOM], [已用资源数量]><br>
+ * 3.超额记录：Hash<rate_limiter_mark:[KEY], Map<[SECOND/MINUTE/HOUR/DAY/MONTH/YEAR/CUSTOM]_time, [超额次数]>><br>
  * <br>
  * @author lry
  */

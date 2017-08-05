@@ -12,10 +12,6 @@ import cn.ms.micro.extension.Spi;
  * 1.管理端添加限流规则<br>
  * 2.流量到来,开始校验流量是否超额<br>
  * 3.更新流量统计<br>
- * <br>
- * 数据结构:<br>
- * 1.KEY-->Statistics Number<br>
- * 2.KEY-->Max Number<br>
  * 
  * @author lry
  */
