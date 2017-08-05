@@ -20,9 +20,12 @@ if redis.call('EXISTS', max_res_key) == 0 then -- 没有设置规则
 else
   local granularity_table_key = {}
   local granularity_table_value = {}
+  
   -- 定义时间粒度(Time Granularity),CUSTOM表示自定义过期时间
   local time_granularity_table_key = {'SECOND', 'MINUTE', 'HOUR', 'DAY', 'MONTH', 'YEAR', 'CUSTOM'}
   local time_granularity_table_value = {1, 60, 3600, 86400, 2592000, 31104000, -1}
+  
+  -- 限流优先级排序:SECOND>MINUTE>HOUR>DAY>MONTH>YEAR>CUSTOM
   local fields = redis.call('hkeys', max_res_key) -- 获取所有时间粒度集合
   for k1, v1 in ipairs(time_granularity_table_key) do
      for k2, v2 in ipairs(fields) do
@@ -46,6 +49,7 @@ else
     if redis.call('EXISTS', now_res_key) == 0 then -- 当前资源的第1次操作
       redis.call('INCR', now_res_key)
       redis.call('EXPIRE', now_res_key, expire_time) -- 设置过期时间
+      -- 返回剩余资源数
       table.insert(resule_key_table, value)
       table.insert(resule_value_table, max_res_num)
     else
