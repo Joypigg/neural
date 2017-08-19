@@ -1,4 +1,4 @@
-package cn.ms.neural.limiter;
+package cn.ms.neural.limiter.cluster;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ import java.util.List;
 import cn.ms.neural.MURL;
 import cn.ms.neural.extension.Scope;
 import cn.ms.neural.extension.Spi;
+import cn.ms.neural.limiter.cluster.LimiterRule;
 
 /**
  * The Current limiter <br>

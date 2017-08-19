@@ -1,4 +1,4 @@
-package cn.ms.neural.limiter;
+package cn.ms.neural.limiter.cluster;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,13 +14,13 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.CharStreams;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.extension.SpiMeta;
+
+import com.google.common.io.CharStreams;
 
 /**
  * 基于Redis实现分布式限流<br>
@@ -32,7 +32,7 @@ import cn.ms.neural.extension.SpiMeta;
  * @author lry
  */
 @SpiMeta(name = "redis")
-public class RedisLimiter implements Limiter {
+public class RedisLimiter extends ClusterLimiter {
 
 	public static final String LIMITER_NAME = "limiter.lua";
 	public static final String LIMITER_RULE_BATCH_SET_NAME = "limiter_rule_batch_set.lua";
