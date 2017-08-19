@@ -56,15 +56,37 @@
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">功能模块</span>
                     </li>
-                    <li class="">
+                    <li>
                         <a href="#">
                         	<i class="fa fa-bitbucket"></i> 
-                        	<span class="nav-label">分布式限流</span>
+                        	<span class="nav-label">限流</span>
                         	<span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
                             <li><a class="J_menuItem" href="${ctx}/web/limiterRules">限流规则</a></li>
-                            <li><a class="J_menuItem" href="${ctx}/web/limiterStatistics">超额记录</a></li>
+                            <li><a class="J_menuItem" href="${ctx}/web/limiterStatistics">告警记录</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                        	<i class="fa fa-eye-slash"></i> 
+                        	<span class="nav-label">降级</span>
+                        	<span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+                            <li><a class="J_menuItem" href="${ctx}/web/limiterRules">限流规则</a></li>
+                            <li><a class="J_menuItem" href="${ctx}/web/limiterStatistics">告警记录</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                        	<i class="fa fa-fire-extinguisher"></i> 
+                        	<span class="nav-label">熔断</span>
+                        	<span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+                            <li><a class="J_menuItem" href="${ctx}/web/limiterRules">限流规则</a></li>
+                            <li><a class="J_menuItem" href="${ctx}/web/limiterStatistics">告警记录</a></li>
                         </ul>
                     </li>
                 </ul>

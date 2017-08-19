@@ -1,8 +1,5 @@
 package cn.ms.neural.limiter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import cn.ms.neural.MURL;
@@ -12,33 +9,30 @@ public class RedisLimiterTest {
 
 	RedisLimiter redisLimiter = new RedisLimiter();
 
+	String[][] rule_keys = {{"area", "beijing"}, {"channel", "web"}, {"env", "sit"}};
+	
 	public RedisLimiterTest() {
-		redisLimiter.start(MURL.valueOf("redis://127.0.0.1:6379"));
+		redisLimiter.start(MURL.valueOf("redis://127.0.0.1:6379/ms"));
 	}
 
 	@Test
 	public void setLimiterRulesTest() {
 		LimiterRule limiterRule = new LimiterRule();
-		limiterRule.setKeys("app");
-		List<Granularity> list = new ArrayList<Granularity>();
-		list.add(new Granularity("HOUR", 100l, 0l));
-		list.add(new Granularity("MINUTE", 20l, 0l));
-		list.add(new Granularity("SECOND", 6l, 0l));
-		limiterRule.setLimiterRes(list);
-		redisLimiter.setLimiterRule(limiterRule);
+		limiterRule.buildKeys(rule_keys).putData("HOUR", 400l).putData("MINUTE", 80l).putData("SECOND", 24l);
+		redisLimiter.addOrUpRule(limiterRule);
 	}
 
 	@Test
 	public void incrementTest() throws Exception {
 		for (int i = 0; i < 20; i++) {
-			redisLimiter.increment("app");
+			redisLimiter.increment(rule_keys);
 			Thread.sleep(600);
 		}
 	}
 
 	@Test
 	public void queryLimiterRulesTest() {
-		System.out.println(redisLimiter.queryLimiterRules(""));
+		System.out.println(redisLimiter.search(1, ""));
 	}
 
 }

@@ -1,6 +1,9 @@
 package cn.ms.neural.limiter;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.ms.neural.Store;
 
 /**
  * 限流统计
@@ -10,16 +13,36 @@ import java.util.List;
 public class LimiterRule {
 
 	private String keys;
-	private Long time;
-	private List<Granularity> granularity;
+	private Map<String, Store<Long, Long>> data = new HashMap<String, Store<Long,Long>>();
 
 	public LimiterRule() {
 	}
 
-	public LimiterRule(String keys, Long time, List<Granularity> granularity) {
+	public LimiterRule(String keys, Map<String, Store<Long, Long>> data) {
 		this.keys = keys;
-		this.time = time;
-		this.granularity = granularity;
+		this.data = data;
+	}
+
+	public LimiterRule buildKeys(String[]... keys) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < keys.length; i++) {
+			sb.append(keys[i][0]).append("=").append(keys[i][1]);
+			if (i < keys.length - 1) {
+				sb.append("&");
+			}
+		}
+		this.keys = sb.toString();
+		return this;
+	}
+	
+	public LimiterRule putData(String category, Long maxThreshold) {
+		this.data.put(category, new Store<Long, Long>(maxThreshold));
+		return this;
+	}
+	
+	public LimiterRule putData(String category, Long maxThreshold, Long nowAmount) {
+		this.data.put(category, new Store<Long, Long>(maxThreshold, nowAmount));
+		return this;
 	}
 
 	public String getKeys() {
@@ -30,26 +53,17 @@ public class LimiterRule {
 		this.keys = keys;
 	}
 
-	public Long getTime() {
-		return time;
+	public Map<String, Store<Long, Long>> getData() {
+		return data;
 	}
 
-	public void setTime(Long time) {
-		this.time = time;
-	}
-
-	public List<Granularity> getLimiterRes() {
-		return granularity;
-	}
-
-	public void setLimiterRes(List<Granularity> granularity) {
-		this.granularity = granularity;
+	public void setData(Map<String, Store<Long, Long>> data) {
+		this.data = data;
 	}
 
 	@Override
 	public String toString() {
-		return "LimiterRule [keys=" + keys + ", time=" + time
-				+ ", granularity=" + granularity + "]";
+		return "LimiterRule [keys=" + keys + ", data=" + data + "]";
 	}
 
 }

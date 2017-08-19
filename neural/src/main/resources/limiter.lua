@@ -12,9 +12,12 @@ local function get_now_time ()
 end
 
 -- 使用Redis实现分布式限流的主函数
+local NAMESPACE = '%s' -- 命名空间
+local RULE_KEY = '%s' -- 限流资源KEY(拼装后的字符串)
+
 local resule_key_table={} -- 统计资源KEY
 local resule_value_table={} -- 统计资源VALUE
-local max_res_key = 'rate_limiter_rule:'..KEYS[1]
+local max_res_key = 'limiter-rules@'..NAMESPACE..'?'..RULE_KEY
 if redis.call('EXISTS', max_res_key) == 0 then -- 没有设置规则
   return {'NORULE', max_res_key, -1}
 else
@@ -45,7 +48,7 @@ else
     
     -- 获取最大允许资源数
     local max_res_num = redis.call('hget', max_res_key, value)
-    local now_res_key = 'rate_limiter_incr:'..KEYS[1]..':'..value
+    local now_res_key = 'limiter-cluster@'..NAMESPACE..'?'..RULE_KEY..':'..value
     if redis.call('EXISTS', now_res_key) == 0 then -- 当前资源的第1次操作
       redis.call('INCR', now_res_key)
       redis.call('EXPIRE', now_res_key, expire_time) -- 设置过期时间

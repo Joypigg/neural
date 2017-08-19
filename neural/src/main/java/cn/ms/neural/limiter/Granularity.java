@@ -9,6 +9,10 @@ public class Granularity {
 	public Granularity() {
 	}
 
+	public Granularity(String category, Long maxAmount) {
+		this(category, maxAmount, null);
+	}
+	
 	public Granularity(String category, Long maxAmount, Long nowAmount) {
 		this.category = category;
 		this.maxAmount = maxAmount;
