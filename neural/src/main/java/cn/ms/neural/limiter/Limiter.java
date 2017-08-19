@@ -27,7 +27,7 @@ public interface Limiter {
 	 * @param keys
 	 * @return
 	 */
-	LimStatus increment(String[]... keys);
+	OptStatus increment(String[]... keys);
 
 	/**
 	 * 添加或更新配置规则

@@ -19,7 +19,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.Store;
 import cn.ms.neural.extension.SpiMeta;
-import cn.ms.neural.limiter.LimStatus;
+import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.LimiterRule;
 
 import com.google.common.io.CharStreams;
@@ -74,7 +74,7 @@ public class RedisLimiter extends ClusterLimiter {
 	}
 
 	@Override
-	public LimStatus increment(String[]... keys) {
+	public OptStatus increment(String[]... keys) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < keys.length; i++) {
 			sb.append(keys[i][0]).append("=").append(keys[i][1]);
@@ -104,9 +104,9 @@ public class RedisLimiter extends ClusterLimiter {
 			} else {
 				String result = String.valueOf(resultArgs.get(0));
 				try {
-					return LimStatus.valueOf(result);
+					return OptStatus.valueOf(result);
 				} catch (Exception e) {
-					return LimStatus.ILLAGE;
+					return OptStatus.ILLAGE;
 				}
 			}
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class RedisLimiter extends ClusterLimiter {
 			}
 		}
 		
-		return LimStatus.UNKNOWN;
+		return OptStatus.UNKNOWN;
 	}
 	
 	@Override

@@ -7,7 +7,7 @@ import cn.ms.neural.limiter.cluster.RedisLimiter;
 
 public class RedisLimiterTest {
 
-	RedisLimiter redisLimiter = new RedisLimiter();
+	Limiter redisLimiter = new RedisLimiter();
 
 	String[][] rule_keys = {{"area", "beijing"}, {"channel", "web"}, {"env", "sit"}};
 	

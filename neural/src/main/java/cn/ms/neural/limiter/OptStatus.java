@@ -1,6 +1,6 @@
 package cn.ms.neural.limiter;
 
-public enum LimStatus {
+public enum OptStatus {
 
 	/**
 	 * 校验通过
