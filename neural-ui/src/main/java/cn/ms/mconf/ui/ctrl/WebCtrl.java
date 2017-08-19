@@ -1,7 +1,5 @@
 package cn.ms.mconf.ui.ctrl;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.ms.mconf.ui.service.LimiterService;
-import cn.ms.neural.limiter.LimiterRule;
+import cn.ms.neural.limiter.LimiterData;
 
 @Controller
 @RequestMapping("web")
@@ -45,8 +43,8 @@ public class WebCtrl {
 		if(keywords == null){
 			keywords = "";
 		}
-		List<LimiterRule> limiterRule = limiterService.queryLimiterRules(keywords);
-		request.setAttribute("limiterRules", limiterRule);
+		LimiterData limiterData = limiterService.search(keywords);
+		request.setAttribute("limiterData", limiterData);
 		return "limiter_rules";
 	}
 

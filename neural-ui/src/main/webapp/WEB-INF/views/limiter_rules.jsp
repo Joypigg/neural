@@ -40,17 +40,17 @@
 	                </div>
                 </div>
 			</div>
-    		<c:forEach items="${limiterRules}" var="limiterRule">
-				<div class="col-sm-4">
+    		<c:forEach items="${limiterData.rules}" var="limiterRule">
+				<div class="col-sm-6">
 	                <div class="ibox float-e-margins">
 	                    <div class="ibox-title">
-	                        <h5><i class="fa fa-paper-plane"></i> ${limiterRule.keys}</h5>
+	                        <h5><i class="fa fa-paper-plane"></i> ${limiterRule.value}</h5>
 	                        <div class="ibox-tools">
 	                        	<span class="badge badge-blue"><i class="fa fa-heartbeat"></i> 正常</span>
 	                        </div>
 	                    </div>
 	                    <div class="ibox-content">
-	                        <h5>限流资源：${limiterRule.keys}</h5>
+	                        <h5>限流资源：${limiterRule.key.keys}</h5>
 	                        <table class="table table-stripped small m-t-md">
 	                        	<thead>
 	                        		<tr>
@@ -60,18 +60,18 @@
 	                               	</tr>
 	                        	</thead>
 	                            <tbody>
-	                            	<c:forEach items="${limiterRule.limiterRes}" var="lres">
+	                            	<c:forEach items="${limiterRule.key.data}" var="lres">
 		                            	<tr>
-	                                    	<td><i class="fa fa-circle text-navy"> ${lres.category}</i></td>
-	                                    	<td><i class="fa text-navy"> ${lres.maxAmount} 次</i></td>
-	                                    	<td><i class="fa text-navy"> ${lres.nowAmount} 次</i></td>
+	                                    	<td><i class="fa fa-circle text-navy"> ${lres.key}</i></td>
+	                                    	<td><i class="fa text-navy"> ${lres.value.key} 次</i></td>
+	                                    	<td><i class="fa text-navy"> ${lres.value.value} 次</i></td>
 	                                	</tr>
 	                            	</c:forEach>
 	                            </tbody>
 	                        </table> 
-	                        <small><i class="fa fa-spinner"></i> 
+	                       <small><i class="fa fa-spinner"></i> 
 							<jsp:useBean id="dateValue" class="java.util.Date"/>
-							<jsp:setProperty name="dateValue" property="time" value="${limiterRule.time}"/>
+							<jsp:setProperty name="dateValue" property="time" value="${limiterData.time}"/>
 							查询时间：<fmt:formatDate value="${dateValue}" pattern="yyyy-MM-dd HH:mm:ss"/>
 	                        </small>
 	                    </div>

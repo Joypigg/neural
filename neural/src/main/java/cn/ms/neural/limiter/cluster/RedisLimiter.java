@@ -19,6 +19,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.Store;
 import cn.ms.neural.extension.SpiMeta;
+import cn.ms.neural.limiter.LimiterData;
 import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.LimiterRule;
 
@@ -44,7 +45,6 @@ public class RedisLimiter extends ClusterLimiter {
 
 	private JedisPool jedisPool;
 
-	public String NAMESPACE_KEY;
 	private String LIMITER_SCRIPT;
 	private String LIMITER_RULE_BATCH_SET_SCRIPT;
 	private String LIMITER_RULE_QUERY_SCRIPT;
@@ -54,15 +54,12 @@ public class RedisLimiter extends ClusterLimiter {
 	}
 
 	@Override
-	public boolean start(MURL url) {
+	public boolean start(MURL murl) {
 		try {
 			JedisPoolConfig config = new JedisPoolConfig();
-			Map<String, String> parameters = url.getParameters();
+			Map<String, String> parameters = murl.getParameters();
 			BeanUtils.copyProperties(config, parameters);
-
-			jedisPool = new JedisPool(config, url.getHost(), url.getPort());
-
-			NAMESPACE_KEY = url.getPath();
+			jedisPool = new JedisPool(config, murl.getHost(), murl.getPort());
 			
 			LIMITER_SCRIPT = getScript(LIMITER_NAME);
 			LIMITER_RULE_BATCH_SET_SCRIPT = getScript(LIMITER_RULE_BATCH_SET_NAME);
@@ -74,7 +71,7 @@ public class RedisLimiter extends ClusterLimiter {
 	}
 
 	@Override
-	public OptStatus increment(String[]... keys) {
+	public OptStatus increment(String scene, String[]... keys) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < keys.length; i++) {
 			sb.append(keys[i][0]).append("=").append(keys[i][1]);
@@ -89,7 +86,7 @@ public class RedisLimiter extends ClusterLimiter {
 			List<String> argKeys = Arrays.asList(sb.toString());
 			List<String> argValues = new ArrayList<String>();
 			
-			String script = String.format(LIMITER_SCRIPT, NAMESPACE_KEY, sb.toString(), NAMESPACE_KEY, sb.toString());
+			String script = String.format(LIMITER_SCRIPT, scene, sb.toString(), scene, sb.toString());
 			logger.debug("The script is: {}", script);
 			
 			Object resultObject = jedis.eval(script, argKeys, argValues);
@@ -121,7 +118,7 @@ public class RedisLimiter extends ClusterLimiter {
 	}
 	
 	@Override
-	public boolean addOrUpRule(LimiterRule limiterRule) {
+	public boolean addOrUpRule(String scene, LimiterRule limiterRule) {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
@@ -135,7 +132,7 @@ public class RedisLimiter extends ClusterLimiter {
 				argValues.add(String.valueOf(entry.getValue().getKey()));
 			}
 			
-			String script = String.format(LIMITER_RULE_BATCH_SET_SCRIPT, NAMESPACE_KEY, limiterRule.getKeys());
+			String script = String.format(LIMITER_RULE_BATCH_SET_SCRIPT, scene, limiterRule.getKeys());
 			Object result = jedis.eval(script, argKeys, argValues);
 			return Boolean.valueOf(String.valueOf(result));
 		} catch (Exception e) {
@@ -151,26 +148,29 @@ public class RedisLimiter extends ClusterLimiter {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LimiterRule> search(Integer type, String keywords) {
-		List<LimiterRule> limiterRules = new ArrayList<LimiterRule>();
+	public LimiterData search(String keywords) {
+		LimiterData limiterData = new LimiterData(keywords);
+		Map<LimiterRule, String> rules = new HashMap<LimiterRule, String>();
 		
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
-			List<String> argKeys = Arrays.asList(NAMESPACE_KEY);
+			List<String> argKeys = Arrays.asList();
 			List<String> argValues = Arrays.asList(keywords==null?"":keywords);
 			
 			Object result = jedis.eval(LIMITER_RULE_QUERY_SCRIPT, argKeys, argValues);
 			logger.debug("执行结果：{}", result);
 			if(result == null || !(result instanceof List)){
-				return limiterRules;
+				return limiterData;
 			} else {
 				List list = (List)result;
-				if(list.size()%2==0){
+				if(list.size()%3==0){
 					throw new IllegalArgumentException();
 				} else {
-					//Long time = Long.valueOf(String.valueOf(list.get(0)));// 返回Redis中的时间戳
-					for (int i = 1; i < list.size(); i+=2) {
+					Long time = Long.valueOf(String.valueOf(list.get(0)));// 返回Redis中的时间戳
+					limiterData.setTime(time);
+					
+					for (int i = 1; i < list.size(); i+=3) {
 						String key = String.valueOf(list.get(i));
 						Object value = list.get(i+1);
 						if(value instanceof List){
@@ -183,7 +183,7 @@ public class RedisLimiter extends ClusterLimiter {
 								
 								data.put(category, new Store<Long, Long>(maxAmount, nowAmount));
 							}
-							limiterRules.add(new LimiterRule(key, data));
+							rules.put(new LimiterRule(key, data), String.valueOf(list.get(i+2)));
 						}
 					}
 				}
@@ -194,9 +194,12 @@ public class RedisLimiter extends ClusterLimiter {
 			if (jedis != null) {
 				jedis.close();
 			}
+			if(!rules.isEmpty()){
+				limiterData.setRules(rules);
+			}
 		}
 		
-		return limiterRules;
+		return limiterData;
 	}
 	
 	@Override

@@ -1,7 +1,5 @@
 package cn.ms.neural.limiter;
 
-import java.util.List;
-
 import cn.ms.neural.MURL;
 import cn.ms.neural.extension.Scope;
 import cn.ms.neural.extension.Spi;
@@ -27,7 +25,7 @@ public interface Limiter {
 	 * @param keys
 	 * @return
 	 */
-	OptStatus increment(String[]... keys);
+	OptStatus increment(String scene, String[]... keys);
 
 	/**
 	 * 添加或更新配置规则
@@ -35,16 +33,15 @@ public interface Limiter {
 	 * @param limiterRule
 	 * @return
 	 */
-	boolean addOrUpRule(LimiterRule limiterRule);
+	boolean addOrUpRule(String scene, LimiterRule limiterRule);
 
 	/**
 	 * 搜索规则列表
 	 * 
-	 * @param type 1表示只查限流规则,2表示只查实时限流数据,3表示查询所有数据
 	 * @param keywords
 	 * @return
 	 */
-	List<LimiterRule> search(Integer type, String keywords);
+	LimiterData search(String keywords);
 
 	void shutdown();
 }

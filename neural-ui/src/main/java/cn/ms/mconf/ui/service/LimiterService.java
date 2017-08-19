@@ -1,11 +1,9 @@
 package cn.ms.mconf.ui.service;
 
-import java.util.List;
-
-import cn.ms.neural.limiter.LimiterRule;
+import cn.ms.neural.limiter.LimiterData;
 
 public interface LimiterService {
 
-	List<LimiterRule> queryLimiterRules(String keywords);
+	LimiterData search(String keywords);
 
 }

@@ -5,10 +5,8 @@ local function get_now_time ()
   return now_time_array[1] * 1000 + math.floor(now_time_array[2] / 1000 + 0.5);
 end
 
-local NAMESPACE = KEYS[1] -- 命名空间
-
 local beans = {get_now_time()};
-local pattern_keyword = 'limiter-rules@'..NAMESPACE..'?*'..ARGV[1].."*"
+local pattern_keyword = 'limiter-rules@*?*'..ARGV[1].."*"
 -- table.insert(beans, pattern_keyword)
 local keyword_table = redis.call('keys', pattern_keyword)
 for i1, v1 in ipairs(keyword_table) do
@@ -28,6 +26,7 @@ for i1, v1 in ipairs(keyword_table) do
   end 
   table.insert(beans, rule_key)
   table.insert(beans, bean)
+  table.insert(beans, string.sub(v1,string.find(v1, '@')+1,string.find(v1, '?')-1))
 end
 
 return beans
