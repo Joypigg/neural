@@ -38,16 +38,16 @@ import com.google.common.io.CharStreams;
 public class RedisLimiter extends ClusterLimiter {
 	
 	public static final String LIMITER_NAME = "limiter.lua";
-	public static final String LIMITER_RULE_BATCH_SET_NAME = "limiter_rule_batch_set.lua";
-	public static final String LIMITER_RULE_QUERY_NAME = "limiter_rule_query.lua";
+	public static final String LIMITER_ADDUP_RULE_NAME = "limiter_addup_rule.lua";
+	public static final String LIMITER_SEARCH_NAME = "limiter_search.lua";
 	
 	private static final Logger logger = LoggerFactory.getLogger(RedisLimiter.class);
 
 	private JedisPool jedisPool;
 
 	private String LIMITER_SCRIPT;
-	private String LIMITER_RULE_BATCH_SET_SCRIPT;
-	private String LIMITER_RULE_QUERY_SCRIPT;
+	private String LIMITER_ADDUP_RULE_SCRIPT;
+	private String LIMITER_SEARCH_SCRIPT;
 
 	public synchronized JedisPool getJedisPool() {
 		return jedisPool;
@@ -62,8 +62,8 @@ public class RedisLimiter extends ClusterLimiter {
 			jedisPool = new JedisPool(config, murl.getHost(), murl.getPort());
 			
 			LIMITER_SCRIPT = getScript(LIMITER_NAME);
-			LIMITER_RULE_BATCH_SET_SCRIPT = getScript(LIMITER_RULE_BATCH_SET_NAME);
-			LIMITER_RULE_QUERY_SCRIPT = this.getScript(LIMITER_RULE_QUERY_NAME);
+			LIMITER_ADDUP_RULE_SCRIPT = getScript(LIMITER_ADDUP_RULE_NAME);
+			LIMITER_SEARCH_SCRIPT = this.getScript(LIMITER_SEARCH_NAME);
 		} catch (Exception e) {
 			logger.error("The start " + this.getClass().getSimpleName() + " is exception.", e);
 		}
@@ -87,8 +87,6 @@ public class RedisLimiter extends ClusterLimiter {
 			List<String> argValues = new ArrayList<String>();
 			
 			String script = String.format(LIMITER_SCRIPT, scene, sb.toString(), scene, sb.toString());
-			logger.debug("The script is: {}", script);
-			
 			Object resultObject = jedis.eval(script, argKeys, argValues);
 			logger.debug("The jedis eval result is: {}", resultObject);
 			if (resultObject == null || !(resultObject instanceof List<?>)) {
@@ -132,7 +130,7 @@ public class RedisLimiter extends ClusterLimiter {
 				argValues.add(String.valueOf(entry.getValue().getKey()));
 			}
 			
-			String script = String.format(LIMITER_RULE_BATCH_SET_SCRIPT, scene, limiterRule.getKeys());
+			String script = String.format(LIMITER_ADDUP_RULE_SCRIPT, scene, limiterRule.getKeys());
 			Object result = jedis.eval(script, argKeys, argValues);
 			return Boolean.valueOf(String.valueOf(result));
 		} catch (Exception e) {
@@ -158,7 +156,7 @@ public class RedisLimiter extends ClusterLimiter {
 			List<String> argKeys = Arrays.asList();
 			List<String> argValues = Arrays.asList(keywords==null?"":keywords);
 			
-			Object result = jedis.eval(LIMITER_RULE_QUERY_SCRIPT, argKeys, argValues);
+			Object result = jedis.eval(LIMITER_SEARCH_SCRIPT, argKeys, argValues);
 			logger.debug("执行结果：{}", result);
 			if(result == null || !(result instanceof List)){
 				return limiterData;

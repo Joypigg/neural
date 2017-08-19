@@ -11,7 +11,7 @@ local pattern_keyword = 'limiter-rules@*?*'..ARGV[1].."*"
 local keyword_table = redis.call('keys', pattern_keyword)
 for i1, v1 in ipairs(keyword_table) do
   local temp_granularity_table = redis.call('hgetAll', v1)
-  local rule_key = string.sub(v1, 18)
+  local rule_key = string.sub(v1, string.find(v1, '?')+1)
   
   local bean = {};
   for i2,v2 in pairs(temp_granularity_table) do
