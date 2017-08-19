@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.ms.mconf.ui.service.LimiterService;
-import cn.ms.neural.limiter.LimiterData;
+import cn.ms.neural.limiter.RuleData;
 
 @Controller
 @RequestMapping("web")
@@ -43,7 +43,7 @@ public class WebCtrl {
 		if(keywords == null){
 			keywords = "";
 		}
-		LimiterData limiterData = limiterService.search(keywords);
+		RuleData limiterData = limiterService.search(keywords);
 		request.setAttribute("limiterData", limiterData);
 		return "limiter_rules";
 	}

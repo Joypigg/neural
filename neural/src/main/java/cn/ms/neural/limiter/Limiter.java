@@ -41,7 +41,7 @@ public interface Limiter {
 	 * @param keywords
 	 * @return
 	 */
-	LimiterData search(String keywords);
+	RuleData search(String keywords);
 
 	void shutdown();
 }

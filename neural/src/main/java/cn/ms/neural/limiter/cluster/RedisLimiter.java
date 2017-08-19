@@ -19,7 +19,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.Store;
 import cn.ms.neural.extension.SpiMeta;
-import cn.ms.neural.limiter.LimiterData;
+import cn.ms.neural.limiter.RuleData;
 import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.LimiterRule;
 
@@ -146,8 +146,8 @@ public class RedisLimiter extends ClusterLimiter {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public LimiterData search(String keywords) {
-		LimiterData limiterData = new LimiterData(keywords);
+	public RuleData search(String keywords) {
+		RuleData limiterData = new RuleData(keywords);
 		Map<LimiterRule, String> rules = new HashMap<LimiterRule, String>();
 		
 		Jedis jedis = null;

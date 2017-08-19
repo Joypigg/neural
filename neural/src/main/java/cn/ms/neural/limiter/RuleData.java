@@ -2,16 +2,16 @@ package cn.ms.neural.limiter;
 
 import java.util.Map;
 
-public class LimiterData {
+public class RuleData {
 
 	String keywords;
 	Long time;
 	Map<LimiterRule, String> rules;
 
-	public LimiterData() {
+	public RuleData() {
 	}
 
-	public LimiterData(String keywords) {
+	public RuleData(String keywords) {
 		this.keywords = keywords;
 	}
 

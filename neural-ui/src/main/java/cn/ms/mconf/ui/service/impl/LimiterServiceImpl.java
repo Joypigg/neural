@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import cn.ms.mconf.ui.service.LimiterService;
 import cn.ms.neural.MURL;
 import cn.ms.neural.limiter.Limiter;
-import cn.ms.neural.limiter.LimiterData;
+import cn.ms.neural.limiter.RuleData;
 import cn.ms.neural.limiter.cluster.RedisLimiter;
 
 @Service
@@ -19,7 +19,7 @@ public class LimiterServiceImpl implements LimiterService {
 	}
 
 	@Override
-	public LimiterData search(String keywords) {
+	public RuleData search(String keywords) {
 		return limiter.search(keywords);
 	}
 
