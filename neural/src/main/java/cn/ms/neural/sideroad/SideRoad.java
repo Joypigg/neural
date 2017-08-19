@@ -1,10 +1,7 @@
 package cn.ms.neural.sideroad;
 
 import java.util.concurrent.TimeUnit;
-
-import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.TimeoutException;
-import com.lmax.disruptor.dsl.Disruptor;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 数据旁路

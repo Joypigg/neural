@@ -2,9 +2,9 @@ package cn.ms.neural.limiter;
 
 import java.util.List;
 
-import cn.ms.micro.common.URL;
-import cn.ms.micro.extension.Scope;
-import cn.ms.micro.extension.Spi;
+import cn.ms.neural.MURL;
+import cn.ms.neural.extension.Scope;
+import cn.ms.neural.extension.Spi;
 
 /**
  * The Current limiter <br>
@@ -18,7 +18,7 @@ import cn.ms.micro.extension.Spi;
 @Spi(scope = Scope.SINGLETON)
 public interface Limiter {
 
-	boolean start(URL url);
+	boolean start(MURL url);
 
 	boolean increment(String... keys);
 	boolean increment(Long expire, String... keys);

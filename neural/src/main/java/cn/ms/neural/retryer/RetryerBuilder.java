@@ -12,10 +12,6 @@ import cn.ms.neural.retryer.strategy.WaitStrategy;
 import cn.ms.neural.timelimiter.AttemptTimeLimiter;
 import cn.ms.neural.timelimiter.AttemptTimeLimiters;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 /**
  * A builder used to configure and create a {@link Retryer}.
  *

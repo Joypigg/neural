@@ -6,16 +6,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.collections.Predicate;
+
 import cn.ms.neural.retryer.strategy.BlockStrategies;
 import cn.ms.neural.retryer.strategy.BlockStrategy;
 import cn.ms.neural.retryer.strategy.StopStrategy;
 import cn.ms.neural.retryer.strategy.WaitStrategy;
 import cn.ms.neural.timelimiter.AttemptTimeLimiter;
 import cn.ms.neural.timelimiter.AttemptTimeLimiters;
-
-import com.google.common.annotations.Beta;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 
 /**
  * A retryer, which executes a call, and retries it until it succeeds, or

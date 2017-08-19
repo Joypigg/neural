@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import cn.ms.neural.timelimiter.AttemptTimeLimiters;
 
-import com.google.common.util.concurrent.UncheckedTimeoutException;
-
 public class AttemptTimeLimiterTest {
 
     Retryer<Void> r = RetryerBuilder.<Void>newBuilder()

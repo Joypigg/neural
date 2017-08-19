@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import cn.ms.micro.common.URL;
+import cn.ms.neural.MURL;
 
 public class RedisLimiterTest {
 
 	RedisLimiter redisLimiter = new RedisLimiter();
 
 	public RedisLimiterTest() {
-		redisLimiter.start(URL.valueOf("redis://127.0.0.1:6379"));
+		redisLimiter.start(MURL.valueOf("redis://127.0.0.1:6379"));
 	}
 
 	@Test

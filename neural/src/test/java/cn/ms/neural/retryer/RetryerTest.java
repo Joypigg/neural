@@ -6,8 +6,6 @@ import java.util.concurrent.ExecutionException;
 
 import cn.ms.neural.retryer.strategy.StopStrategies;
 
-import com.google.common.base.Predicates;
-
 public class RetryerTest {
 
 	public static void main(String[] args) {

@@ -1,6 +1,5 @@
 package cn.ms.neural.retryer;
 
-import com.google.common.annotations.Beta;
 
 /**
  * This listener provides callbacks for several events that occur when running

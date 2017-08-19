@@ -1,6 +1,5 @@
 package cn.ms.neural.retryer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An exception indicating that none of the attempts of the {@link Retryer}

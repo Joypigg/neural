@@ -17,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import cn.ms.micro.common.URL;
-import cn.ms.micro.extension.SpiMeta;
-
-import com.google.common.io.CharStreams;
+import cn.ms.neural.MURL;
+import cn.ms.neural.extension.SpiMeta;
 
 /**
  * 基于Redis实现分布式限流<br>
@@ -51,7 +49,7 @@ public class RedisLimiter implements Limiter {
 	}
 
 	@Override
-	public boolean start(URL url) {
+	public boolean start(MURL url) {
 		try {
 			JedisPoolConfig config = new JedisPoolConfig();
 			Map<String, String> parameters = url.getParameters();

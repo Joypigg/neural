@@ -1,7 +1,7 @@
 package cn.ms.neural.bypass;
 
-import cn.ms.neural.ResultType;
 import cn.ms.neural.Result;
+import cn.ms.neural.ResultType;
 
 /**
  * 流量分流

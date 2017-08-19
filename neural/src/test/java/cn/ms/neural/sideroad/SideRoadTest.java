@@ -1,10 +1,9 @@
 package cn.ms.neural.sideroad;
 
+import java.beans.EventHandler;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.lmax.disruptor.EventFactory;
-import com.lmax.disruptor.EventHandler;
 
 public class SideRoadTest {
 

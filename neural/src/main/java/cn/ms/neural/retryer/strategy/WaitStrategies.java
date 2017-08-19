@@ -6,10 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import cn.ms.neural.retryer.Attempt;
 
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-
 /**
  * Factory class for instances of {@link WaitStrategy}.
  *

@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 import cn.ms.neural.retryer.Attempt;
 
-import com.google.common.base.Preconditions;
-
 /**
  * Factory class for {@link StopStrategy} instances.
  *

@@ -1,14 +1,7 @@
 package cn.ms.neural.sideroad;
 
+import java.beans.EventHandler;
 import java.util.concurrent.ThreadFactory;
-
-import cn.ms.micro.threadpool.NamedThreadFactory;
-
-import com.lmax.disruptor.EventFactory;
-import com.lmax.disruptor.EventHandler;
-import com.lmax.disruptor.WaitStrategy;
-import com.lmax.disruptor.YieldingWaitStrategy;
-import com.lmax.disruptor.dsl.ProducerType;
 
 /**
  * 数据旁路模型

@@ -23,9 +23,6 @@ import cn.ms.neural.retryer.strategy.BlockStrategy;
 import cn.ms.neural.retryer.strategy.StopStrategies;
 import cn.ms.neural.retryer.strategy.WaitStrategies;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 public class RetryerBuilderTest {
 
     @Test

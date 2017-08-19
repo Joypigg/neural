@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-import cn.ms.neural.ResultType;
 import cn.ms.neural.Result;
+import cn.ms.neural.ResultType;
 
 /**
  * The Gray Router.<br>
