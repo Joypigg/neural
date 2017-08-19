@@ -157,38 +157,35 @@ public class RedisLimiter extends ClusterLimiter {
 		Jedis jedis = null;
 		try {
 			jedis = this.getJedisPool().getResource();
-			
-			List<String> argKeys = new ArrayList<String>();
-			argKeys.add(NAMESPACE_KEY);
-			List<String> argValues = new ArrayList<String>();
-			argValues.add(keywords);
+			List<String> argKeys = Arrays.asList(NAMESPACE_KEY);
+			List<String> argValues = Arrays.asList(keywords==null?"":keywords);
 			
 			Object result = jedis.eval(LIMITER_RULE_QUERY_SCRIPT, argKeys, argValues);
 			logger.debug("执行结果：{}", result);
-			
 			if(result == null || !(result instanceof List)){
 				return limiterRules;
-			}
-			List list = (List)result;
-			if(list.size()%2==0){
-				throw new IllegalArgumentException();
-			}
-			
-			//Long time = Long.valueOf(String.valueOf(list.get(0)));
-			for (int i = 1; i < list.size(); i+=2) {
-				String key = String.valueOf(list.get(i));
-				Object value = list.get(i+1);
-				if(value instanceof List){
-					Map<String, Store<Long, Long>> data = new HashMap<String, Store<Long,Long>>();
-					List<List<Object>> granularityList = (List<List<Object>>)value;
-					for (List<Object> granularity:granularityList) {
-						String category = String.valueOf(granularity.get(0));
-						Long maxAmount = Long.valueOf(String.valueOf(granularity.get(1)));
-						Long nowAmount = Long.valueOf(String.valueOf(granularity.get(2)));
-						
-						data.put(category, new Store<Long, Long>(maxAmount, nowAmount));
+			} else {
+				List list = (List)result;
+				if(list.size()%2==0){
+					throw new IllegalArgumentException();
+				} else {
+					//Long time = Long.valueOf(String.valueOf(list.get(0)));// 返回Redis中的时间戳
+					for (int i = 1; i < list.size(); i+=2) {
+						String key = String.valueOf(list.get(i));
+						Object value = list.get(i+1);
+						if(value instanceof List){
+							Map<String, Store<Long, Long>> data = new HashMap<String, Store<Long,Long>>();
+							List<List<Object>> granularityList = (List<List<Object>>)value;
+							for (List<Object> granularity:granularityList) {
+								String category = String.valueOf(granularity.get(0));
+								Long maxAmount = Long.valueOf(String.valueOf(granularity.get(1)));
+								Long nowAmount = Long.valueOf(String.valueOf(granularity.get(2)));
+								
+								data.put(category, new Store<Long, Long>(maxAmount, nowAmount));
+							}
+							limiterRules.add(new LimiterRule(key, data));
+						}
 					}
-					limiterRules.add(new LimiterRule(key, data));
 				}
 			}
 		} catch (Exception e) {

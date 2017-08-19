@@ -32,7 +32,7 @@ public class RedisLimiterTest {
 
 	@Test
 	public void queryLimiterRulesTest() {
-		System.out.println(redisLimiter.search(1, ""));
+		System.out.println(redisLimiter.search(1, null));
 	}
 
 }
