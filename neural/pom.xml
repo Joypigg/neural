@@ -10,16 +10,27 @@
 
 	<artifactId>neural</artifactId>
 
+	<properties>
+		<guava.version>20.0</guava.version>
+		<jedis.version>2.9.0</jedis.version>
+		<commons-beanutils.version>1.9.3</commons-beanutils.version>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>2.9.0</version>
+			<version>${jedis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.3</version>
+			<version>${commons-beanutils.version}</version>
 		</dependency>
 	</dependencies>
 
