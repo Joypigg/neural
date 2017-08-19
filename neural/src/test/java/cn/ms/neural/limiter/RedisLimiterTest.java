@@ -6,8 +6,6 @@ import java.util.List;
 import org.junit.Test;
 
 import cn.ms.neural.MURL;
-import cn.ms.neural.limiter.cluster.Granularity;
-import cn.ms.neural.limiter.cluster.LimiterRule;
 import cn.ms.neural.limiter.cluster.RedisLimiter;
 
 public class RedisLimiterTest {

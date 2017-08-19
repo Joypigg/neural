@@ -19,6 +19,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.extension.SpiMeta;
+import cn.ms.neural.limiter.Granularity;
+import cn.ms.neural.limiter.LimiterRule;
 
 import com.google.common.io.CharStreams;
 

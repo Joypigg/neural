@@ -1,4 +1,4 @@
-package cn.ms.neural.limiter.cluster;
+package cn.ms.neural.limiter;
 
 public class Granularity {
 

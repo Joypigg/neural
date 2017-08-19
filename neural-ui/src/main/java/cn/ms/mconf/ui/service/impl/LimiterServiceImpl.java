@@ -8,7 +8,7 @@ import cn.ms.mconf.ui.service.LimiterService;
 import cn.ms.neural.MURL;
 import cn.ms.neural.limiter.Limiter;
 import cn.ms.neural.limiter.LimiterRule;
-import cn.ms.neural.limiter.RedisLimiter;
+import cn.ms.neural.limiter.cluster.RedisLimiter;
 
 @Service
 public class LimiterServiceImpl implements LimiterService {
