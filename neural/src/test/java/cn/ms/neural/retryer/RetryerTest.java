@@ -3,8 +3,10 @@ package cn.ms.neural.retryer;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import cn.ms.neural.retryer.strategy.StopStrategies;
+import cn.ms.neural.retryer.strategy.WaitStrategies;
 
 import com.google.common.base.Predicates;
 
@@ -28,6 +30,8 @@ public class RetryerTest {
 		        .retryIfExceptionOfType(IOException.class)
 		        .retryIfRuntimeException()
 		        .withStopStrategy(StopStrategies.stopAfterAttempt(3))
+		        .withWaitStrategy(WaitStrategies.fixedWait(3000, TimeUnit.MILLISECONDS))
+		        //.withBlockStrategy(BlockStrategies.threadSleepStrategy())
 		        .build();
 		try {
 		    System.out.println("执行结果:"+retryer.call(callable));
