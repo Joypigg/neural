@@ -8,7 +8,6 @@ import org.junit.Test;
 import cn.ms.neural.extension.prototype.SpiPrototype;
 import cn.ms.neural.extension.prototype.SpiPrototypeImpl2;
 import cn.ms.neural.extension.singleton.SpiSingleton;
-import cn.ms.neural.extension.singleton.SpiSingletonImpl;
 
 public class ExtensionLoaderTest {
 	
@@ -48,15 +47,7 @@ public class ExtensionLoaderTest {
             ExtensionLoader.getExtensionLoader(NotSpiInterface.class);
             Assert.assertTrue(false);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("without @Spi annotation"));
-        }
-
-        // 非接口无法进行扩展
-        try {
-            ExtensionLoader.getExtensionLoader(SpiSingletonImpl.class);
-            Assert.assertTrue(false);
-        } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("is not interface"));
+            Assert.assertTrue(e.getMessage().contains("without @NSPI annotation"));
         }
 
         Assert.assertNull(ExtensionLoader.getExtensionLoader(SpiWithoutImpl.class).getExtension("default"));

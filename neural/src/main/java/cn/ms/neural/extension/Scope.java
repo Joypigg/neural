@@ -1,19 +1,19 @@
 package cn.ms.neural.extension;
 
 /**
- * The Scope of SPI.
+ * The Scope of NSPI.
  * 
  * @author lry
  */
 public enum Scope {
 
 	/**
-	 * The Single Case
+	 * The Single
 	 */
 	SINGLETON,
 
 	/**
-	 * The Multiple Case
+	 * The Multiple
 	 */
 	PROTOTYPE
 

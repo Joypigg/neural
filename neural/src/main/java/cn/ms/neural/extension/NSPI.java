@@ -11,11 +11,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 public @interface NSPI {
 
-	/**
-	 * 单例/多例模式
-	 * 
-	 * @return
-	 */
 	Scope scope() default Scope.PROTOTYPE;
 
 }

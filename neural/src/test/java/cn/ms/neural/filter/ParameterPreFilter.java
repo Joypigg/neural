@@ -3,7 +3,7 @@ package cn.ms.neural.filter;
 import cn.ms.neural.extension.Activation;
 import cn.ms.neural.extension.SpiMeta;
 
-@SpiMeta(name = "parameter")
+@SpiMeta("parameter")
 @Activation(keys = FilterChain.PRE, order = 1)
 public class ParameterPreFilter extends Filter<Message> {
 

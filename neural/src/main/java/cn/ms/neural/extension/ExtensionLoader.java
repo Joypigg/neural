@@ -21,29 +21,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <pre>
- * 	扩展增加的方式：
- * 		支持 JDK ServiceProvider 
- * 
- * 		支持 weibo:spi 配置
- * </pre>
+ * The ExtensionLoader
  * 
  * @author lry
+ *
+ * @param <T>
  */
 public class ExtensionLoader<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
-    private static ConcurrentMap<Class<?>, ExtensionLoader<?>> extensionLoaders = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
-
-    private ConcurrentMap<String, T> singletonInstances = null;
-    private ConcurrentMap<String, Class<T>> extensionClasses = null;
 
     private Class<T> type;
-    private volatile boolean init = false;
-
-    // spi path prefix
-    private static final String PREFIX = "META-INF/services/";
     private ClassLoader classLoader;
+    private volatile boolean init = false;
+    private static final String PREFIX = "META-INF/services/";
+    private ConcurrentMap<String, T> singletonInstances = null;
+    private ConcurrentMap<String, Class<T>> extensionClasses = null;
+    private static ConcurrentMap<Class<?>, ExtensionLoader<?>> extensionLoaders = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
 
     private ExtensionLoader(Class<T> type) {
         this(type, Thread.currentThread().getContextClassLoader());
@@ -62,7 +56,6 @@ public class ExtensionLoader<T> {
 
     public Class<T> getExtensionClass(String name) {
         checkInit();
-
         return extensionClasses.get(name);
     }
 
@@ -85,10 +78,8 @@ public class ExtensionLoader<T> {
                 return clz.newInstance();
             }
         } catch (Exception e) {
-            failThrows(type, "Error when getExtension " + name, e);
+        	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
         }
-
-        return null;
     }
 
     private T getSingletonInstance(String name) throws InstantiationException, IllegalAccessException {
@@ -107,7 +98,6 @@ public class ExtensionLoader<T> {
             if (obj != null) {
                 return obj;
             }
-
             obj = clz.newInstance();
             singletonInstances.put(name, obj);
         }
@@ -125,7 +115,7 @@ public class ExtensionLoader<T> {
         String spiName = getSpiName(clz);
         synchronized (extensionClasses) {
             if (extensionClasses.containsKey(spiName)) {
-                failThrows(clz, ":Error spiName already exist " + spiName);
+            	throw new RuntimeException(clz.getName() + ": Error spiName already exist " + spiName);
             } else {
                 extensionClasses.put(spiName, clz);
             }
@@ -144,7 +134,13 @@ public class ExtensionLoader<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
-        checkInterfaceType(type);
+        if (type == null) {
+        	throw new RuntimeException("Error extension type is null");
+        }
+        if (!type.isAnnotationPresent(NSPI.class)) {
+        	throw new RuntimeException(type.getName() + ": Error extension type without @NSPI annotation");
+        }
+        
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
         if (loader == null) {
             loader = initExtensionLoader(type);
@@ -165,13 +161,8 @@ public class ExtensionLoader<T> {
         return loader;
     }
 
-    /**
-     * 获取所有的扩展实现,与getExtensions("")等效
-     * 
-     * @return
-     */
     public List<T> getExtensions() {
-    	return getExtensions("");
+    	return this.getExtensions("");
     }
     
     /**
@@ -179,7 +170,7 @@ public class ExtensionLoader<T> {
      * <br>
      * 注意：<br>
      * 1 SpiMeta 中的active 为true<br> 
-     * 2 按照spiMeta中的sequence进行排序 <br>
+     * 2 按照spiMeta中的order进行排序 <br>
      * <br>
      * FIXME： 是否需要对singleton来区分对待，后面再考虑 fishermen
      * 
@@ -208,7 +199,7 @@ public class ExtensionLoader<T> {
             }
         }
         
-        // sequence 大的排在后面,如果没有设置sequence的排到最前面
+        // order 大的排在后面,如果没有设置order的排到最前面
         Collections.sort(exts, new Comparator<T>() {
         	@Override
         	public int compare(T o1, T o2) {
@@ -227,77 +218,30 @@ public class ExtensionLoader<T> {
         return exts;
     }
 
-    /**
-     * check clz
-     * 
-     * <pre>
-	 * 		1.  is interface
-	 * 		2.  is contains @Spi annotation
-	 * </pre>
-     * 
-     * @param <T>
-     * @param clz
-     */
-    private static <T> void checkInterfaceType(Class<T> clz) {
-        if (clz == null) {
-            failThrows(clz, "Error extension type is null");
-        }
-
-        if (!clz.isInterface()) {
-            failThrows(clz, "Error extension type is not interface");
-        }
-
-        if (!isSpiType(clz)) {
-            failThrows(clz, "Error extension type without @Spi annotation");
-        }
-    }
-
-    /**
-     * check extension clz
-     * 
-     * <pre>
-	 * 		1) is public class
-	 * 		2) contain public constructor and has not-args constructor
-	 * 		3) check extension clz instanceof Type.class
-	 * </pre>
-     * 
-     * @param clz
-     */
     private void checkExtensionType(Class<T> clz) {
-        checkClassPublic(clz);
-        checkConstructorPublic(clz);
-        checkClassInherit(clz);
-    }
-
-    private void checkClassInherit(Class<T> clz) {
-        if (!type.isAssignableFrom(clz)) {
-            failThrows(clz, "Error is not instanceof " + type.getName());
+    	// 1) is public class
+    	if (!type.isAssignableFrom(clz)) {
+        	throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
         }
-    }
-
-    private void checkClassPublic(Class<T> clz) {
-        if (!Modifier.isPublic(clz.getModifiers())) {
-            failThrows(clz, "Error is not a public class");
-        }
-    }
-
-    private void checkConstructorPublic(Class<T> clz) {
-        Constructor<?>[] constructors = clz.getConstructors();
+    	
+    	// 2) contain public constructor and has not-args constructor
+    	Constructor<?>[] constructors = clz.getConstructors();
         if (constructors == null || constructors.length == 0) {
-            failThrows(clz, "Error has no public no-args constructor");
+            throw new RuntimeException(clz.getName() + ": Error has no public no-args constructor");
         }
 
         for (Constructor<?> constructor : constructors) {
             if (Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterTypes().length == 0) {
-                return;
+            	// 3) check extension clz instanceof Type.class
+            	if (!type.isAssignableFrom(clz)) {
+                	throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
+                }
+            	
+            	return;
             }
         }
 
-        failThrows(clz, "Error has no public no-args constructor");
-    }
-
-    private static <T> boolean isSpiType(Class<T> clz) {
-        return clz.isAnnotationPresent(NSPI.class);
+        throw new RuntimeException(clz.getName() + ": Error has no public no-args constructor");
     }
 
     private ConcurrentMap<String, Class<T>> loadExtensionClasses(String prefix) {
@@ -318,8 +262,7 @@ public class ExtensionLoader<T> {
 
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
-
-                parseUrl(type, url, classNames);
+                this.parseUrl(type, url, classNames);
             }
         } catch (Exception e) {
             throw new RuntimeException("ExtensionLoader loadExtensionClasses error, prefix: " + prefix + " type: " + type.getClass(), e);
@@ -340,15 +283,15 @@ public class ExtensionLoader<T> {
                     clz = (Class<T>) Class.forName(className, true, classLoader);
                 }
 
-                checkExtensionType(clz);
-                String spiName = getSpiName(clz);
+                this.checkExtensionType(clz);
+                String spiName = this.getSpiName(clz);
                 if (map.containsKey(spiName)) {
-                    failThrows(clz, ":Error spiName already exist " + spiName);
+                    throw new RuntimeException(clz.getName() + ": Error spiName already exist " + spiName);
                 } else {
                     map.put(spiName, clz);
                 }
             } catch (Exception e) {
-                failLog(type, "Error load spi class", e);
+            	logger.error(type.getName() + ": Error load spi class", e);
             }
         }
 
@@ -356,21 +299,9 @@ public class ExtensionLoader<T> {
 
     }
 
-    /**
-     * 获取扩展点的名字
-     * 
-     * <pre>
-	 * 		如果扩展类有SpiMeta的注解，那么获取对应的name，如果没有的话获取classname
-	 * </pre>
-     * 
-     * @param clz
-     * @return
-     */
     private String getSpiName(Class<?> clz) {
         SpiMeta spiMeta = clz.getAnnotation(SpiMeta.class);
-        String name = (spiMeta != null && !"".equals(spiMeta.name())) ? spiMeta.name() : clz.getSimpleName();
-
-        return name;
+        return (spiMeta != null && !"".equals(spiMeta.value())) ? spiMeta.value() : clz.getSimpleName();
     }
 
     private void parseUrl(Class<T> type, URL url, List<String> classNames) throws ServiceConfigurationError {
@@ -384,10 +315,10 @@ public class ExtensionLoader<T> {
             int indexNumber = 0;
             while ((line = reader.readLine()) != null) {
                 indexNumber++;
-                parseLine(type, url, line, indexNumber, classNames);
+                this.parseLine(type, url, line, indexNumber, classNames);
             }
-        } catch (Exception x) {
-            failLog(type, "Error reading spi configuration file", x);
+        } catch (Exception e) {
+        	logger.error(type.getName() + ": Error reading spi configuration file", e);
         } finally {
             try {
                 if (reader != null) {
@@ -396,14 +327,13 @@ public class ExtensionLoader<T> {
                 if (inputStream != null) {
                     inputStream.close();
                 }
-            } catch (IOException y) {
-                failLog(type, "Error closing spi configuration file", y);
+            } catch (IOException e) {
+            	logger.error(type.getName() + ": Error closing spi configuration file", e);
             }
         }
     }
 
-    private void parseLine(Class<T> type, URL url, String line, int lineNumber, List<String> names) throws IOException,
-            ServiceConfigurationError {
+    private void parseLine(Class<T> type, URL url, String line, int lineNumber, List<String> names) throws IOException, ServiceConfigurationError {
         int ci = line.indexOf('#');
         if (ci >= 0) {
             line = line.substring(0, ci);
@@ -415,40 +345,24 @@ public class ExtensionLoader<T> {
         }
 
         if ((line.indexOf(' ') >= 0) || (line.indexOf('\t') >= 0)) {
-            failThrows(type, url, lineNumber, "Illegal spi configuration-file syntax");
+        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi configuration-file syntax: " + line);
         }
 
         int cp = line.codePointAt(0);
         if (!Character.isJavaIdentifierStart(cp)) {
-            failThrows(type, url, lineNumber, "Illegal spi provider-class name: " + line);
+            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi provider-class name: " + line);
         }
 
         for (int i = Character.charCount(cp); i < line.length(); i += Character.charCount(cp)) {
             cp = line.codePointAt(i);
             if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
-                failThrows(type, url, lineNumber, "Illegal spi provider-class name: " + line);
+                throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi provider-class name: " + line);
             }
         }
 
         if (!names.contains(line)) {
             names.add(line);
         }
-    }
-
-    private static <T> void failLog(Class<T> type, String msg, Throwable cause) {
-    	logger.error(type.getName() + ": " + msg, cause);
-    }
-
-    private static <T> void failThrows(Class<T> type, String msg, Throwable cause) {
-        throw new RuntimeException(type.getName() + ": " + msg, cause);
-    }
-
-    private static <T> void failThrows(Class<T> type, String msg) {
-        throw new RuntimeException(type.getName() + ": " + msg);
-    }
-
-    private static <T> void failThrows(Class<T> type, URL url, int line, String msg) throws ServiceConfigurationError {
-        failThrows(type, url + ":" + line + ": " + msg);
     }
 
 }

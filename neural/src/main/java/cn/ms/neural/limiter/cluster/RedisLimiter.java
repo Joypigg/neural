@@ -34,7 +34,7 @@ import com.google.common.io.CharStreams;
  * <br>
  * @author lry
  */
-@SpiMeta(name = "redis")
+@SpiMeta("redis")
 public class RedisLimiter extends ClusterLimiter {
 	
 	public static final String LIMITER_NAME = "limiter.lua";

@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface SpiMeta {
 	
-    String name() default "";
+    String value() default "";
     
 }
