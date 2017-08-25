@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-public @interface Spi {
+public @interface CopyOfSpi {
 
 	/**
 	 * 单例/多例模式
