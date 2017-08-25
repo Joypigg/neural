@@ -62,15 +62,15 @@ public class ExtensionLoader<T> {
     public T getExtension() {
     	this.checkInit();
     	 
-    	NSPI spi = type.getAnnotation(NSPI.class);
-    	if(spi.value() == null || spi.value().length() == 0){
+    	NSPI nspi = type.getAnnotation(NSPI.class);
+    	if(nspi.value() == null || nspi.value().length() == 0){
         	throw new RuntimeException(type.getName() + ": The default implementation ID(@NSPI.value()) is not set");
         } else {
         	try {
-                if (spi.single()) {
-                    return this.getSingletonInstance(spi.value());
+                if (nspi.single()) {
+                    return this.getSingletonInstance(nspi.value());
                 } else {
-                    Class<T> clz = extensionClasses.get(spi.value());
+                    Class<T> clz = extensionClasses.get(nspi.value());
                     if (clz == null) {
                         return null;
                     }
@@ -90,8 +90,8 @@ public class ExtensionLoader<T> {
         }
 
         try {
-            NSPI spi = type.getAnnotation(NSPI.class);
-            if (spi.single()) {
+            NSPI nspi = type.getAnnotation(NSPI.class);
+            if (nspi.single()) {
                 return this.getSingletonInstance(name);
             } else {
                 Class<T> clz = extensionClasses.get(name);
@@ -136,12 +136,12 @@ public class ExtensionLoader<T> {
 
         checkInit();
         checkExtensionType(clz);
-        String spiName = getSpiName(clz);
+        String nspiName = getSpiName(clz);
         synchronized (extensionClasses) {
-            if (extensionClasses.containsKey(spiName)) {
-            	throw new RuntimeException(clz.getName() + ": Error spiName already exist " + spiName);
+            if (extensionClasses.containsKey(nspiName)) {
+            	throw new RuntimeException(clz.getName() + ": Error nspiName already exist " + nspiName);
             } else {
-                extensionClasses.put(spiName, clz);
+                extensionClasses.put(nspiName, clz);
             }
         }
     }
@@ -190,11 +190,11 @@ public class ExtensionLoader<T> {
     }
     
     /**
-     * 有些地方需要spi的所有激活的instances，所以需要能返回一个列表的方法<br>
+     * 有些地方需要nspi的所有激活的instances，所以需要能返回一个列表的方法<br>
      * <br>
      * 注意：<br>
      * 1 SpiMeta 中的active 为true<br> 
-     * 2 按照spiMeta中的order进行排序 <br>
+     * 2 按照nspiMeta中的order进行排序 <br>
      * <br>
      * FIXME： 是否需要对singleton来区分对待，后面再考虑 fishermen
      * 
@@ -308,14 +308,14 @@ public class ExtensionLoader<T> {
                 }
 
                 this.checkExtensionType(clz);
-                String spiName = this.getSpiName(clz);
-                if (map.containsKey(spiName)) {
-                    throw new RuntimeException(clz.getName() + ": Error spiName already exist " + spiName);
+                String nspiName = this.getSpiName(clz);
+                if (map.containsKey(nspiName)) {
+                    throw new RuntimeException(clz.getName() + ": Error nspiName already exist " + nspiName);
                 } else {
-                    map.put(spiName, clz);
+                    map.put(nspiName, clz);
                 }
             } catch (Exception e) {
-            	logger.error(type.getName() + ": Error load spi class", e);
+            	logger.error(type.getName() + ": Error load nspi class", e);
             }
         }
 
@@ -342,7 +342,7 @@ public class ExtensionLoader<T> {
                 this.parseLine(type, url, line, indexNumber, classNames);
             }
         } catch (Exception e) {
-        	logger.error(type.getName() + ": Error reading spi configuration file", e);
+        	logger.error(type.getName() + ": Error reading nspi configuration file", e);
         } finally {
             try {
                 if (reader != null) {
@@ -352,7 +352,7 @@ public class ExtensionLoader<T> {
                     inputStream.close();
                 }
             } catch (IOException e) {
-            	logger.error(type.getName() + ": Error closing spi configuration file", e);
+            	logger.error(type.getName() + ": Error closing nspi configuration file", e);
             }
         }
     }
@@ -369,18 +369,18 @@ public class ExtensionLoader<T> {
         }
 
         if ((line.indexOf(' ') >= 0) || (line.indexOf('\t') >= 0)) {
-        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi configuration-file syntax: " + line);
+        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi configuration-file syntax: " + line);
         }
 
         int cp = line.codePointAt(0);
         if (!Character.isJavaIdentifierStart(cp)) {
-            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi provider-class name: " + line);
+            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi provider-class name: " + line);
         }
 
         for (int i = Character.charCount(cp); i < line.length(); i += Character.charCount(cp)) {
             cp = line.codePointAt(i);
             if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
-                throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal spi provider-class name: " + line);
+                throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi provider-class name: " + line);
             }
         }
 
