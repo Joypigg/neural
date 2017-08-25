@@ -6,23 +6,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * NSPI<br>
+ * <br>
+ * 1.支持自定义实现类为单例/多例<br>
+ * 2.支持设置默认的实现类<br>
+ * 3.支持实现类order排序<br>
+ * 4.支持实现类定义特征属性category,用于区分多维度的不同类别<br>
+ * 
+ * @author lry
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface NSPI {
 
-	/**
-	 * 用于设置默认的实现类KEY
-	 * 
-	 * @return
-	 */
+	/** 自定义默认的实现类ID **/
 	String value() default "";
 
-	/**
-	 * 实现类实例是否是单例,默认为非单例,即每次都重新创建
-	 * 
-	 * @return
-	 */
+	/** 声明每次获取实现类时是否需要创建新对象,即是否单例 **/
 	boolean single() default false;
 
 }

@@ -61,21 +61,25 @@ public class ExtensionLoader<T> {
 
     public T getExtension() {
     	this.checkInit();
-    	
-    	try {
-            NSPI spi = type.getAnnotation(NSPI.class);
-            if (spi.single()) {
-                return this.getSingletonInstance(spi.value());
-            } else {
-                Class<T> clz = extensionClasses.get(spi.value());
-                if (clz == null) {
-                    return null;
-                }
+    	 
+    	NSPI spi = type.getAnnotation(NSPI.class);
+    	if(spi.value() == null || spi.value().length() == 0){
+        	throw new RuntimeException(type.getName() + ": The default implementation ID(@NSPI.value()) is not set");
+        } else {
+        	try {
+                if (spi.single()) {
+                    return this.getSingletonInstance(spi.value());
+                } else {
+                    Class<T> clz = extensionClasses.get(spi.value());
+                    if (clz == null) {
+                        return null;
+                    }
 
-                return clz.newInstance();
+                    return clz.newInstance();
+                }
+            } catch (Exception e) {
+            	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
             }
-        } catch (Exception e) {
-        	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
         }
     }
     
@@ -209,8 +213,8 @@ public class ExtensionLoader<T> {
             Activation activation = entry.getValue().getAnnotation(Activation.class);
             if (key==null||key.length()==0) {
                 exts.add(getExtension(entry.getKey()));
-            } else if (activation != null && activation.keys() != null) {
-                for (String k : activation.keys()) {
+            } else if (activation != null && activation.category() != null) {
+                for (String k : activation.category()) {
                     if (key.equals(k)) {
                         exts.add(getExtension(entry.getKey()));
                         break;

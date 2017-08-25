@@ -16,12 +16,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Activation {
 	
+	/** 自定义实现类ID **/
     String value() default "";
     
     /** order号越小，在返回的list<Instance>中的位置越靠前 */
 	int order() default 20;
 
-	/** spi 的key，获取spi列表时，根据key进行匹配，当key中存在待过滤的search-key时，匹配成功 */
-	String[] keys() default "";
+	/** NSPI的category，获取NSPI列表时，根据category进行匹配，当category中存在待过滤的search-category时，匹配成功 */
+	String[] category() default "";
     
 }
