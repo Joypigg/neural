@@ -1,5 +1,6 @@
 package cn.ms.neural.limiter.cluster;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -22,8 +23,6 @@ import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.RuleData;
 import cn.ms.neural.util.BeanUtils;
 import cn.ms.neural.util.Store;
-
-import com.google.common.io.CharStreams;
 
 /**
  * 基于Redis实现分布式限流<br>
@@ -217,13 +216,29 @@ public class RedisLimiter extends ClusterLimiter {
 		try {
 			Reader reader = null;
 			InputStream inputStream = null;
+			BufferedReader bufferedReader = null;
+			
 			try {
 				inputStream = this.getClass().getClassLoader().getResourceAsStream(name);
 				reader = new InputStreamReader(inputStream);
-				return CharStreams.toString(reader);
+				bufferedReader = new BufferedReader(reader);
+				StringBuffer sb = new StringBuffer();
+		        String temp = null;
+		        while ((temp = bufferedReader.readLine()) != null) {
+		            sb.append(temp);
+		        }
+		        bufferedReader.close();
+				
+				return sb.toString();
 			} finally {
+				if (bufferedReader != null) {
+					bufferedReader.close();
+				}
 				if (reader != null) {
 					reader.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
 				}
 			}
 		} catch (Exception e) {
