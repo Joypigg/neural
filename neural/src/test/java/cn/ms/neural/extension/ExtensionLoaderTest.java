@@ -5,38 +5,38 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.ms.neural.extension.prototype.SpiPrototype;
-import cn.ms.neural.extension.prototype.SpiPrototypeImpl2;
-import cn.ms.neural.extension.singleton.SpiSingleton;
+import cn.ms.neural.extension.prototype.NspiPrototype;
+import cn.ms.neural.extension.prototype.NspiPrototypeImpl2;
+import cn.ms.neural.extension.singleton.NspiSingleton;
 
 public class ExtensionLoaderTest {
 	
 	@Test
 	public void test() {
-		List<SpiPrototype> spiPrototype = ExtensionLoader.getExtensionLoader(SpiPrototype.class).getExtensions("ddd");
-		System.out.println(spiPrototype);
+		List<NspiPrototype> nspiPrototype = ExtensionLoader.getExtensionLoader(NspiPrototype.class).getExtensions("ddd");
+		System.out.println(nspiPrototype);
 	}
 	
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void testExtensionNormal() {
         // 单例模式下只会构造一次实例
-        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(SpiSingleton.class).getExtension("spiSingletonImpl").spiHello());
-        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(SpiSingleton.class).getExtension("spiSingletonImpl").spiHello());
+        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(NspiSingleton.class).getExtension("spiSingletonImpl").spiHello());
+        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(NspiSingleton.class).getExtension("spiSingletonImpl").spiHello());
 
         // 多例模式下在每次获取的时候进行实例化
-        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(SpiPrototype.class).getExtension("spiPrototypeImpl1").spiHello());
-        Assert.assertEquals(2, ExtensionLoader.getExtensionLoader(SpiPrototype.class).getExtension("spiPrototypeImpl1").spiHello());
+        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(NspiPrototype.class).getExtension("spiPrototypeImpl1").spiHello());
+        Assert.assertEquals(2, ExtensionLoader.getExtensionLoader(NspiPrototype.class).getExtension("spiPrototypeImpl1").spiHello());
 
         // 手动添加实现类
-        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(SpiPrototype.class).getExtensions("").size());
-        ExtensionLoader loader = ExtensionLoader.getExtensionLoader(SpiPrototype.class);
-        loader.addExtensionClass(SpiPrototypeImpl2.class);
+        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(NspiPrototype.class).getExtensions("").size());
+        ExtensionLoader loader = ExtensionLoader.getExtensionLoader(NspiPrototype.class);
+        loader.addExtensionClass(NspiPrototypeImpl2.class);
 
         // 返回所有实现类
-        ExtensionLoader.initExtensionLoader(SpiPrototype.class);
-        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(SpiSingleton.class).getExtensions("").size());
-        Assert.assertEquals(2, ExtensionLoader.getExtensionLoader(SpiPrototype.class).getExtensions("").size());
+        ExtensionLoader.initExtensionLoader(NspiPrototype.class);
+        Assert.assertEquals(1, ExtensionLoader.getExtensionLoader(NspiSingleton.class).getExtensions("").size());
+        Assert.assertEquals(2, ExtensionLoader.getExtensionLoader(NspiPrototype.class).getExtensions("").size());
 
     }
 

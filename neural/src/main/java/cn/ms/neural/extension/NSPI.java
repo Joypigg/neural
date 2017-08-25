@@ -7,12 +7,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * NSPI<br>
- * <br>
+ * <b>NSPI</b><br>
+ * <font color="red"><br>
+ * <b>功能特性：</b><br>
  * 1.支持自定义实现类为单例/多例<br>
  * 2.支持设置默认的实现类<br>
  * 3.支持实现类order排序<br>
  * 4.支持实现类定义特征属性category,用于区分多维度的不同类别<br>
+ * 5.支持根据category属性值来搜索实现类<br>
+ * 6.支持自动扫描实现类<br>
+ * 7.支持手动添加实现类<br>
+ * 8.支持获取所有实现类<br>
+ * </font>
  * 
  * @author lry
  */
