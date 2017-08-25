@@ -1,5 +1,5 @@
 package cn.ms.neural;
 
-public class MURLTest {
+public class NURLTest {
 
 }
