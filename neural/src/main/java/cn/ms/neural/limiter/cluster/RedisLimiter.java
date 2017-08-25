@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +18,10 @@ import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.MURL;
 import cn.ms.neural.Store;
 import cn.ms.neural.extension.SpiMeta;
-import cn.ms.neural.limiter.RuleData;
-import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.LimiterRule;
+import cn.ms.neural.limiter.OptStatus;
+import cn.ms.neural.limiter.RuleData;
+import cn.ms.neural.util.BeanUtils;
 
 import com.google.common.io.CharStreams;
 
@@ -58,7 +58,7 @@ public class RedisLimiter extends ClusterLimiter {
 		try {
 			JedisPoolConfig config = new JedisPoolConfig();
 			Map<String, String> parameters = murl.getParameters();
-			BeanUtils.copyProperties(config, parameters);
+			BeanUtils.copyMapToObj(parameters, config);
 			jedisPool = new JedisPool(config, murl.getHost(), murl.getPort());
 			
 			LIMITER_SCRIPT = getScript(LIMITER_NAME);

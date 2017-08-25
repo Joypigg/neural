@@ -13,7 +13,6 @@
 	<properties>
 		<guava.version>20.0</guava.version>
 		<jedis.version>2.9.0</jedis.version>
-		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 	</properties>
 
 	<dependencies>
@@ -26,11 +25,7 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>${commons-beanutils.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
