@@ -72,7 +72,7 @@ public class ExtensionLoader<T> {
         }
 
         try {
-            Spi spi = type.getAnnotation(Spi.class);
+            NSPI spi = type.getAnnotation(NSPI.class);
             if (spi.scope() == Scope.SINGLETON) {
                 return getSingletonInstance(name);
             } else {
@@ -281,7 +281,7 @@ public class ExtensionLoader<T> {
     }
 
     private static <T> boolean isSpiType(Class<T> clz) {
-        return clz.isAnnotationPresent(Spi.class);
+        return clz.isAnnotationPresent(NSPI.class);
     }
 
     private ConcurrentMap<String, Class<T>> loadExtensionClasses(String prefix) {

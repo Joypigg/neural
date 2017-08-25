@@ -66,6 +66,6 @@ public class ExtensionLoaderTest {
     public interface NotSpiInterface {}
 
     // not impl
-    @Spi
+    @NSPI
     public interface SpiWithoutImpl {}
 }
