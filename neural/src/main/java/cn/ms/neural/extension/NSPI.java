@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
  * 7.支持手动添加实现类<br>
  * 8.支持获取所有实现类<br>
  * 9.支持只创建所需实现类，解决JDK原生的全量方式<br>
+ * 10.支持自定义ClassLoader来加载class<br>
  * </font> <br>
  * TODO: 需要实现对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点
  * 

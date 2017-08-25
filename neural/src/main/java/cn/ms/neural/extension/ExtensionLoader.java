@@ -39,10 +39,6 @@ public class ExtensionLoader<T> {
     private ConcurrentMap<String, Class<T>> extensionClasses = null;
     private static ConcurrentMap<Class<?>, ExtensionLoader<?>> extensionLoaders = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
 
-    private ExtensionLoader(Class<T> type) {
-        this(type, Thread.currentThread().getContextClassLoader());
-    }
-
     private ExtensionLoader(Class<T> type, ClassLoader classLoader) {
         this.type = type;
         this.classLoader = classLoader;
@@ -55,7 +51,7 @@ public class ExtensionLoader<T> {
     }
 
     public Class<T> getExtensionClass(String name) {
-        checkInit();
+        this.checkInit();
         return extensionClasses.get(name);
     }
 
@@ -156,8 +152,12 @@ public class ExtensionLoader<T> {
         init = true;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
+    	return getExtensionLoader(type, Thread.currentThread().getContextClassLoader());
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type, ClassLoader classLoader) {
         if (type == null) {
         	throw new RuntimeException("Error extension type is null");
         }
@@ -167,17 +167,21 @@ public class ExtensionLoader<T> {
         
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
         if (loader == null) {
-            loader = initExtensionLoader(type);
+            loader = initExtensionLoader(type, classLoader);
         }
         
         return loader;
     }
 
-    @SuppressWarnings("unchecked")
     public static synchronized <T> ExtensionLoader<T> initExtensionLoader(Class<T> type) {
+    	return initExtensionLoader(type, Thread.currentThread().getContextClassLoader());
+	}
+    
+    @SuppressWarnings("unchecked")
+    public static synchronized <T> ExtensionLoader<T> initExtensionLoader(Class<T> type, ClassLoader classLoader) {
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
         if (loader == null) {
-            loader = new ExtensionLoader<T>(type);
+            loader = new ExtensionLoader<T>(type, classLoader);
             extensionLoaders.putIfAbsent(type, loader);
             loader = (ExtensionLoader<T>) extensionLoaders.get(type);
         }
