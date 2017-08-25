@@ -21,11 +21,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * URL - Uniform Resource Locator (Immutable, ThreadSafe)
+ * NURL - Uniform Resource Locator (Immutable, ThreadSafe)
  * 
  * @author lry
  */
-public final class MURL implements Serializable {
+public final class NURL implements Serializable {
 
     private static final long serialVersionUID = -1985165475234910535L;
 
@@ -39,7 +39,7 @@ public final class MURL implements Serializable {
     
     // ==== cache ====
     private volatile transient Map<String, Number> numbers;
-    private volatile transient Map<String, MURL> murls;
+    private volatile transient Map<String, NURL> murls;
     private volatile transient String ip;
     private volatile transient String full;
     private volatile transient String identity;
@@ -49,7 +49,7 @@ public final class MURL implements Serializable {
     public static final Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     private static final Pattern KVP_PATTERN = Pattern.compile("([_.a-zA-Z0-9][-_.a-zA-Z0-9]*)[=](.*)"); //key value pair pattern.
     
-    protected MURL() {
+    protected NURL() {
         this.protocol = null;
         this.username = null;
         this.password = null;
@@ -59,39 +59,39 @@ public final class MURL implements Serializable {
         this.parameters = null;
     }
     
-	public MURL(String protocol, String host, int port) {
+	public NURL(String protocol, String host, int port) {
 	    this(protocol, null, null, host, port, null, (Map<String, String>) null);
 	}
 	
-	public MURL(String protocol, String host, int port, String[] pairs) { // 变长参数...与下面的path参数冲突，改为数组
+	public NURL(String protocol, String host, int port, String[] pairs) { // 变长参数...与下面的path参数冲突，改为数组
         this(protocol, null, null, host, port, null, toStringMap(pairs));
     }
 	
-	public MURL(String protocol, String host, int port, Map<String, String> parameters) {
+	public NURL(String protocol, String host, int port, Map<String, String> parameters) {
         this(protocol, null, null, host, port, null, parameters);
     }
 	
-	public MURL(String protocol, String host, int port, String path) {
+	public NURL(String protocol, String host, int port, String path) {
 	    this(protocol, null, null, host, port, path, (Map<String, String>) null);
 	}
 
-	public MURL(String protocol, String host, int port, String path, String... pairs) {
+	public NURL(String protocol, String host, int port, String path, String... pairs) {
         this(protocol, null, null, host, port, path, toStringMap(pairs));
     }
 	
-	public MURL(String protocol, String host, int port, String path, Map<String, String> parameters) {
+	public NURL(String protocol, String host, int port, String path, Map<String, String> parameters) {
 		this(protocol, null, null, host, port, path, parameters);
 	}
 	
-	public MURL(String protocol, String username, String password, String host, int port, String path) {
+	public NURL(String protocol, String username, String password, String host, int port, String path) {
         this(protocol, username, password, host, port, path, (Map<String, String>) null);
     }
 	
-	public MURL(String protocol, String username, String password, String host, int port, String path, String... pairs) {
+	public NURL(String protocol, String username, String password, String host, int port, String path, String... pairs) {
 	    this(protocol, username, password, host, port, path, toStringMap(pairs));
 	}
 	
-	public MURL(String protocol, String username, String password, String host, int port, String path, Map<String, String> parameters) {
+	public NURL(String protocol, String username, String password, String host, int port, String path, Map<String, String> parameters) {
 		if ((username == null || username.length() == 0) 
 				&& password != null && password.length() > 0) {
 			throw new IllegalArgumentException("Invalid murl, password without username!");
@@ -119,9 +119,9 @@ public final class MURL implements Serializable {
      * 
      * @param murl URL string
      * @return URL instance
-     * @see MURL
+     * @see NURL
      */
-    public static MURL valueOf(String murl) {
+    public static NURL valueOf(String murl) {
         if (murl == null || (murl = murl.trim()).length() == 0) {
             throw new IllegalArgumentException("url == null");
         }
@@ -186,7 +186,7 @@ public final class MURL implements Serializable {
             murl = murl.substring(0, i);
         }
         if(murl.length() > 0) host = murl;
-        return new MURL(protocol, username, password, host, port, path, parameters);
+        return new NURL(protocol, username, password, host, port, path, parameters);
     }
 
 	public String getProtocol() {
@@ -264,8 +264,8 @@ public final class MURL implements Serializable {
         return address.toString();
 	}
 	
-	public List<MURL> getBackupUrls() {
-		List<MURL> murls = new ArrayList<MURL>();
+	public List<NURL> getBackupUrls() {
+		List<NURL> murls = new ArrayList<NURL>();
 		murls.add(this);
         String[] backups = getParameter("backup", new String[0]);
         if (backups != null && backups.length > 0) {
@@ -317,19 +317,19 @@ public final class MURL implements Serializable {
         return path;
 	}
 	
-	public MURL setProtocol(String protocol) {
-	    return new MURL(protocol, username, password, host, port, path, getParameters());
+	public NURL setProtocol(String protocol) {
+	    return new NURL(protocol, username, password, host, port, path, getParameters());
 	}
 
-    public MURL setUsername(String username) {
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+    public NURL setUsername(String username) {
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public MURL setPassword(String password) {
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+    public NURL setPassword(String password) {
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
     
-    public MURL setAddress(String address) {
+    public NURL setAddress(String address) {
         int i = address.lastIndexOf(':');
         String host;
         int port = this.port;
@@ -339,19 +339,19 @@ public final class MURL implements Serializable {
         } else {
             host = address;
         }
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public MURL setHost(String host) {
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+    public NURL setHost(String host) {
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public MURL setPort(int port) {
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+    public NURL setPort(int port) {
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public MURL setPath(String path) {
-        return new MURL(protocol, username, password, host, port, path, getParameters());
+    public NURL setPath(String path) {
+        return new NURL(protocol, username, password, host, port, path, getParameters());
     }
 
     public Map<String, String> getParameters() {
@@ -397,15 +397,15 @@ public final class MURL implements Serializable {
         return numbers;
     }
 
-    private Map<String, MURL> getUrls() {
+    private Map<String, NURL> getUrls() {
         if (murls == null) { // 允许并发重复创建
-            murls = new ConcurrentHashMap<String, MURL>();
+            murls = new ConcurrentHashMap<String, NURL>();
         }
         return murls;
     }
 
-    public MURL getUrlParameter(String key) {
-        MURL u = getUrls().get(key);
+    public NURL getUrlParameter(String key) {
+        NURL u = getUrls().get(key);
         if (u != null) {
             return u;
         }
@@ -413,7 +413,7 @@ public final class MURL implements Serializable {
         if (value == null || value.length() == 0) {
             return null;
         }
-        u = MURL.valueOf(value);
+        u = NURL.valueOf(value);
         getUrls().put(key, u);
         return u;
     }
@@ -590,11 +590,11 @@ public final class MURL implements Serializable {
     }
 
     public String getMethodParameterAndDecoded(String method, String key) {
-        return MURL.decode(getMethodParameter(method, key));
+        return NURL.decode(getMethodParameter(method, key));
     }
 
     public String getMethodParameterAndDecoded(String method, String key, String defaultValue) {
-        return MURL.decode(getMethodParameter(method, key, defaultValue));
+        return NURL.decode(getMethodParameter(method, key, defaultValue));
     }
     
     public Map<String, String> getMethodParameters(String method) {
@@ -833,61 +833,61 @@ public final class MURL implements Serializable {
         return "0.0.0.0".equals(host) || getParameter("anyhost", false);
     }
     
-    public MURL addParameterAndEncoded(String key, String value) {
+    public NURL addParameterAndEncoded(String key, String value) {
         if(value == null || value.length() == 0) {
             return this;
         }
         return addParameter(key, encode(value));
     }
     
-    public MURL addParameter(String key, boolean value) {
+    public NURL addParameter(String key, boolean value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public MURL addParameter(String key, char value) {
+    public NURL addParameter(String key, char value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public MURL addParameter(String key, byte value) {
+    public NURL addParameter(String key, byte value) {
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, short value) {
+    public NURL addParameter(String key, short value) {
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, int value) {
+    public NURL addParameter(String key, int value) {
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, long value) {
+    public NURL addParameter(String key, long value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public MURL addParameter(String key, float value) {
+    public NURL addParameter(String key, float value) {
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, double value) {
+    public NURL addParameter(String key, double value) {
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, Enum<?> value) {
+    public NURL addParameter(String key, Enum<?> value) {
         if(value == null) return this;
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, Number value) {
+    public NURL addParameter(String key, Number value) {
         if(value == null) return this;
         return addParameter(key, String.valueOf(value));
     }
 
-    public MURL addParameter(String key, CharSequence value) {
+    public NURL addParameter(String key, CharSequence value) {
         if(value == null || value.length() == 0) return this;
         return addParameter(key, String.valueOf(value));
     }
     
-    public MURL addParameter(String key, String value) {
+    public NURL addParameter(String key, String value) {
         if (key == null || key.length() == 0
                 || value == null || value.length() == 0) {
             return this;
@@ -899,10 +899,10 @@ public final class MURL implements Serializable {
 
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.put(key, value);
-        return new MURL(protocol, username, password, host, port, path, map);
+        return new NURL(protocol, username, password, host, port, path, map);
     }
     
-    public MURL addParameterIfAbsent(String key, String value) {
+    public NURL addParameterIfAbsent(String key, String value) {
         if (key == null || key.length() == 0
                 || value == null || value.length() == 0) {
             return this;
@@ -912,7 +912,7 @@ public final class MURL implements Serializable {
         }
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.put(key, value);
-        return new MURL(protocol, username, password, host, port, path, map);
+        return new NURL(protocol, username, password, host, port, path, map);
     }
     
 	/**
@@ -921,7 +921,7 @@ public final class MURL implements Serializable {
 	 * @param parameters
 	 * @return A new URL 
 	 */
-    public MURL addParameters(Map<String, String> parameters) {
+    public NURL addParameters(Map<String, String> parameters) {
         if (parameters == null || parameters.size() == 0) {
             return this;
         }
@@ -939,19 +939,19 @@ public final class MURL implements Serializable {
 
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.putAll(parameters);
-        return new MURL(protocol, username, password, host, port, path, map);
+        return new NURL(protocol, username, password, host, port, path, map);
     }
     
-	public MURL addParametersIfAbsent(Map<String, String> parameters) {
+	public NURL addParametersIfAbsent(Map<String, String> parameters) {
 		if (parameters == null || parameters.size() == 0) {
 			return this;
 		}
 		Map<String, String> map = new HashMap<String, String>(parameters);
 		map.putAll(getParameters());
-		return new MURL(protocol, username, password, host, port, path, map);
+		return new NURL(protocol, username, password, host, port, path, map);
 	}
 
-    public MURL addParameters(String... pairs) {
+    public NURL addParameters(String... pairs) {
         if (pairs == null || pairs.length == 0) {
             return this;
         }
@@ -966,7 +966,7 @@ public final class MURL implements Serializable {
         return addParameters(map);
     }
     
-    public MURL addParameterString(String query) {
+    public NURL addParameterString(String query) {
         if (query == null || query.length() == 0) {
             return this;
         }
@@ -988,21 +988,21 @@ public final class MURL implements Serializable {
         return addParameters(parameters);
     }
     
-    public MURL removeParameter(String key) {
+    public NURL removeParameter(String key) {
         if (key == null || key.length() == 0) {
             return this;
         }
         return removeParameters(key);
     }
     
-    public MURL removeParameters(Collection<String> keys) {
+    public NURL removeParameters(Collection<String> keys) {
         if (keys == null || keys.size() == 0) {
             return this;
         }
         return removeParameters(keys.toArray(new String[0]));
     }
 
-	public MURL removeParameters(String... keys) {
+	public NURL removeParameters(String... keys) {
 	    if (keys == null || keys.length == 0) {
             return this;
         }
@@ -1013,11 +1013,11 @@ public final class MURL implements Serializable {
         if (map.size() == getParameters().size()) {
             return this;
         }
-        return new MURL(protocol, username, password, host, port, path, map);
+        return new NURL(protocol, username, password, host, port, path, map);
 	}
 	
-	public MURL clearParameters() {
-        return new MURL(protocol, username, password, host, port, path, new HashMap<String, String>());
+	public NURL clearParameters() {
+        return new NURL(protocol, username, password, host, port, path, new HashMap<String, String>());
     }
 	
 	public String getRawParameter(String key) {
@@ -1205,7 +1205,7 @@ public final class MURL implements Serializable {
         return getParameter("interface", path);
     }
 
-    public MURL setServiceInterface(String service) {
+    public NURL setServiceInterface(String service) {
         return addParameter("interface", service);
     }
 
@@ -1253,7 +1253,7 @@ public final class MURL implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MURL other = (MURL) obj;
+        NURL other = (NURL) obj;
         if (host == null) {
             if (other.host != null)
                 return false;

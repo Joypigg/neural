@@ -1,6 +1,6 @@
 package cn.ms.neural.limiter;
 
-import cn.ms.neural.MURL;
+import cn.ms.neural.NURL;
 import cn.ms.neural.extension.Scope;
 import cn.ms.neural.extension.Spi;
 
@@ -16,7 +16,7 @@ import cn.ms.neural.extension.Spi;
 @Spi(scope = Scope.SINGLETON)
 public interface Limiter {
 
-	boolean start(MURL murl);
+	boolean start(NURL nurl);
 
 	/**
 	 * 限流校验与更新 <br>

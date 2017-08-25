@@ -15,13 +15,13 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import cn.ms.neural.MURL;
-import cn.ms.neural.Store;
+import cn.ms.neural.NURL;
 import cn.ms.neural.extension.SpiMeta;
 import cn.ms.neural.limiter.LimiterRule;
 import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.RuleData;
 import cn.ms.neural.util.BeanUtils;
+import cn.ms.neural.util.Store;
 
 import com.google.common.io.CharStreams;
 
@@ -54,12 +54,12 @@ public class RedisLimiter extends ClusterLimiter {
 	}
 
 	@Override
-	public boolean start(MURL murl) {
+	public boolean start(NURL nurl) {
 		try {
 			JedisPoolConfig config = new JedisPoolConfig();
-			Map<String, String> parameters = murl.getParameters();
+			Map<String, String> parameters = nurl.getParameters();
 			BeanUtils.copyMapToObj(parameters, config);
-			jedisPool = new JedisPool(config, murl.getHost(), murl.getPort());
+			jedisPool = new JedisPool(config, nurl.getHost(), nurl.getPort());
 			
 			LIMITER_SCRIPT = getScript(LIMITER_NAME);
 			LIMITER_ADDUP_RULE_SCRIPT = getScript(LIMITER_ADDUP_RULE_NAME);

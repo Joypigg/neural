@@ -2,7 +2,7 @@ package cn.ms.neural.limiter;
 
 import org.junit.Test;
 
-import cn.ms.neural.MURL;
+import cn.ms.neural.NURL;
 import cn.ms.neural.limiter.cluster.RedisLimiter;
 
 public class RedisLimiterTest {
@@ -13,7 +13,7 @@ public class RedisLimiterTest {
 	String[][] rule_keys = {{"area", "beijing"}, {"channel", "web"}, {"env", "sit"}};
 	
 	public RedisLimiterTest() {
-		redisLimiter.start(MURL.valueOf("redis://127.0.0.1:6379/ms"));
+		redisLimiter.start(NURL.valueOf("redis://127.0.0.1:6379/ms"));
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package cn.ms.neural;
+package cn.ms.neural.util;
 
 import java.io.Serializable;
 
