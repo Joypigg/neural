@@ -186,7 +186,7 @@ public class ExtensionLoader<T> {
         List<T> exts = new ArrayList<T>(extensionClasses.size());
         // 多个实现，按优先级排序返回
         for (Map.Entry<String, Class<T>> entry : extensionClasses.entrySet()) {
-            SpiMeta activation = entry.getValue().getAnnotation(SpiMeta.class);
+            Activation activation = entry.getValue().getAnnotation(Activation.class);
             if (key==null||key.length()==0) {
                 exts.add(getExtension(entry.getKey()));
             } else if (activation != null && activation.keys() != null) {
@@ -203,8 +203,8 @@ public class ExtensionLoader<T> {
         Collections.sort(exts, new Comparator<T>() {
         	@Override
         	public int compare(T o1, T o2) {
-        		SpiMeta p1 = o1.getClass().getAnnotation(SpiMeta.class);
-        		SpiMeta p2 = o2.getClass().getAnnotation(SpiMeta.class);
+        		Activation p1 = o1.getClass().getAnnotation(Activation.class);
+        		Activation p2 = o2.getClass().getAnnotation(Activation.class);
                 if (p1 == null) {
                     return 1;
                 } else if (p2 == null) {
@@ -300,8 +300,8 @@ public class ExtensionLoader<T> {
     }
 
     private String getSpiName(Class<?> clz) {
-        SpiMeta spiMeta = clz.getAnnotation(SpiMeta.class);
-        return (spiMeta != null && !"".equals(spiMeta.value())) ? spiMeta.value() : clz.getSimpleName();
+        Activation activation = clz.getAnnotation(Activation.class);
+        return (activation != null && !"".equals(activation.value())) ? activation.value() : clz.getSimpleName();
     }
 
     private void parseUrl(Class<T> type, URL url, List<String> classNames) throws ServiceConfigurationError {

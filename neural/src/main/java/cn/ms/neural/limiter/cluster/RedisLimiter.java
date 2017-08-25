@@ -16,7 +16,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import cn.ms.neural.NURL;
-import cn.ms.neural.extension.SpiMeta;
+import cn.ms.neural.extension.Activation;
 import cn.ms.neural.limiter.LimiterRule;
 import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.RuleData;
@@ -34,7 +34,7 @@ import com.google.common.io.CharStreams;
  * <br>
  * @author lry
  */
-@SpiMeta("redis")
+@Activation("redis")
 public class RedisLimiter extends ClusterLimiter {
 	
 	public static final String LIMITER_NAME = "limiter.lua";
