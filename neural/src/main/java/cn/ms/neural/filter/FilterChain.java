@@ -14,8 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.ms.neural.extension.Activation;
 import cn.ms.neural.extension.ExtensionLoader;
+import cn.ms.neural.extension.SpiMeta;
 
 
 /**
@@ -74,7 +74,7 @@ public class FilterChain<MSG> {
 			
 			// Compute packet key
 			Set<String> groupSet = new HashSet<String>();
-			Activation activation = filter.getClass().getAnnotation(Activation.class);
+			SpiMeta activation = filter.getClass().getAnnotation(SpiMeta.class);
 			if (activation == null || activation.keys() == null || activation.keys().length != 1) {
 				continue;
 			} else {
@@ -119,8 +119,8 @@ public class FilterChain<MSG> {
 			Collections.sort(list, new Comparator<IFilter<MSG>>() {
 				@Override
 				public int compare(IFilter<MSG> o1, IFilter<MSG> o2) {
-					Activation a1 = o1.getClass().getAnnotation(Activation.class);
-					Activation a2 = o2.getClass().getAnnotation(Activation.class);
+					SpiMeta a1 = o1.getClass().getAnnotation(SpiMeta.class);
+					SpiMeta a2 = o2.getClass().getAnnotation(SpiMeta.class);
 					return a1.order()-a2.order();
 				}
 			});
@@ -143,7 +143,7 @@ public class FilterChain<MSG> {
 	@SuppressWarnings("unchecked")
 	public <T> T getFilter(Class<T> filterClazz) {
 		String key;
-		Activation activation = filterClazz.getAnnotation(Activation.class);
+		SpiMeta activation = filterClazz.getAnnotation(SpiMeta.class);
 		if(activation==null||activation.keys()==null||activation.keys().length==0){
 			key="default";
 		}else{

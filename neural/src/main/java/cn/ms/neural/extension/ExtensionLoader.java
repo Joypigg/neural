@@ -186,7 +186,7 @@ public class ExtensionLoader<T> {
         List<T> exts = new ArrayList<T>(extensionClasses.size());
         // 多个实现，按优先级排序返回
         for (Map.Entry<String, Class<T>> entry : extensionClasses.entrySet()) {
-            Activation activation = entry.getValue().getAnnotation(Activation.class);
+            SpiMeta activation = entry.getValue().getAnnotation(SpiMeta.class);
             if (key==null||key.length()==0) {
                 exts.add(getExtension(entry.getKey()));
             } else if (activation != null && activation.keys() != null) {
@@ -203,8 +203,8 @@ public class ExtensionLoader<T> {
         Collections.sort(exts, new Comparator<T>() {
         	@Override
         	public int compare(T o1, T o2) {
-        		Activation p1 = o1.getClass().getAnnotation(Activation.class);
-                Activation p2 = o2.getClass().getAnnotation(Activation.class);
+        		SpiMeta p1 = o1.getClass().getAnnotation(SpiMeta.class);
+        		SpiMeta p2 = o2.getClass().getAnnotation(SpiMeta.class);
                 if (p1 == null) {
                     return 1;
                 } else if (p2 == null) {

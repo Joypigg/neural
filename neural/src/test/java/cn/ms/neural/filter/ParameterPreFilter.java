@@ -1,10 +1,8 @@
 package cn.ms.neural.filter;
 
-import cn.ms.neural.extension.Activation;
 import cn.ms.neural.extension.SpiMeta;
 
-@SpiMeta("parameter")
-@Activation(keys = FilterChain.PRE, order = 1)
+@SpiMeta(value = "parameter", keys = FilterChain.PRE, order = 1)
 public class ParameterPreFilter extends Filter<Message> {
 
 	@Override
