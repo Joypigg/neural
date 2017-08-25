@@ -21,7 +21,7 @@ public class ActivationComparator<T> implements Comparator<T> {
         } else if (p2 == null) {
             return -1;
         } else {
-            return p1.seq() - p2.seq();
+            return p1.order() - p2.order();
         }
     }
 

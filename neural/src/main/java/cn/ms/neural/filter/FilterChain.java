@@ -75,10 +75,10 @@ public class FilterChain<MSG> {
 			// Compute packet key
 			Set<String> groupSet = new HashSet<String>();
 			Activation activation = filter.getClass().getAnnotation(Activation.class);
-			if (activation == null || activation.key() == null || activation.key().length != 1) {
+			if (activation == null || activation.keys() == null || activation.keys().length != 1) {
 				continue;
 			} else {
-				groupSet.add(activation.key()[0]);
+				groupSet.add(activation.keys()[0]);
 				// Packet collection filter
 				AtomicInteger no = new AtomicInteger(0);
 				for (String key : groupSet) {
@@ -121,7 +121,7 @@ public class FilterChain<MSG> {
 				public int compare(IFilter<MSG> o1, IFilter<MSG> o2) {
 					Activation a1 = o1.getClass().getAnnotation(Activation.class);
 					Activation a2 = o2.getClass().getAnnotation(Activation.class);
-					return a1.seq()-a2.seq();
+					return a1.order()-a2.order();
 				}
 			});
 			
@@ -144,10 +144,10 @@ public class FilterChain<MSG> {
 	public <T> T getFilter(Class<T> filterClazz) {
 		String key;
 		Activation activation = filterClazz.getAnnotation(Activation.class);
-		if(activation==null||activation.key()==null||activation.key().length==0){
+		if(activation==null||activation.keys()==null||activation.keys().length==0){
 			key="default";
 		}else{
-			key=activation.key()[0];
+			key=activation.keys()[0];
 		}
 		
 		Map<Integer, IFilter<MSG>> map = filters.get(key);

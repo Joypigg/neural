@@ -197,8 +197,8 @@ public class ExtensionLoader<T> {
             Activation activation = entry.getValue().getAnnotation(Activation.class);
             if (key==null||key.length()==0) {
                 exts.add(getExtension(entry.getKey()));
-            } else if (activation != null && activation.key() != null) {
-                for (String k : activation.key()) {
+            } else if (activation != null && activation.keys() != null) {
+                for (String k : activation.keys()) {
                     if (key.equals(k)) {
                         exts.add(getExtension(entry.getKey()));
                         break;
