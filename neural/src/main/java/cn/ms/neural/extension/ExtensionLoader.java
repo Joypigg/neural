@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -206,7 +207,22 @@ public class ExtensionLoader<T> {
                 }
             }
         }
-        Collections.sort(exts, new ActivationComparator<T>());
+        
+        // sequence 大的排在后面,如果没有设置sequence的排到最前面
+        Collections.sort(exts, new Comparator<T>() {
+        	@Override
+        	public int compare(T o1, T o2) {
+        		Activation p1 = o1.getClass().getAnnotation(Activation.class);
+                Activation p2 = o2.getClass().getAnnotation(Activation.class);
+                if (p1 == null) {
+                    return 1;
+                } else if (p2 == null) {
+                    return -1;
+                } else {
+                    return p1.order() - p2.order();
+                }
+        	}
+		});
         
         return exts;
     }
