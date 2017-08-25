@@ -2,7 +2,6 @@ package cn.ms.neural.limiter;
 
 import cn.ms.neural.NURL;
 import cn.ms.neural.extension.NSPI;
-import cn.ms.neural.extension.Scope;
 
 /**
  * The Current limiter <br>
@@ -13,7 +12,7 @@ import cn.ms.neural.extension.Scope;
  * 
  * @author lry
  */
-@NSPI(scope = Scope.SINGLETON)
+@NSPI
 public interface Limiter {
 
 	boolean start(NURL nurl);

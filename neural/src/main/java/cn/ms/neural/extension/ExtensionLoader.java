@@ -59,16 +59,36 @@ public class ExtensionLoader<T> {
         return extensionClasses.get(name);
     }
 
+    public T getExtension() {
+    	this.checkInit();
+    	
+    	try {
+            NSPI spi = type.getAnnotation(NSPI.class);
+            if (spi.single()) {
+                return this.getSingletonInstance(spi.value());
+            } else {
+                Class<T> clz = extensionClasses.get(spi.value());
+                if (clz == null) {
+                    return null;
+                }
+
+                return clz.newInstance();
+            }
+        } catch (Exception e) {
+        	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
+        }
+    }
+    
     public T getExtension(String name) {
-        checkInit();
+    	this.checkInit();
         if (name == null) {
             return null;
         }
 
         try {
             NSPI spi = type.getAnnotation(NSPI.class);
-            if (spi.scope() == Scope.SINGLETON) {
-                return getSingletonInstance(name);
+            if (spi.single()) {
+                return this.getSingletonInstance(name);
             } else {
                 Class<T> clz = extensionClasses.get(name);
                 if (clz == null) {

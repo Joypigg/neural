@@ -11,6 +11,18 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 public @interface NSPI {
 
-	Scope scope() default Scope.PROTOTYPE;
+	/**
+	 * 用于设置默认的实现类KEY
+	 * 
+	 * @return
+	 */
+	String value() default "";
+
+	/**
+	 * 实现类实例是否是单例,默认为非单例,即每次都重新创建
+	 * 
+	 * @return
+	 */
+	boolean single() default false;
 
 }

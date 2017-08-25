@@ -1,7 +1,6 @@
 package cn.ms.neural.filter;
 
 import cn.ms.neural.extension.NSPI;
-import cn.ms.neural.extension.Scope;
 
 /**
  * The Responsibility Chain Filter.
@@ -13,7 +12,7 @@ import cn.ms.neural.extension.Scope;
  * @param <RES>
  *            Response object
  */
-@NSPI(scope = Scope.PROTOTYPE)
+@NSPI
 public interface IFilter<MSG> {
 
 	/**
