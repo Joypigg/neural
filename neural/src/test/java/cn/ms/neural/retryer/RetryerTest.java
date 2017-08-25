@@ -12,10 +12,11 @@ public class RetryerTest {
 
 	public static void main(String[] args) {
 		Callable<Boolean> callable = new Callable<Boolean>() {
-			int time = 0;
+			int time = 1;
 		    public Boolean call() throws Exception {
-		    	if(time > 1){
-		    		return true; // do something useful here
+		    	System.out.println(time);
+		    	if(time > 2){
+		    		//return true; // do something useful here
 		    	}
 		    	time++;
 		    	throw new IOException();
