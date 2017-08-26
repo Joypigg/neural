@@ -1,4 +1,4 @@
-package cn.ms.neural.degrade;
+package cn.ms.neural.degrader;
 
 public enum DegradeType {
 

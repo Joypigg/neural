@@ -1,4 +1,4 @@
-package cn.ms.neural.degrade;
+package cn.ms.neural.degrader;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,12 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author lry
  */
-public class Degrade {
+public class Degrader {
 
-	ConcurrentHashMap<String, Degrade> degradeMap = new ConcurrentHashMap<String, Degrade>();
+	ConcurrentHashMap<String, Degrader> degradeMap = new ConcurrentHashMap<String, Degrader>();
 
-	public static Degrade build() {
-		return new Degrade();
+	public static Degrader build() {
+		return new Degrader();
 	}
 
 }
