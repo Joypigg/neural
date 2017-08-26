@@ -66,8 +66,8 @@ cn.ms.neural.demo.Demo1Impl
 cn.ms.neural.demo.Demo2Impl
 
 //第五步：使用ExtensionLoader来获取接口实现类
-IDemo demo1 =ExtensionLoader.getExtensionLoader(IDemo.class).getExtension("demo1");
-IDemo demo2 =ExtensionLoader.getExtensionLoader(IDemo.class).getExtension("demo2");
+IDemo demo1 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo1");
+IDemo demo2 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo2");
 ```
 
 

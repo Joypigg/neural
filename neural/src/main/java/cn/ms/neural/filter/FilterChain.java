@@ -61,7 +61,7 @@ public class FilterChain<MSG> {
 		}
 		
 		@SuppressWarnings("rawtypes")
-		List<IFilter> list = ExtensionLoader.getExtensionLoader(IFilter.class).getExtensions("");
+		List<IFilter> list = ExtensionLoader.getLoader(IFilter.class).getExtensions("");
 		for (IFilter<MSG> filter : list) {
 			// Filter filter
 			if(!ignoreFilterIdsSet.isEmpty()){// Use the scene: configure the shield part of the filter

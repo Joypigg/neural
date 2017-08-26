@@ -152,12 +152,12 @@ public class ExtensionLoader<T> {
         init = true;
     }
 
-    public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
-    	return getExtensionLoader(type, Thread.currentThread().getContextClassLoader());
+    public static <T> ExtensionLoader<T> getLoader(Class<T> type) {
+    	return getLoader(type, Thread.currentThread().getContextClassLoader());
     }
     
     @SuppressWarnings("unchecked")
-    public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type, ClassLoader classLoader) {
+    public static <T> ExtensionLoader<T> getLoader(Class<T> type, ClassLoader classLoader) {
         if (type == null) {
         	throw new RuntimeException("Error extension type is null");
         }
