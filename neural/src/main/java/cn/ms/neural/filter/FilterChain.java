@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.ms.neural.extension.ExtensionLoader;
-import cn.ms.neural.extension.Activation;
+import cn.ms.neural.extension.Extension;
 
 
 /**
@@ -74,11 +74,11 @@ public class FilterChain<MSG> {
 			
 			// Compute packet key
 			Set<String> groupSet = new HashSet<String>();
-			Activation activation = filter.getClass().getAnnotation(Activation.class);
-			if (activation == null || activation.category() == null || activation.category().length != 1) {
+			Extension extension = filter.getClass().getAnnotation(Extension.class);
+			if (extension == null || extension.category() == null || extension.category().length != 1) {
 				continue;
 			} else {
-				groupSet.add(activation.category()[0]);
+				groupSet.add(extension.category()[0]);
 				// Packet collection filter
 				AtomicInteger no = new AtomicInteger(0);
 				for (String key : groupSet) {
@@ -119,8 +119,8 @@ public class FilterChain<MSG> {
 			Collections.sort(list, new Comparator<IFilter<MSG>>() {
 				@Override
 				public int compare(IFilter<MSG> o1, IFilter<MSG> o2) {
-					Activation a1 = o1.getClass().getAnnotation(Activation.class);
-					Activation a2 = o2.getClass().getAnnotation(Activation.class);
+					Extension a1 = o1.getClass().getAnnotation(Extension.class);
+					Extension a2 = o2.getClass().getAnnotation(Extension.class);
 					return a1.order()-a2.order();
 				}
 			});
@@ -143,11 +143,11 @@ public class FilterChain<MSG> {
 	@SuppressWarnings("unchecked")
 	public <T> T getFilter(Class<T> filterClazz) {
 		String key;
-		Activation activation = filterClazz.getAnnotation(Activation.class);
-		if(activation==null||activation.category()==null||activation.category().length==0){
+		Extension extension = filterClazz.getAnnotation(Extension.class);
+		if(extension==null||extension.category()==null||extension.category().length==0){
 			key="default";
 		}else{
-			key=activation.category()[0];
+			key=extension.category()[0];
 		}
 		
 		Map<Integer, IFilter<MSG>> map = filters.get(key);

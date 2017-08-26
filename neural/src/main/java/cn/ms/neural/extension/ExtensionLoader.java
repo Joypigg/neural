@@ -214,11 +214,11 @@ public class ExtensionLoader<T> {
         List<T> exts = new ArrayList<T>(extensionClasses.size());
         // 多个实现，按优先级排序返回
         for (Map.Entry<String, Class<T>> entry : extensionClasses.entrySet()) {
-            Activation activation = entry.getValue().getAnnotation(Activation.class);
+            Extension extension = entry.getValue().getAnnotation(Extension.class);
             if (key==null||key.length()==0) {
                 exts.add(getExtension(entry.getKey()));
-            } else if (activation != null && activation.category() != null) {
-                for (String k : activation.category()) {
+            } else if (extension != null && extension.category() != null) {
+                for (String k : extension.category()) {
                     if (key.equals(k)) {
                         exts.add(getExtension(entry.getKey()));
                         break;
@@ -231,8 +231,8 @@ public class ExtensionLoader<T> {
         Collections.sort(exts, new Comparator<T>() {
         	@Override
         	public int compare(T o1, T o2) {
-        		Activation p1 = o1.getClass().getAnnotation(Activation.class);
-        		Activation p2 = o2.getClass().getAnnotation(Activation.class);
+        		Extension p1 = o1.getClass().getAnnotation(Extension.class);
+        		Extension p2 = o2.getClass().getAnnotation(Extension.class);
                 if (p1 == null) {
                     return 1;
                 } else if (p2 == null) {
@@ -328,8 +328,8 @@ public class ExtensionLoader<T> {
     }
 
     private String getSpiName(Class<?> clz) {
-        Activation activation = clz.getAnnotation(Activation.class);
-        return (activation != null && !"".equals(activation.value())) ? activation.value() : clz.getSimpleName();
+        Extension extension = clz.getAnnotation(Extension.class);
+        return (extension != null && !"".equals(extension.value())) ? extension.value() : clz.getSimpleName();
     }
 
     private void parseUrl(Class<T> type, URL url, List<String> classNames) throws ServiceConfigurationError {

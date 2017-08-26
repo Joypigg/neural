@@ -53,9 +53,9 @@ package cn.ms.neural.demo;
 public interface IDemo {}
 
 //第二步：定义接口实现类
-@Activation("demo1")
+@Extension("demo1")
 public class Demo1Impl implements IDemo {}
-@Activation("demo2")
+@Extension("demo2")
 public class Demo2Impl implements IDemo {}
 
 //第三步：使用接口全路径（包名+类名）创建接口资源文件

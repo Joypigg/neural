@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Activation {
+public @interface Extension {
 	
 	/** 自定义实现类ID **/
     String value() default "";

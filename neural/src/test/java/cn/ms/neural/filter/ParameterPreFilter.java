@@ -1,8 +1,8 @@
 package cn.ms.neural.filter;
 
-import cn.ms.neural.extension.Activation;
+import cn.ms.neural.extension.Extension;
 
-@Activation(value = "parameter", category = FilterChain.PRE, order = 1)
+@Extension(value = "parameter", category = FilterChain.PRE, order = 1)
 public class ParameterPreFilter extends Filter<Message> {
 
 	@Override
