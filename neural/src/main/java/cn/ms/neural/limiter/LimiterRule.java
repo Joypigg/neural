@@ -3,7 +3,7 @@ package cn.ms.neural.limiter;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.ms.neural.util.Store;
+import cn.ms.neural.util.micro.Store;
 
 /**
  * 限流统计

@@ -22,7 +22,7 @@ import cn.ms.neural.limiter.LimiterRule;
 import cn.ms.neural.limiter.OptStatus;
 import cn.ms.neural.limiter.RuleData;
 import cn.ms.neural.util.BeanUtils;
-import cn.ms.neural.util.Store;
+import cn.ms.neural.util.micro.Store;
 
 /**
  * 基于Redis实现分布式限流<br>
