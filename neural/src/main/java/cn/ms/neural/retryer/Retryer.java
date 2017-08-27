@@ -28,7 +28,6 @@ import com.google.common.base.Predicate;
  * Retryer instances are better constructed with a {@link RetryerBuilder}. A retryer
  * is thread-safe, provided the arguments passed to its constructor are thread-safe.
  *
- * orgi:https://github.com/rholder/guava-retrying
  *
  * @param <V> the type of the call return value
  * @author lry
@@ -42,62 +41,20 @@ public final class Retryer<V> {
     private final Predicate<Attempt<V>> rejectionPredicate;
     private final Collection<RetryListener> listeners;
 
-    /**
-     * Constructor
-     *
-     * @param stopStrategy       the strategy used to decide when the retryer must stop retrying
-     * @param waitStrategy       the strategy used to decide how much time to sleep between attempts
-     * @param rejectionPredicate the predicate used to decide if the attempt must be rejected
-     *                           or not. If an attempt is rejected, the retryer will retry the call, unless the stop
-     *                           strategy indicates otherwise or the thread is interrupted.
-     */
     public Retryer(StopStrategy stopStrategy, WaitStrategy waitStrategy, Predicate<Attempt<V>> rejectionPredicate) {
         this(AttemptTimeLimiters.<V>noTimeLimit(), stopStrategy, waitStrategy, BlockStrategies.threadSleepStrategy(), rejectionPredicate);
     }
 
-    /**
-     * Constructor
-     *
-     * @param attemptTimeLimiter to prevent from any single attempt from spinning infinitely
-     * @param stopStrategy       the strategy used to decide when the retryer must stop retrying
-     * @param waitStrategy       the strategy used to decide how much time to sleep between attempts
-     * @param rejectionPredicate the predicate used to decide if the attempt must be rejected
-     *                           or not. If an attempt is rejected, the retryer will retry the call, unless the stop
-     *                           strategy indicates otherwise or the thread is interrupted.
-     */
     public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy,
     		WaitStrategy waitStrategy, Predicate<Attempt<V>> rejectionPredicate) {
         this(attemptTimeLimiter, stopStrategy, waitStrategy, BlockStrategies.threadSleepStrategy(), rejectionPredicate);
     }
 
-    /**
-     * Constructor
-     *
-     * @param attemptTimeLimiter to prevent from any single attempt from spinning infinitely
-     * @param stopStrategy       the strategy used to decide when the retryer must stop retrying
-     * @param waitStrategy       the strategy used to decide how much time to sleep between attempts
-     * @param blockStrategy      the strategy used to decide how to block between retry attempts; eg, Thread#sleep(), latches, etc.
-     * @param rejectionPredicate the predicate used to decide if the attempt must be rejected
-     *                           or not. If an attempt is rejected, the retryer will retry the call, unless the stop
-     *                           strategy indicates otherwise or the thread is interrupted.
-     */
     public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy,
     		WaitStrategy waitStrategy, BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate) {
         this(attemptTimeLimiter, stopStrategy, waitStrategy, blockStrategy, rejectionPredicate, new ArrayList<RetryListener>());
     }
 
-    /**
-     * Constructor
-     *
-     * @param attemptTimeLimiter to prevent from any single attempt from spinning infinitely
-     * @param stopStrategy       the strategy used to decide when the retryer must stop retrying
-     * @param waitStrategy       the strategy used to decide how much time to sleep between attempts
-     * @param blockStrategy      the strategy used to decide how to block between retry attempts; eg, Thread#sleep(), latches, etc.
-     * @param rejectionPredicate the predicate used to decide if the attempt must be rejected
-     *                           or not. If an attempt is rejected, the retryer will retry the call, unless the stop
-     *                           strategy indicates otherwise or the thread is interrupted.
-     * @param listeners          collection of retry listeners
-     */
     @Beta
     public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy, WaitStrategy waitStrategy, 
     		BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate, Collection<RetryListener> listeners) {
@@ -116,21 +73,6 @@ public final class Retryer<V> {
         this.listeners = listeners;
     }
 
-    /**
-     * Executes the given callable. If the rejection predicate
-     * accepts the attempt, the stop strategy is used to decide if a new attempt
-     * must be made. Then the wait strategy is used to decide how much time to sleep
-     * and a new attempt is made.
-     *
-     * @param callable the callable task to be executed
-     * @return the computed result of the given callable
-     * @throws ExecutionException if the given callable throws an exception, and the
-     *                            rejection predicate considers the attempt as successful. The original exception
-     *                            is wrapped into an ExecutionException.
-     * @throws RetryException     if all the attempts failed before the stop strategy decided
-     *                            to abort, or the thread was interrupted. Note that if the thread is interrupted,
-     *                            this exception is thrown and the thread's interrupt status is set.
-     */
     public V call(Callable<V> callable) throws ExecutionException, RetryException {
         long startTime = System.nanoTime();
         for (int attemptNumber = 1; ; attemptNumber++) {
@@ -163,14 +105,6 @@ public final class Retryer<V> {
         }
     }
 
-    /**
-     * Wraps the given {@link Callable} in a {@link RetryerCallable}, which can
-     * be submitted to an executor. The returned {@link RetryerCallable} uses
-     * this {@link Retryer} instance to call the given {@link Callable}.
-     *
-     * @param callable the callable to wrap
-     * @return a {@link RetryerCallable} that behaves like the given {@link Callable} with retry behavior defined by this {@link Retryer}
-     */
     public RetryerCallable<V> wrap(Callable<V> callable) {
         return new RetryerCallable<V>(this, callable);
     }
@@ -271,28 +205,16 @@ public final class Retryer<V> {
         }
     }
 
-    /**
-     * A {@link Callable} which wraps another {@link Callable} in order to add
-     * retrying behavior from a given {@link Retryer} instance.
-     *
-     * @author JB
-     */
     public static class RetryerCallable<X> implements Callable<X> {
         
     	private Retryer<X> retryer;
         private Callable<X> callable;
 
-        private RetryerCallable(Retryer<X> retryer,
-                                Callable<X> callable) {
+        private RetryerCallable(Retryer<X> retryer, Callable<X> callable) {
             this.retryer = retryer;
             this.callable = callable;
         }
 
-        /**
-         * Makes the enclosing retryer call the wrapped callable.
-         *
-         * @see Retryer#call(Callable)
-         */
         @Override
         public X call() throws ExecutionException, RetryException {
             return retryer.call(callable);

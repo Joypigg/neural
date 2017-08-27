@@ -13,10 +13,9 @@ public final class BlockStrategies {
     }
 
     /**
-     * Returns a block strategy that puts the current thread to sleep between
-     * retries.
+     * Returns a block strategy that puts the current thread to sleep between retries.
      *
-     * @return a block strategy that puts the current thread to sleep between retries
+     * @return
      */
     public static BlockStrategy threadSleepStrategy() {
         return THREAD_SLEEP_STRATEGY;

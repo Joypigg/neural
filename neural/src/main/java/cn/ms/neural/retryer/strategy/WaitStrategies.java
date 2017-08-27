@@ -25,7 +25,7 @@ public final class WaitStrategies {
     /**
      * Returns a wait strategy that doesn't sleep at all before retrying. Use this at your own risk.
      *
-     * @return a wait strategy that doesn't wait between retries
+     * @return
      */
     public static WaitStrategy noWait() {
         return NO_WAIT_STRATEGY;
@@ -50,7 +50,7 @@ public final class WaitStrategies {
      * @param maximumTime the maximum time to sleep
      * @param timeUnit    the unit of the maximum time
      * @return a wait strategy with a random wait time
-     * @throws IllegalStateException if the maximum sleep time is &lt;= 0.
+     * @throws IllegalStateException
      */
     public static WaitStrategy randomWait(long maximumTime, TimeUnit timeUnit) {
         Preconditions.checkNotNull(timeUnit, "The time unit may not be null");
@@ -65,45 +65,35 @@ public final class WaitStrategies {
      * @param maximumTime     the maximum time to sleep
      * @param maximumTimeUnit the unit of the maximum time
      * @return a wait strategy with a random wait time
-     * @throws IllegalStateException if the minimum sleep time is &lt; 0, or if the
-     *                               maximum sleep time is less than (or equals to) the minimum.
+     * @throws IllegalStateException
      */
-    public static WaitStrategy randomWait(long minimumTime,
-                                          TimeUnit minimumTimeUnit,
-                                          long maximumTime,
-                                          TimeUnit maximumTimeUnit) {
+    public static WaitStrategy randomWait(long minimumTime, TimeUnit minimumTimeUnit, long maximumTime, TimeUnit maximumTimeUnit) {
         Preconditions.checkNotNull(minimumTimeUnit, "The minimum time unit may not be null");
         Preconditions.checkNotNull(maximumTimeUnit, "The maximum time unit may not be null");
-        return new RandomWaitStrategy(minimumTimeUnit.toMillis(minimumTime),
-                maximumTimeUnit.toMillis(maximumTime));
+        return new RandomWaitStrategy(minimumTimeUnit.toMillis(minimumTime), maximumTimeUnit.toMillis(maximumTime));
     }
 
     /**
      * Returns a strategy that sleeps a fixed amount of time after the first
-     * failed attempt and in incrementing amounts of time after each additional
-     * failed attempt.
+     * failed attempt and in incrementing amounts of time after each additional failed attempt.
      *
      * @param initialSleepTime     the time to sleep before retrying the first time
      * @param initialSleepTimeUnit the unit of the initial sleep time
      * @param increment            the increment added to the previous sleep time after each failed attempt
      * @param incrementTimeUnit    the unit of the increment
-     * @return a wait strategy that incrementally sleeps an additional fixed time after each failed attempt
+     * @return
      */
-    public static WaitStrategy incrementingWait(long initialSleepTime,
-                                                TimeUnit initialSleepTimeUnit,
-                                                long increment,
-                                                TimeUnit incrementTimeUnit) {
+    public static WaitStrategy incrementingWait(long initialSleepTime, TimeUnit initialSleepTimeUnit, long increment, TimeUnit incrementTimeUnit) {
         Preconditions.checkNotNull(initialSleepTimeUnit, "The initial sleep time unit may not be null");
         Preconditions.checkNotNull(incrementTimeUnit, "The increment time unit may not be null");
-        return new IncrementingWaitStrategy(initialSleepTimeUnit.toMillis(initialSleepTime),
-                incrementTimeUnit.toMillis(increment));
+        return new IncrementingWaitStrategy(initialSleepTimeUnit.toMillis(initialSleepTime), incrementTimeUnit.toMillis(increment));
     }
 
     /**
      * Returns a strategy which sleeps for an exponential amount of time after the first failed attempt,
      * and in exponentially incrementing amounts after each failed attempt up to Long.MAX_VALUE.
      *
-     * @return a wait strategy that increments with each failed attempt using exponential backoff
+     * @return
      */
     public static WaitStrategy exponentialWait() {
         return new ExponentialWaitStrategy(1, Long.MAX_VALUE);
@@ -115,7 +105,7 @@ public final class WaitStrategies {
      *
      * @param maximumTime     the maximum time to sleep
      * @param maximumTimeUnit the unit of the maximum time
-     * @return a wait strategy that increments with each failed attempt using exponential backoff
+     * @return
      */
     public static WaitStrategy exponentialWait(long maximumTime, TimeUnit maximumTimeUnit) {
         Preconditions.checkNotNull(maximumTimeUnit, "The maximum time unit may not be null");
@@ -131,7 +121,7 @@ public final class WaitStrategies {
      * @param multiplier      multiply the wait time calculated by this
      * @param maximumTime     the maximum time to sleep
      * @param maximumTimeUnit the unit of the maximum time
-     * @return a wait strategy that increments with each failed attempt using exponential backoff
+     * @return
      */
     public static WaitStrategy exponentialWait(long multiplier, long maximumTime, TimeUnit maximumTimeUnit) {
         Preconditions.checkNotNull(maximumTimeUnit, "The maximum time unit may not be null");
@@ -142,7 +132,7 @@ public final class WaitStrategies {
      * Returns a strategy which sleeps for an increasing amount of time after the first failed attempt,
      * and in Fibonacci increments after each failed attempt up to {@link Long#MAX_VALUE}.
      *
-     * @return a wait strategy that increments with each failed attempt using a Fibonacci sequence
+     * @return
      */
     public static WaitStrategy fibonacciWait() {
         return new FibonacciWaitStrategy(1, Long.MAX_VALUE);
@@ -154,7 +144,7 @@ public final class WaitStrategies {
      *
      * @param maximumTime     the maximum time to sleep
      * @param maximumTimeUnit the unit of the maximum time
-     * @return a wait strategy that increments with each failed attempt using a Fibonacci sequence
+     * @return
      */
     public static WaitStrategy fibonacciWait(long maximumTime, TimeUnit maximumTimeUnit) {
         Preconditions.checkNotNull(maximumTimeUnit, "The maximum time unit may not be null");
@@ -170,7 +160,7 @@ public final class WaitStrategies {
      * @param multiplier      multiply the wait time calculated by this
      * @param maximumTime     the maximum time to sleep
      * @param maximumTimeUnit the unit of the maximum time
-     * @return a wait strategy that increments with each failed attempt using a Fibonacci sequence
+     * @return
      */
     public static WaitStrategy fibonacciWait(long multiplier, long maximumTime, TimeUnit maximumTimeUnit) {
         Preconditions.checkNotNull(maximumTimeUnit, "The maximum time unit may not be null");
@@ -184,10 +174,9 @@ public final class WaitStrategies {
      *
      * @param function       function to calculate sleep time
      * @param exceptionClass class to calculate sleep time from
-     * @return a wait strategy calculated from the failed attempt
+     * @return
      */
-    public static <T extends Throwable> WaitStrategy exceptionWait(Class<T> exceptionClass,
-                                                                   Function<T, Long> function) {
+    public static <T extends Throwable> WaitStrategy exceptionWait(Class<T> exceptionClass, Function<T, Long> function) {
         Preconditions.checkNotNull(exceptionClass, "exceptionClass may not be null");
         Preconditions.checkNotNull(function, "function may not be null");
         return new ExceptionWaitStrategy<T>(exceptionClass, function);
@@ -198,7 +187,7 @@ public final class WaitStrategies {
      * The new joined strategy will have a wait time which is total of all wait times computed one after another in order.
      *
      * @param waitStrategies Wait strategies that need to be applied one after another for computing the sleep time.
-     * @return A composite wait strategy
+     * @return 
      */
     public static WaitStrategy join(WaitStrategy... waitStrategies) {
         Preconditions.checkState(waitStrategies.length > 0, "Must have at least one wait strategy");

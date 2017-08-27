@@ -15,8 +15,7 @@ public interface Attempt<V> {
      * Returns the result of the attempt, if any.
      *
      * @return the result of the attempt
-     * @throws ExecutionException if an exception was thrown by the attempt. The thrown
-     *                            exception is set as the cause of the ExecutionException
+     * @throws ExecutionException
      */
     V get() throws ExecutionException;
 
@@ -40,8 +39,7 @@ public interface Attempt<V> {
      * Gets the result of the call
      *
      * @return the result of the call
-     * @throws IllegalStateException if the call didn't return a result, but threw an exception,
-     *                               as indicated by {@link #hasResult()}
+     * @throws IllegalStateException
      */
     V getResult() throws IllegalStateException;
 
@@ -49,8 +47,7 @@ public interface Attempt<V> {
      * Gets the exception thrown by the call
      *
      * @return the exception thrown by the call
-     * @throws IllegalStateException if the call didn't throw an exception,
-     *                               as indicated by {@link #hasException()}
+     * @throws IllegalStateException
      */
     Throwable getExceptionCause() throws IllegalStateException;
 

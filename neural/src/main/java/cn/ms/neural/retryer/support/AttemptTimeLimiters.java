@@ -20,21 +20,19 @@ public class AttemptTimeLimiters {
 
     /**
      * @param <V> The type of the computation result.
-     * @return an {@link AttemptTimeLimiter} impl which has no time limit
+     * @return 
      */
     public static <V> AttemptTimeLimiter<V> noTimeLimit() {
         return new NoAttemptTimeLimit<V>();
     }
 
     /**
-     * For control over thread management, it is preferable to offer an {@link ExecutorService} through the other
-     * factory method, {@link #fixedTimeLimit(long, TimeUnit, ExecutorService)}. See the note on
-     * {@link SimpleTimeLimiter#SimpleTimeLimiter(ExecutorService)}, which this AttemptTimeLimiter uses.
-     *
+     * For control over thread management
+     * 
      * @param duration that an attempt may persist before being circumvented
      * @param timeUnit of the 'duration' arg
      * @param <V>      the type of the computation result
-     * @return an {@link AttemptTimeLimiter} with a fixed time limit for each attempt
+     * @return
      */
     public static <V> AttemptTimeLimiter<V> fixedTimeLimit(long duration, TimeUnit timeUnit) {
         Preconditions.checkNotNull(timeUnit);
@@ -46,7 +44,7 @@ public class AttemptTimeLimiters {
      * @param timeUnit        of the 'duration' arg
      * @param executorService used to enforce time limit
      * @param <V>             the type of the computation result
-     * @return an {@link AttemptTimeLimiter} with a fixed time limit for each attempt
+     * @return
      */
     public static <V> AttemptTimeLimiter<V> fixedTimeLimit(long duration, TimeUnit timeUnit, ExecutorService executorService) {
         Preconditions.checkNotNull(timeUnit);
