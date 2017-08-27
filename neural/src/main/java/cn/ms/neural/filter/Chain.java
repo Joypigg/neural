@@ -14,27 +14,27 @@ import org.slf4j.LoggerFactory;
  * @param <M>
  */
 @SuppressWarnings("rawtypes")
-public class FilterChain<M> extends Filter<M> {
+public class Chain<M> extends Filter<M> {
 
-	private Logger logger = LoggerFactory.getLogger(FilterChain.class);
+	private Logger logger = LoggerFactory.getLogger(Chain.class);
 
 	private final List<Filter> filters;
 	private final AtomicInteger index;
 
-	public FilterChain(List<Filter> filters) {
+	public Chain(List<Filter> filters) {
 		this.filters = filters;
 		this.index = new AtomicInteger(0);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void doFilter(FilterChain<M> chain, M m) throws Exception {
+	public void doFilter(Chain<M> chain, M m) throws Exception {
 		if (index.get() == filters.size()) {
 			return;
 		}
 
 		Filter<M> filter = filters.get(index.getAndIncrement());
-		logger.debug("The next filter to be executed is: {}", filter.getClass().getName());
+		logger.debug("The next filter to be executed is: {}", filter.getId());
 
 		filter.doFilter(chain, m);
 	}

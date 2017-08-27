@@ -17,40 +17,61 @@ public class NeuralChain<M> {
 	public static final String PRE = "PRE";
 	public static final String POST = "POST";
 	public static final String ERROR = "ERROR";
-	public static final String[] TYPES = { PRE, POST, ERROR };
 
 	@SuppressWarnings("rawtypes")
-	private final ConcurrentHashMap<String, List<Filter>> filterMap = new ConcurrentHashMap<String, List<Filter>>();
+	private final ConcurrentHashMap<String, List<Filter>> filters = new ConcurrentHashMap<String, List<Filter>>();
 
 	@SuppressWarnings("rawtypes")
 	public NeuralChain() {
-		List<Filter> filters = ExtensionLoader.getLoader(Filter.class).getExtensions();
-		if (filters.size() > 0) {
-			for (Filter filter : filters) {
-				logger.debug("The add filter: {}", filters.getClass().getName());
-				Extension extension = filter.getClass().getAnnotation(Extension.class);
-				if (extension != null) {
-					String[] categories = extension.category();
-					if (categories != null) {
-						for (int i = 0; i < categories.length; i++) {
-							List<Filter> filterList = filterMap.get(categories[i]);
-							if (filterList == null) {
-								filterMap.put(categories[i], filterList = new ArrayList<Filter>());
+		try {
+			List<Filter> filterList = ExtensionLoader.getLoader(Filter.class).getExtensions();
+			if (filterList.size() > 0) {
+				for (Filter filter : filterList) {
+					logger.debug("The add filter: {}", filter.getClass().getName());
+
+					Extension extension = filter.getClass().getAnnotation(Extension.class);
+					if (extension != null) {
+						String[] categories = extension.category();
+						if (categories != null) {
+							for (int i = 0; i < categories.length; i++) {
+								List<Filter> temoFilterList = filters.get(categories[i]);
+								if (temoFilterList == null) {
+									filters.put(categories[i], temoFilterList = new ArrayList<Filter>());
+								}
+								temoFilterList.add(filter);
 							}
-							filterList.add(filter);
 						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error("The start neural chain is exception", e);
 		}
 	}
 
 	@SuppressWarnings("rawtypes")
-	public ConcurrentHashMap<String, List<Filter>> getFilterMap() {
-		return filterMap;
+	public ConcurrentHashMap<String, List<Filter>> getFilters() {
+		return filters;
 	}
 
-	public void doChains(M m) throws Exception {
+	/**
+	 * 执行复合过滤器链<br>
+	 * <br>
+	 * 执行流程如下：<br>
+	 * <code>
+	 * try{<br>
+	 * <font color="green">// PRE Filter</font><br>
+	 * }catch(Throwable t){<br>
+	 * <font color="red">// ERROR Filter</font><br>
+	 * }finally{<br>
+	 * <font color="blue">// POST Filter</font><br>
+	 * }<br>
+	 * </code>
+	 * 
+	 * @param m
+	 * @throws Exception
+	 */
+	public void doCompositeChain(M m) throws Exception {
 		try {
 			this.doChain(m, PRE);
 		} catch (Throwable t) {
@@ -61,19 +82,26 @@ public class NeuralChain<M> {
 		}
 	}
 
+	/**
+	 * 执行指定类型的过滤器链
+	 * 
+	 * @param m
+	 * @param type 如果type为null则默认执行没有指定category属性的所有过滤器, 如果不为空则默认执行category中包含的特征属性过滤器
+	 * @throws Exception
+	 */
 	@SuppressWarnings("rawtypes")
 	public void doChain(M m, String... type) throws Exception {
-		List<Filter> filters = null;
+		List<Filter> tempFilters = null;
 		if (type == null || type.length == 0) {
-			filters = filterMap.get("");
+			tempFilters = filters.get("");
 		} else if (type.length == 1) {
-			filters = filterMap.get(type[0]);
+			tempFilters = filters.get(type[0]);
 		} else {
-			throw new IllegalArgumentException("tpye length:" + type.length);
+			throw new IllegalArgumentException("The illegal argument 'type' length:" + type.length);
 		}
 
-		FilterChain<M> filterChain = new FilterChain<M>(filters);
-		filterChain.doFilter(filterChain, m);
+		Chain<M> chain = new Chain<M>(tempFilters);
+		chain.doFilter(chain, m);
 	}
 
 }

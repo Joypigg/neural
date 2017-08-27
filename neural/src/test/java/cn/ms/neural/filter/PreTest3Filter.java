@@ -6,7 +6,7 @@ import cn.ms.neural.extension.Extension;
 public class PreTest3Filter extends Filter<Message> {
 	
 	@Override
-	public void doFilter(FilterChain<Message> chain, Message m) throws Exception {
+	public void doFilter(Chain<Message> chain, Message m) throws Exception {
 		System.out.println(this.getClass().getName());
 //		throw new RuntimeException();
 		chain.doFilter(chain, m);
