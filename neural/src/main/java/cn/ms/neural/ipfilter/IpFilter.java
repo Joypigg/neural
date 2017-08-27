@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * 
  * @author lry
  */
-public class IPWhiteList {
+public class IpFilter {
     
 	// IP的正则
 	public static Pattern pattern = Pattern.compile("(1\\d{1,2}|2[0-4]\\d|25[0-5]|\\d{1,2})\\."
@@ -19,20 +19,6 @@ public class IPWhiteList {
                     + "(1\\d{1,2}|2[0-4]\\d|25[0-5]|\\d{1,2})\\."
                     + "(1\\d{1,2}|2[0-4]\\d|25[0-5]|\\d{1,2})");
 
-    public static void main(String[] args) {
-        String ipWhilte = "192.168.1.1;" +                 //设置单个IP的白名单
-                          "192.168.2.*;" +                 //设置ip通配符,对一个ip段进行匹配
-                          "192.168.3.17-192.168.3.38";     //设置一个IP范围
-        boolean flag = IPWhiteList.checkLoginIP("192.168.2.2",ipWhilte);
-        boolean flag2 = IPWhiteList.checkLoginIP("192.168.1.2",ipWhilte);
-        boolean flag3 = IPWhiteList.checkLoginIP("192.168.3.16",ipWhilte);
-        boolean flag4 = IPWhiteList.checkLoginIP("192.168.3.17",ipWhilte);
-        System.out.println(flag);  //true
-        System.out.println(flag2);  //false
-        System.out.println(flag3);  //false
-        System.out.println(flag4);  //true
-    }
-    
     /**
      * 根据IP白名单设置获取可用的IP列表
      * 
