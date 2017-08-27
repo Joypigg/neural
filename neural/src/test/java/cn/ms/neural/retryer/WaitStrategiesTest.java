@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import cn.ms.neural.retryer.strategy.WaitStrategies;
 import cn.ms.neural.retryer.strategy.WaitStrategy;
+import cn.ms.neural.retryer.support.Attempt;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Sets;

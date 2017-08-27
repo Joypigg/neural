@@ -1,4 +1,4 @@
-package cn.ms.neural.retryer;
+package cn.ms.neural.retryer.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

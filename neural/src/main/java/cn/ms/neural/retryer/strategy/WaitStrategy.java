@@ -1,6 +1,6 @@
 package cn.ms.neural.retryer.strategy;
 
-import cn.ms.neural.retryer.Attempt;
+import cn.ms.neural.retryer.support.Attempt;
 
 /**
  * A strategy used to decide how long to sleep before retrying after a failed attempt.

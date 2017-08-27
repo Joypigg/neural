@@ -9,6 +9,7 @@ import cn.ms.neural.retryer.strategy.StopStrategies;
 import cn.ms.neural.retryer.strategy.StopStrategy;
 import cn.ms.neural.retryer.strategy.WaitStrategies;
 import cn.ms.neural.retryer.strategy.WaitStrategy;
+import cn.ms.neural.retryer.support.Attempt;
 import cn.ms.neural.retryer.support.AttemptTimeLimiter;
 import cn.ms.neural.retryer.support.AttemptTimeLimiters;
 

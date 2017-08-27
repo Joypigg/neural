@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import cn.ms.neural.retryer.Attempt;
+import cn.ms.neural.retryer.support.Attempt;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;

@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.ms.neural.retryer.strategy.StopStrategies;
 import cn.ms.neural.retryer.strategy.WaitStrategies;
+import cn.ms.neural.retryer.support.RetryException;
 
 import com.google.common.base.Predicates;
 

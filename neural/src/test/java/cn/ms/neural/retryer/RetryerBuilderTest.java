@@ -22,6 +22,8 @@ import cn.ms.neural.retryer.Retryer.RetryerCallable;
 import cn.ms.neural.retryer.strategy.BlockStrategy;
 import cn.ms.neural.retryer.strategy.StopStrategies;
 import cn.ms.neural.retryer.strategy.WaitStrategies;
+import cn.ms.neural.retryer.support.Attempt;
+import cn.ms.neural.retryer.support.RetryException;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;

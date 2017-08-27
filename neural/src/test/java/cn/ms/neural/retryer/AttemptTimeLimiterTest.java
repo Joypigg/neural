@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.ms.neural.retryer.support.AttemptTimeLimiters;
+import cn.ms.neural.retryer.support.RetryException;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 

@@ -1,6 +1,6 @@
 package cn.ms.neural.retryer.strategy;
 
-import cn.ms.neural.retryer.Attempt;
+import cn.ms.neural.retryer.support.Attempt;
 
 /**
  * A strategy used to decide if a retryer must stop retrying after a failed attempt or not.

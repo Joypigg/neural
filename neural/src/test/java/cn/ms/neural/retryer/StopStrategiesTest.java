@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import cn.ms.neural.retryer.strategy.StopStrategies;
+import cn.ms.neural.retryer.support.Attempt;
 
 public class StopStrategiesTest {
 

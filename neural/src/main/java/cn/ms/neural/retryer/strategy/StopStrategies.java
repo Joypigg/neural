@@ -2,7 +2,7 @@ package cn.ms.neural.retryer.strategy;
 
 import java.util.concurrent.TimeUnit;
 
-import cn.ms.neural.retryer.Attempt;
+import cn.ms.neural.retryer.support.Attempt;
 
 import com.google.common.base.Preconditions;
 
