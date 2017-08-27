@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import cn.ms.neural.Message;
+
 /**
  * PRO:1->3->2<br>
  * POST:2->1->3<br>

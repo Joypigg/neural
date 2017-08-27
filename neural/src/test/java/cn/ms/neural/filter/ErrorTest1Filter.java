@@ -1,5 +1,6 @@
 package cn.ms.neural.filter;
 
+import cn.ms.neural.Message;
 import cn.ms.neural.extension.Extension;
 
 @Extension(category = FilterChain.ERROR, order = 3)

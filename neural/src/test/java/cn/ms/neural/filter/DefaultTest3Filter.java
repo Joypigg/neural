@@ -1,5 +1,6 @@
 package cn.ms.neural.filter;
 
+import cn.ms.neural.Message;
 import cn.ms.neural.extension.Extension;
 
 @Extension(order = 1)
