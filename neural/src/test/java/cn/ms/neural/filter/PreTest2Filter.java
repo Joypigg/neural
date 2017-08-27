@@ -2,7 +2,7 @@ package cn.ms.neural.filter;
 
 import cn.ms.neural.extension.Extension;
 
-@Extension(category = NeuralChain.PRE, order = 3)
+@Extension(category = FilterChain.PRE, order = 3)
 public class PreTest2Filter extends Filter<Message> {
 	
 	@Override

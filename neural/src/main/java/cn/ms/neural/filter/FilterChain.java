@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import cn.ms.neural.extension.Extension;
 import cn.ms.neural.extension.ExtensionLoader;
 
-public class NeuralChain<M> {
+public class FilterChain<M> {
 
-	private Logger logger = LoggerFactory.getLogger(NeuralChain.class);
+	private Logger logger = LoggerFactory.getLogger(FilterChain.class);
 
 	public static final String PRE = "PRE";
 	public static final String POST = "POST";
@@ -22,7 +22,7 @@ public class NeuralChain<M> {
 	private final ConcurrentHashMap<String, List<Filter>> filters = new ConcurrentHashMap<String, List<Filter>>();
 
 	@SuppressWarnings("rawtypes")
-	public NeuralChain() {
+	public FilterChain() {
 		try {
 			List<Filter> filterList = ExtensionLoader.getLoader(Filter.class).getExtensions();
 			if (filterList.size() > 0) {

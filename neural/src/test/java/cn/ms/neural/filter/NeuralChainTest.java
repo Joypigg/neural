@@ -20,24 +20,24 @@ public class NeuralChainTest {
 	@Test
 	public void testDefaultFilter() {
 		try {
-			NeuralChain<Message> neuralChain = new NeuralChain<Message>();
-			for (Map.Entry<String, List<Filter>> entry : neuralChain.getFilters().entrySet()) {
+			FilterChain<Message> filterChain = new FilterChain<Message>();
+			for (Map.Entry<String, List<Filter>> entry : filterChain.getFilters().entrySet()) {
 				System.out.println(entry.getKey() + "--->" + entry.getValue());
 			}
 			System.out.println("===========");
-			neuralChain.doChain(new Message());
+			filterChain.doChain(new Message());
 			
 			System.out.println("===========");
-			neuralChain.doChain(new Message(), "PRE");
+			filterChain.doChain(new Message(), "PRE");
 			
 			System.out.println("===========");
-			neuralChain.doChain(new Message(), "POST");
+			filterChain.doChain(new Message(), "POST");
 			
 			System.out.println("===========");
-			neuralChain.doChain(new Message(), "ERROR");
+			filterChain.doChain(new Message(), "ERROR");
 			
 			System.out.println("===========");
-			neuralChain.doCompositeChain(new Message());			
+			filterChain.doCompositeChain(new Message());			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
