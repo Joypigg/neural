@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author lry
  *
  */
-public class NeuralChainTest {
+public class FilterChainTest {
 
 	@SuppressWarnings("rawtypes")
 	@Test
