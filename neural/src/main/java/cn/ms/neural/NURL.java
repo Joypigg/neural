@@ -39,10 +39,8 @@ public final class NURL implements Serializable {
     
     // ==== cache ====
     private volatile transient Map<String, Number> numbers;
-    private volatile transient Map<String, NURL> murls;
+    private volatile transient Map<String, NURL> nurls;
     private volatile transient String ip;
-    private volatile transient String full;
-    private volatile transient String identity;
     private volatile transient String parameter;
     private volatile transient String string;
     
@@ -397,15 +395,15 @@ public final class NURL implements Serializable {
         return numbers;
     }
 
-    private Map<String, NURL> getUrls() {
-        if (murls == null) { // 允许并发重复创建
-            murls = new ConcurrentHashMap<String, NURL>();
+    private Map<String, NURL> getNurls() {
+        if (nurls == null) { // 允许并发重复创建
+            nurls = new ConcurrentHashMap<String, NURL>();
         }
-        return murls;
+        return nurls;
     }
 
-    public NURL getUrlParameter(String key) {
-        NURL u = getUrls().get(key);
+    public NURL getNurlParameter(String key) {
+        NURL u = getNurls().get(key);
         if (u != null) {
             return u;
         }
@@ -414,7 +412,7 @@ public final class NURL implements Serializable {
             return null;
         }
         u = NURL.valueOf(value);
-        getUrls().put(key, u);
+        getNurls().put(key, u);
         return u;
     }
 
@@ -1064,24 +1062,10 @@ public final class NURL implements Serializable {
         return buildString(false, true, parameters); // no show username and password
     }
     
-    public String toIdentityString() {
-        if (identity != null) {
-            return identity;
-        }
-        return identity = buildString(true, false); // only return identity message, see the method "equals" and "hashCode"
-	}
-
     public String toIdentityString(String... parameters) {
         return buildString(true, false, parameters); // only return identity message, see the method "equals" and "hashCode"
     }
     
-	public String toFullString() {
-	    if (full != null) {
-	        return full;
-	    }
-		return full = buildString(true, true);
-	}
-
     public String toFullString(String... parameters) {
         return buildString(true, true, parameters);
     }
