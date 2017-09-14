@@ -3,40 +3,45 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>cn.ms</groupId>
-	<artifactId>neural-parent</artifactId>
+	<artifactId>neural</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
 
 	<name>The Micro Service Neural</name>
 	<description>The Micro Service Neural</description>
 
 	<properties>
+		<guava.version>20.0</guava.version>
+		<jedis.version>2.9.0</jedis.version>
+		<jackson.version>2.8.4</jackson.version>
+
 		<log4j2.version>2.7</log4j2.version>
 		<junit.version>4.12</junit.version>
 		<easymock.version>3.4</easymock.version>
-	</properties> 
-
-	<modules>
-		<module>neural</module>
-		<module>neural-ui</module>
-	</modules>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>cn.ms</groupId>
-				<artifactId>neural</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.ms</groupId>
-				<artifactId>neural-ui</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
+		<!-- limiter -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- jwt -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Log4J2 -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
