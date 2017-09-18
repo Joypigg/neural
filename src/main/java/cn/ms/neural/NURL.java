@@ -47,7 +47,7 @@ public final class NURL implements Serializable {
     public static final Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     private static final Pattern KVP_PATTERN = Pattern.compile("([_.a-zA-Z0-9][-_.a-zA-Z0-9]*)[=](.*)"); //key value pair pattern.
     
-    protected NURL() {
+	protected NURL() {
         this.protocol = null;
         this.username = null;
         this.password = null;
@@ -212,6 +212,10 @@ public final class NURL implements Serializable {
 		return host;
 	}
 	
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	
 	/**
 	 * 获取IP地址.
 	 * 
@@ -237,10 +241,6 @@ public final class NURL implements Serializable {
 	public int getPort() {
 		return port;
 	}
-
-    public int getPort(int defaultPort) {
-        return port <= 0 ? defaultPort : port;
-    }
 
 	public String getAddress() {
 	    return port <= 0 ? host : host + ":" + port;
