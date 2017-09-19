@@ -5,7 +5,7 @@ import io.neural.jwt.algorithms.Algorithm;
 import io.neural.jwt.algorithms.CryptoHelper;
 import io.neural.jwt.exceptions.SignatureGenerationException;
 import io.neural.jwt.exceptions.SignatureVerificationException;
-import io.neural.util.micro.Base64;
+import io.neural.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;

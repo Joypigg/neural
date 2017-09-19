@@ -4,7 +4,7 @@ import io.neural.jwt.DecodedJWT;
 import io.neural.jwt.algorithms.Algorithm;
 import io.neural.jwt.exceptions.SignatureGenerationException;
 import io.neural.jwt.exceptions.SignatureVerificationException;
-import io.neural.util.micro.Base64;
+import io.neural.util.Base64;
 
 public class NoneAlgorithm extends Algorithm {
 

@@ -11,7 +11,12 @@ import io.neural.jwt.support.ECDSAKeyProvider;
 import io.neural.jwt.support.RSAKeyProvider;
 
 import java.io.UnsupportedEncodingException;
-import java.security.interfaces.*;
+import java.security.interfaces.ECKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
+import java.security.interfaces.RSAKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
 /**
  * The Algorithm class represents an algorithm to be used in the Signing or Verification process of a Token.

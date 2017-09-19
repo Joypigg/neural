@@ -1,8 +1,8 @@
-package io.neural.util.micro;
+package io.neural.util;
 
 import java.io.FilterOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

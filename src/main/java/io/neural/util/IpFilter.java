@@ -1,4 +1,4 @@
-package io.neural.ipfilter;
+package io.neural.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;

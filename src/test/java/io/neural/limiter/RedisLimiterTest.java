@@ -1,8 +1,6 @@
 package io.neural.limiter;
 
 import io.neural.NURL;
-import io.neural.limiter.Limiter;
-import io.neural.limiter.LimiterRule;
 import io.neural.limiter.cluster.RedisLimiter;
 
 import org.junit.Test;

@@ -1,7 +1,5 @@
 package io.neural.extension;
 
-import io.neural.extension.ExtensionLoader;
-import io.neural.extension.NSPI;
 import io.neural.extension.prototype.NspiPrototype;
 import io.neural.extension.prototype.NspiPrototypeImpl2;
 import io.neural.extension.singleton.NspiSingleton;

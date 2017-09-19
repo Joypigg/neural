@@ -6,7 +6,7 @@ import io.neural.jwt.claim.PublicClaims;
 import io.neural.jwt.exceptions.JWTCreationException;
 import io.neural.jwt.exceptions.SignatureGenerationException;
 import io.neural.jwt.playload.PayloadSerializer;
-import io.neural.util.micro.Base64;
+import io.neural.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

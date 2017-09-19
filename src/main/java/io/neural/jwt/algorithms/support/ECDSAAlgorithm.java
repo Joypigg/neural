@@ -6,7 +6,7 @@ import io.neural.jwt.algorithms.CryptoHelper;
 import io.neural.jwt.exceptions.SignatureGenerationException;
 import io.neural.jwt.exceptions.SignatureVerificationException;
 import io.neural.jwt.support.ECDSAKeyProvider;
-import io.neural.util.micro.Base64;
+import io.neural.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;

@@ -1,12 +1,15 @@
 package io.neural.jwt.playload;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
+import static io.neural.jwt.claim.JsonNodeClaim.extractClaim;
 import io.neural.jwt.claim.Claim;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static io.neural.jwt.claim.JsonNodeClaim.extractClaim;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The PayloadImpl class implements the Payload interface.

@@ -1,7 +1,5 @@
 package io.neural.retryer;
 
-import io.neural.retryer.Retryer;
-import io.neural.retryer.RetryerBuilder;
 import io.neural.retryer.strategy.StopStrategies;
 import io.neural.retryer.strategy.WaitStrategies;
 import io.neural.retryer.support.RetryException;

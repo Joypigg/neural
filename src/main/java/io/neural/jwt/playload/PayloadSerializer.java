@@ -1,9 +1,5 @@
 package io.neural.jwt.playload;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
 import io.neural.jwt.claim.ClaimsHolder;
 import io.neural.jwt.claim.PublicClaims;
 
@@ -11,6 +7,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public class PayloadSerializer extends StdSerializer<ClaimsHolder> {
 

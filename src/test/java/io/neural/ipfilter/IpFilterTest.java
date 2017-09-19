@@ -1,6 +1,6 @@
 package io.neural.ipfilter;
 
-import io.neural.ipfilter.IpFilter;
+import io.neural.util.IpFilter;
 
 public class IpFilterTest {
 

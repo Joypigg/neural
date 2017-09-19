@@ -1,7 +1,7 @@
-package io.neural.router;
+package io.neural.util;
 
 import io.neural.NURL;
-import io.neural.util.micro.Store;
+import io.neural.util.Store;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;

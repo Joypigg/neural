@@ -5,7 +5,7 @@ import io.neural.jwt.exceptions.JWTDecodeException;
 import io.neural.jwt.header.Header;
 import io.neural.jwt.playload.Payload;
 import io.neural.jwt.support.TokenUtils;
-import io.neural.util.micro.Base64;
+import io.neural.util.Base64;
 
 import java.util.Date;
 import java.util.List;

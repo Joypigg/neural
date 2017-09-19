@@ -1,4 +1,4 @@
-package io.neural.util.micro;
+package io.neural.util;
 
 /**
  * 基于Twitter的分布式自增ID算法Snowflake实现分布式有序

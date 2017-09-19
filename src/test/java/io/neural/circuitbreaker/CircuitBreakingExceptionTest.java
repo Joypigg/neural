@@ -3,7 +3,6 @@ package io.neural.circuitbreaker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import io.neural.circuitbreaker.CircuitBreakingException;
 
 import org.junit.Test;
 

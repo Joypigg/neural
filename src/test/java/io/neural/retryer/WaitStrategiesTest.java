@@ -2,7 +2,6 @@ package io.neural.retryer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import io.neural.retryer.Retryer;
 import io.neural.retryer.strategy.WaitStrategies;
 import io.neural.retryer.strategy.WaitStrategy;
 import io.neural.retryer.support.Attempt;

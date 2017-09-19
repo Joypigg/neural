@@ -1,7 +1,5 @@
 package io.neural.retryer.support;
 
-import io.neural.retryer.support.AttemptTimeLimiters;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 

@@ -2,8 +2,6 @@ package io.neural.filter;
 
 import io.neural.Message;
 import io.neural.extension.Extension;
-import io.neural.filter.Chain;
-import io.neural.filter.Filter;
 
 @Extension(order = 3)
 public class DefaultTest1Filter extends Filter<Message> {

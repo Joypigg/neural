@@ -2,9 +2,6 @@ package io.neural.filter;
 
 import io.neural.Message;
 import io.neural.extension.Extension;
-import io.neural.filter.Chain;
-import io.neural.filter.Filter;
-import io.neural.filter.FilterChain;
 
 @Extension(category = FilterChain.ERROR, order = 3)
 public class ErrorTest1Filter extends Filter<Message> {

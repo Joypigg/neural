@@ -1,4 +1,4 @@
-package io.neural.util.micro;
+package io.neural.util;
 
 import java.util.HashMap;
 import java.util.Set;

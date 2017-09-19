@@ -1,10 +1,5 @@
 package io.neural.jwt;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-
 import io.neural.jwt.exceptions.JWTDecodeException;
 import io.neural.jwt.header.Header;
 import io.neural.jwt.header.HeaderDeserializer;
@@ -12,6 +7,11 @@ import io.neural.jwt.playload.Payload;
 import io.neural.jwt.playload.PayloadDeserializer;
 
 import java.io.IOException;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class JWTParser implements JWTPartsParser {
     

@@ -1,14 +1,13 @@
 package io.neural.jwt.header;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
+import static io.neural.jwt.claim.JsonNodeClaim.extractClaim;
 import io.neural.jwt.claim.Claim;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.neural.jwt.claim.JsonNodeClaim.extractClaim;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The BasicHeader class implements the Header interface.
