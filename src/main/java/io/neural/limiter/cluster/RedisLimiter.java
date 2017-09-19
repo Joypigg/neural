@@ -5,7 +5,7 @@ import io.neural.extension.Extension;
 import io.neural.limiter.LimiterRule;
 import io.neural.limiter.OptStatus;
 import io.neural.limiter.RuleData;
-import io.neural.util.BeanUtils;
+import io.neural.util.Beans;
 import io.neural.util.Store;
 
 import java.io.BufferedReader;
@@ -58,7 +58,7 @@ public class RedisLimiter extends ClusterLimiter {
 		try {
 			JedisPoolConfig config = new JedisPoolConfig();
 			Map<String, String> parameters = nurl.getParameters();
-			BeanUtils.copyMapToObj(parameters, config);
+			Beans.copyMapToObj(parameters, config);
 			jedisPool = new JedisPool(config, nurl.getHost(), nurl.getPort());
 			
 			LIMITER_SCRIPT = getScript(LIMITER_NAME);

@@ -12,7 +12,7 @@ import java.util.Map;
  * 
  * @author lry
  */
-public class BeanUtils {
+public class Beans {
 
 	/** 
      * Using reflection to realize the object to copy
