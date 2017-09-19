@@ -1,6 +1,6 @@
 package cn.ms.neural.extension.prototype;
 
-import cn.ms.neural.extension.NSPI;
+import io.neural.extension.NSPI;
 
 @NSPI
 public interface NspiPrototype {

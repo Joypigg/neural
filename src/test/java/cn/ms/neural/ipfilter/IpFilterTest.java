@@ -1,5 +1,7 @@
 package cn.ms.neural.ipfilter;
 
+import io.neural.ipfilter.IpFilter;
+
 public class IpFilterTest {
 
 	public static void main(String[] args) {

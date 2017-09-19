@@ -2,15 +2,15 @@ package cn.ms.neural.retryer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import io.neural.retryer.Retryer;
+import io.neural.retryer.strategy.WaitStrategies;
+import io.neural.retryer.strategy.WaitStrategy;
+import io.neural.retryer.support.Attempt;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-
-import cn.ms.neural.retryer.strategy.WaitStrategies;
-import cn.ms.neural.retryer.strategy.WaitStrategy;
-import cn.ms.neural.retryer.support.Attempt;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Sets;

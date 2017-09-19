@@ -2,13 +2,13 @@ package cn.ms.neural.retryer;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import io.neural.retryer.Retryer;
+import io.neural.retryer.strategy.StopStrategies;
+import io.neural.retryer.support.Attempt;
 
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-
-import cn.ms.neural.retryer.strategy.StopStrategies;
-import cn.ms.neural.retryer.support.Attempt;
 
 public class StopStrategiesTest {
 

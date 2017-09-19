@@ -1,6 +1,9 @@
 package cn.ms.neural.jwt;
 
-import cn.ms.neural.jwt.algorithms.Algorithm;
+import io.neural.jwt.DecodedJWT;
+import io.neural.jwt.JWT;
+import io.neural.jwt.JWTVerifier;
+import io.neural.jwt.algorithms.Algorithm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

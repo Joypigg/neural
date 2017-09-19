@@ -1,8 +1,8 @@
 package cn.ms.neural.extension.singleton;
 
-import java.util.concurrent.atomic.AtomicLong;
+import io.neural.extension.Extension;
 
-import cn.ms.neural.extension.Extension;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Extension("spiSingletonImpl")
 public class NspiSingletonImpl implements NspiSingleton {

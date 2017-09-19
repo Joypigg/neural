@@ -1,9 +1,11 @@
 package cn.ms.neural.limiter;
 
-import org.junit.Test;
+import io.neural.NURL;
+import io.neural.limiter.Limiter;
+import io.neural.limiter.LimiterRule;
+import io.neural.limiter.cluster.RedisLimiter;
 
-import cn.ms.neural.NURL;
-import cn.ms.neural.limiter.cluster.RedisLimiter;
+import org.junit.Test;
 
 public class RedisLimiterTest {
 

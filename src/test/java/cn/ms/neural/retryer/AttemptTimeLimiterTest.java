@@ -1,14 +1,16 @@
 package cn.ms.neural.retryer;
 
+import io.neural.retryer.Retryer;
+import io.neural.retryer.RetryerBuilder;
+import io.neural.retryer.support.AttemptTimeLimiters;
+import io.neural.retryer.support.RetryException;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.ms.neural.retryer.support.AttemptTimeLimiters;
-import cn.ms.neural.retryer.support.RetryException;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 

@@ -1,6 +1,6 @@
 package cn.ms.neural;
 
-import cn.ms.neural.util.micro.Base64;
+import io.neural.util.micro.Base64;
 
 public class Base64Test {
 

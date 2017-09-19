@@ -1,5 +1,7 @@
 package cn.ms.neural.limiter;
 
+import io.neural.limiter.injvm.TokenBucket;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,8 +9,6 @@ import java.io.OutputStreamWriter;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
-
-import cn.ms.neural.limiter.injvm.TokenBucket;
 
 public class TokenBucketTest {
 	

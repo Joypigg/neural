@@ -1,8 +1,8 @@
 package cn.ms.neural.extension.prototype;
 
-import java.util.concurrent.atomic.AtomicLong;
+import io.neural.extension.Extension;
 
-import cn.ms.neural.extension.Extension;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Extension("spiPrototypeImpl1")
 public class NspiPrototypeImpl1 implements NspiPrototype {

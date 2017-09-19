@@ -1,13 +1,15 @@
 package cn.ms.neural.retryer;
 
+import io.neural.retryer.Retryer;
+import io.neural.retryer.RetryerBuilder;
+import io.neural.retryer.strategy.StopStrategies;
+import io.neural.retryer.strategy.WaitStrategies;
+import io.neural.retryer.support.RetryException;
+
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-
-import cn.ms.neural.retryer.strategy.StopStrategies;
-import cn.ms.neural.retryer.strategy.WaitStrategies;
-import cn.ms.neural.retryer.support.RetryException;
 
 import com.google.common.base.Predicates;
 

@@ -1,6 +1,6 @@
 package cn.ms.neural.extension.singleton;
 
-import cn.ms.neural.extension.NSPI;
+import io.neural.extension.NSPI;
 
 @NSPI(single = true)
 public interface NspiSingleton {

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import io.neural.circuitbreaker.EventCountCircuitBreaker;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -337,7 +338,7 @@ public class EventCountCircuitBreakerTest {
          * method.
          */
         @Override
-        long now() {
+       public long now() {
             return currentTime;
         }
     }

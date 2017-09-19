@@ -1,7 +1,10 @@
 package cn.ms.neural.filter;
 
-import cn.ms.neural.Message;
-import cn.ms.neural.extension.Extension;
+import io.neural.Message;
+import io.neural.extension.Extension;
+import io.neural.filter.Chain;
+import io.neural.filter.Filter;
+import io.neural.filter.FilterChain;
 
 @Extension(category = FilterChain.POST, order = 1)
 public class PostTest2Filter extends Filter<Message> {

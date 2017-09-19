@@ -1,5 +1,8 @@
 package cn.ms.neural.extension;
 
+import io.neural.extension.ExtensionLoader;
+import io.neural.extension.NSPI;
+
 import java.util.List;
 
 import org.junit.Assert;
