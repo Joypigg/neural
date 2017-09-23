@@ -1,4 +1,4 @@
-package io.neural.util;
+package io.neural.micro;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;

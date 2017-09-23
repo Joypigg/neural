@@ -1,4 +1,4 @@
-package io.neural.util;
+package io.neural.micro;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,6 +1,5 @@
 package io.neural.filter;
 
-import io.neural.Message;
 import io.neural.extension.Extension;
 
 @Extension(category = FilterChain.ERROR, order = 1)

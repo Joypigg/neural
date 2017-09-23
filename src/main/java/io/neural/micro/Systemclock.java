@@ -1,4 +1,4 @@
-package io.neural.util;
+package io.neural.micro;
 
 import java.sql.Timestamp;
 import java.util.concurrent.Executors;

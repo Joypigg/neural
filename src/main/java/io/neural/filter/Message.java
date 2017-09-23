@@ -1,4 +1,4 @@
-package io.neural;
+package io.neural.filter;
 
 public class Message {
 

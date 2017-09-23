@@ -1,6 +1,6 @@
 package io.neural;
 
-import io.neural.util.Base64;
+import io.neural.micro.Base64;
 
 public class Base64Test {
 

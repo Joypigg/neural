@@ -1,6 +1,6 @@
 package io.neural.limiter;
 
-import io.neural.util.Store;
+import io.neural.micro.Store;
 
 import java.util.HashMap;
 import java.util.Map;

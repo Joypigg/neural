@@ -1,4 +1,4 @@
-package io.neural.util;
+package io.neural.micro;
 
 import java.io.Closeable;
 import java.io.IOException;

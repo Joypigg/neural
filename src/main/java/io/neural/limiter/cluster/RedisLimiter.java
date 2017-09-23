@@ -5,8 +5,8 @@ import io.neural.extension.Extension;
 import io.neural.limiter.LimiterRule;
 import io.neural.limiter.OptStatus;
 import io.neural.limiter.RuleData;
-import io.neural.util.Beans;
-import io.neural.util.Store;
+import io.neural.micro.Beans;
+import io.neural.micro.Store;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

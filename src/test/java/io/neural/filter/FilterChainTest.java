@@ -1,7 +1,5 @@
 package io.neural.filter;
 
-import io.neural.Message;
-
 import java.util.List;
 import java.util.Map;
 
