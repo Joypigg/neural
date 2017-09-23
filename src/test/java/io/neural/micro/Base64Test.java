@@ -1,4 +1,4 @@
-package io.neural;
+package io.neural.micro;
 
 import io.neural.micro.Base64;
 

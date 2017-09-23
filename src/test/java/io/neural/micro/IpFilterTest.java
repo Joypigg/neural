@@ -1,4 +1,4 @@
-package io.neural.ipfilter;
+package io.neural.micro;
 
 import io.neural.micro.IpFilter;
 
