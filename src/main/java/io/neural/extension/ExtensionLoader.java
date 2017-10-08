@@ -34,7 +34,9 @@ public class ExtensionLoader<T> {
     private Class<T> type;
     private ClassLoader classLoader;
     private volatile boolean init = false;
-    private static final String PREFIX = "META-INF/services/";
+    private static final String PREFIX_DEFAULT = "META-INF/";
+    private static final String PREFIX_NEURALS = "META-INF/neurals/";
+    private static final String PREFIX_SERVICES = "META-INF/services/";
     private ConcurrentMap<String, T> singletonInstances = null;
     private ConcurrentMap<String, Class<T>> extensionClasses = null;
     private static ConcurrentMap<Class<?>, ExtensionLoader<?>> extensionLoaders = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
@@ -147,7 +149,16 @@ public class ExtensionLoader<T> {
             return;
         }
 
-        extensionClasses = loadExtensionClasses(PREFIX);
+		extensionClasses = this.loadExtensionClasses(PREFIX_DEFAULT);
+		ConcurrentMap<String, Class<T>> neuralExtensionClasses = this.loadExtensionClasses(PREFIX_NEURALS);
+		if (!neuralExtensionClasses.isEmpty()) {
+			extensionClasses.putAll(neuralExtensionClasses);
+		}
+		ConcurrentMap<String, Class<T>> serviceExtensionClasses = this.loadExtensionClasses(PREFIX_SERVICES);
+		if (!serviceExtensionClasses.isEmpty()) {
+			extensionClasses.putAll(serviceExtensionClasses);
+		}
+        
         singletonInstances = new ConcurrentHashMap<String, T>();
         init = true;
     }

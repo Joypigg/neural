@@ -47,7 +47,7 @@ public class ExtensionLoaderTest {
             ExtensionLoader.getLoader(NotSpiInterface.class);
             Assert.assertTrue(false);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("without @NSPI annotation"));
+            Assert.assertTrue(e.getMessage().contains("without @NPI annotation"));
         }
 
         Assert.assertNull(ExtensionLoader.getLoader(SpiWithoutImpl.class).getExtension("default"));
