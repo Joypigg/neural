@@ -18,7 +18,7 @@
 http://www.51testing.com/html/87/n-3719887.html
 
 
-## 1 NSPI
+## 1 NPI
 ### 1.1 JDK中SPI缺陷
 
 + JDK标准的SPI会一次性实例化扩展点所有实现，如果有扩展实现初始化很耗时，但如果没用上也加载，会很浪费资源
@@ -27,7 +27,7 @@ http://www.51testing.com/html/87/n-3719887.html
 + 不支持实现类分组
 + 不支持单例/多例的选择
 
-### 1.2 NSPI功能特性
+### 1.2 NPI功能特性
 
 + 支持自定义实现类为单例/多例
 
@@ -49,7 +49,7 @@ http://www.51testing.com/html/87/n-3719887.html
 package cn.ms.neural.demo;
 
 //第一步：定义接口
-@NSPI
+@NPI
 public interface IDemo {}
 
 //第二步：定义接口实现类

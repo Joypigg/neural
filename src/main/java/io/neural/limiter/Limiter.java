@@ -1,7 +1,7 @@
 package io.neural.limiter;
 
 import io.neural.NURL;
-import io.neural.extension.NSPI;
+import io.neural.extension.NPI;
 
 /**
  * The Current limiter <br>
@@ -12,7 +12,7 @@ import io.neural.extension.NSPI;
  * 
  * @author lry
  */
-@NSPI
+@NPI
 public interface Limiter {
 
 	boolean start(NURL nurl);

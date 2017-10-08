@@ -1,20 +1,21 @@
-package io.neural.extension.singleton;
+package io.neural.extension.prototype;
 
 import io.neural.extension.Extension;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-@Extension("spiSingletonImpl")
-public class NspiSingletonImpl implements NspiSingleton {
+@Extension("spiPrototypeImpl2")
+public class NpiPrototypeImpl2 implements NpiPrototype {
     private static AtomicLong counter = new AtomicLong(0);
     private long index = 0;
 
-    public NspiSingletonImpl() {
+    public NpiPrototypeImpl2() {
         index = counter.incrementAndGet();
     }
 
     @Override
     public long spiHello() {
+        System.out.println("SpiPrototypeTestImpl_" + index + " say hello");
         return index;
     }
 

@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <b>NSPI</b><br>
+ * <b>NPI</b><br>
  * <font color="red"><br>
  * <b>功能特性：</b><br>
  * 1.支持自定义实现类为单例/多例<br>
@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-public @interface NSPI {
+public @interface NPI {
 
 	/** 自定义默认的实现类ID **/
 	String value() default "";

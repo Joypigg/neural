@@ -58,15 +58,15 @@ public class ExtensionLoader<T> {
     public T getExtension() {
     	this.checkInit();
     	 
-    	NSPI nspi = type.getAnnotation(NSPI.class);
-    	if(nspi.value() == null || nspi.value().length() == 0){
-        	throw new RuntimeException(type.getName() + ": The default implementation ID(@NSPI.value()) is not set");
+    	NPI npi = type.getAnnotation(NPI.class);
+    	if(npi.value() == null || npi.value().length() == 0){
+        	throw new RuntimeException(type.getName() + ": The default implementation ID(@NPI.value()) is not set");
         } else {
         	try {
-                if (nspi.single()) {
-                    return this.getSingletonInstance(nspi.value());
+                if (npi.single()) {
+                    return this.getSingletonInstance(npi.value());
                 } else {
-                    Class<T> clz = extensionClasses.get(nspi.value());
+                    Class<T> clz = extensionClasses.get(npi.value());
                     if (clz == null) {
                         return null;
                     }
@@ -86,8 +86,8 @@ public class ExtensionLoader<T> {
         }
 
         try {
-            NSPI nspi = type.getAnnotation(NSPI.class);
-            if (nspi.single()) {
+            NPI npi = type.getAnnotation(NPI.class);
+            if (npi.single()) {
                 return this.getSingletonInstance(name);
             } else {
                 Class<T> clz = extensionClasses.get(name);
@@ -132,12 +132,12 @@ public class ExtensionLoader<T> {
 
         checkInit();
         checkExtensionType(clz);
-        String nspiName = getSpiName(clz);
+        String npiName = getSpiName(clz);
         synchronized (extensionClasses) {
-            if (extensionClasses.containsKey(nspiName)) {
-            	throw new RuntimeException(clz.getName() + ": Error nspiName already exist " + nspiName);
+            if (extensionClasses.containsKey(npiName)) {
+            	throw new RuntimeException(clz.getName() + ": Error npiName already exist " + npiName);
             } else {
-                extensionClasses.put(nspiName, clz);
+                extensionClasses.put(npiName, clz);
             }
         }
     }
@@ -161,8 +161,8 @@ public class ExtensionLoader<T> {
         if (type == null) {
         	throw new RuntimeException("Error extension type is null");
         }
-        if (!type.isAnnotationPresent(NSPI.class)) {
-        	throw new RuntimeException(type.getName() + ": Error extension type without @NSPI annotation");
+        if (!type.isAnnotationPresent(NPI.class)) {
+        	throw new RuntimeException(type.getName() + ": Error extension type without @NPI annotation");
         }
         
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
@@ -194,11 +194,11 @@ public class ExtensionLoader<T> {
     }
     
     /**
-     * 有些地方需要nspi的所有激活的instances，所以需要能返回一个列表的方法<br>
+     * 有些地方需要npi的所有激活的instances，所以需要能返回一个列表的方法<br>
      * <br>
      * 注意：<br>
      * 1 SpiMeta 中的active 为true<br> 
-     * 2 按照nspiMeta中的order进行排序 <br>
+     * 2 按照npiMeta中的order进行排序 <br>
      * <br>
      * FIXME： 是否需要对singleton来区分对待，后面再考虑 fishermen
      * 
@@ -312,14 +312,14 @@ public class ExtensionLoader<T> {
                 }
 
                 this.checkExtensionType(clz);
-                String nspiName = this.getSpiName(clz);
-                if (map.containsKey(nspiName)) {
-                    throw new RuntimeException(clz.getName() + ": Error nspiName already exist " + nspiName);
+                String npiName = this.getSpiName(clz);
+                if (map.containsKey(npiName)) {
+                    throw new RuntimeException(clz.getName() + ": Error npiName already exist " + npiName);
                 } else {
-                    map.put(nspiName, clz);
+                    map.put(npiName, clz);
                 }
             } catch (Exception e) {
-            	logger.error(type.getName() + ": Error load nspi class", e);
+            	logger.error(type.getName() + ": Error load npi class", e);
             }
         }
 
@@ -346,7 +346,7 @@ public class ExtensionLoader<T> {
                 this.parseLine(type, url, line, indexNumber, classNames);
             }
         } catch (Exception e) {
-        	logger.error(type.getName() + ": Error reading nspi configuration file", e);
+        	logger.error(type.getName() + ": Error reading npi configuration file", e);
         } finally {
             try {
                 if (reader != null) {
@@ -356,7 +356,7 @@ public class ExtensionLoader<T> {
                     inputStream.close();
                 }
             } catch (IOException e) {
-            	logger.error(type.getName() + ": Error closing nspi configuration file", e);
+            	logger.error(type.getName() + ": Error closing npi configuration file", e);
             }
         }
     }
@@ -373,18 +373,18 @@ public class ExtensionLoader<T> {
         }
 
         if ((line.indexOf(' ') >= 0) || (line.indexOf('\t') >= 0)) {
-        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi configuration-file syntax: " + line);
+        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal npi configuration-file syntax: " + line);
         }
 
         int cp = line.codePointAt(0);
         if (!Character.isJavaIdentifierStart(cp)) {
-            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi provider-class name: " + line);
+            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal npi provider-class name: " + line);
         }
 
         for (int i = Character.charCount(cp); i < line.length(); i += Character.charCount(cp)) {
             cp = line.codePointAt(i);
             if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
-                throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal nspi provider-class name: " + line);
+                throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal npi provider-class name: " + line);
             }
         }
 

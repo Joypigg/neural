@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * NSPI有多个实现时，可以根据条件进行过滤、排序后再返回。
+ * NPI有多个实现时，可以根据条件进行过滤、排序后再返回。
  *  
  * @author lry
  */
@@ -22,7 +22,7 @@ public @interface Extension {
     /** order号越小，在返回的list<Instance>中的位置越靠前 */
 	int order() default 20;
 
-	/** NSPI的category，获取NSPI列表时，根据category进行匹配，当category中存在待过滤的search-category时，匹配成功 */
+	/** NPI的category，获取NPI列表时，根据category进行匹配，当category中存在待过滤的search-category时，匹配成功 */
 	String[] category() default "";
     
 }

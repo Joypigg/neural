@@ -1,6 +1,6 @@
 package io.neural.filter;
 
-import io.neural.extension.NSPI;
+import io.neural.extension.NPI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  *
  * @param <M>
  */
-@NSPI
+@NPI
 public abstract class Filter<M> {
 
 	private final static Logger logger = LoggerFactory.getLogger(Filter.class);

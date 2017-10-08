@@ -1,15 +1,15 @@
-package io.neural.extension.prototype;
+package io.neural.extension.singleton;
 
 import io.neural.extension.Extension;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-@Extension("spiPrototypeImpl1")
-public class NspiPrototypeImpl1 implements NspiPrototype {
+@Extension("spiSingletonImpl")
+public class NpiSingletonImpl implements NpiSingleton {
     private static AtomicLong counter = new AtomicLong(0);
     private long index = 0;
 
-    public NspiPrototypeImpl1() {
+    public NpiSingletonImpl() {
         index = counter.incrementAndGet();
     }
 
