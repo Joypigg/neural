@@ -29,6 +29,10 @@ public class NUUID {
 	private static final int MIN_RADIX = 2;// 支持的最小进制数
 	private static final int MAX_RADIX = digits.length;// 支持的最大进制数
 
+	public static void main(String[] args) {
+		System.out.println(NUUID.randomUUIDBase64());
+	}
+	
 	/**
 	 * 获取36位UUID(原生UUID)
 	 * 
@@ -82,72 +86,75 @@ public class NUUID {
 	public static long randomUUID15Long() {
 		return toNumber(randomUUID15(), 10);
 	}
+	
+	public static String randomUUIDBase64() {
+		UUID uuid = UUID.randomUUID();
+		byte[] byUuid = new byte[16];
+		long least = uuid.getLeastSignificantBits();
+		long most = uuid.getMostSignificantBits();
+		long2bytes(most, byUuid, 0);
+		long2bytes(least, byUuid, 8);
+
+		return Base64.getEncoder().encodeToString(byUuid);
+	}
+
+	private static void long2bytes(long value, byte[] bytes, int offset) {
+		for (int i = 7; i > -1; i--) {
+			bytes[offset++] = (byte) ((value >> 8 * i) & 0xFF);
+		}
+	}
 
 	/**
 	 * 将字符串转换为长整型数字
 	 *
-	 * @param s
-	 *            数字字符串
-	 * @param radix
-	 *            进制数
+	 * @param s 数字字符串
+	 * @param radix 进制数
 	 * @return
 	 */
 	public static long toNumber(String s, int radix) {
 		if (s == null) {
 			throw new NumberFormatException("null");
 		}
-
 		if (radix < MIN_RADIX) {
-			throw new NumberFormatException("radix " + radix
-					+ " less than Numbers.MIN_RADIX");
+			throw new NumberFormatException("radix " + radix + " less than Numbers.MIN_RADIX");
 		}
 		if (radix > MAX_RADIX) {
-			throw new NumberFormatException("radix " + radix
-					+ " greater than Numbers.MAX_RADIX");
+			throw new NumberFormatException("radix " + radix + " greater than Numbers.MAX_RADIX");
 		}
 
-		long result = 0;
 		boolean negative = false;
-		int i = 0, len = s.length();
-		long limit = -Long.MAX_VALUE;
-		long multmin;
-		Integer digit;
-
-		if (len > 0) {
-			char firstChar = s.charAt(0);
-			if (firstChar < '0') {
-				if (firstChar == '-') {
-					negative = true;
-					limit = Long.MIN_VALUE;
-				} else if (firstChar != '+')
-					throw forInputString(s);
-
-				if (len == 1) {
-					throw forInputString(s);
-				}
-				i++;
-			}
-			multmin = limit / radix;
-			while (i < len) {
-				digit = digitMap.get(s.charAt(i++));
-				if (digit == null) {
-					throw forInputString(s);
-				}
-				if (digit < 0) {
-					throw forInputString(s);
-				}
-				if (result < multmin) {
-					throw forInputString(s);
-				}
-				result *= radix;
-				if (result < limit + digit) {
-					throw forInputString(s);
-				}
-				result -= digit;
-			}
-		} else {
+		Integer digit, i = 0, len = s.length();
+		long result = 0, limit = -Long.MAX_VALUE, multmin;
+		if (len <= 0) {
 			throw forInputString(s);
 		}
+		
+		char firstChar = s.charAt(0);
+		if (firstChar < '0') {
+			if (firstChar == '-') {
+				negative = true;
+				limit = Long.MIN_VALUE;
+			} else if (firstChar != '+'){
+				throw forInputString(s);
+			}
+			if (len == 1) {
+				throw forInputString(s);
+			}
+			i++;
+		}
+		multmin = limit / radix;
+		while (i < len) {
+			digit = digitMap.get(s.charAt(i++));
+			if (digit == null || digit < 0 || result < multmin) {
+				throw forInputString(s);
+			}
+			result *= radix;
+			if (result < limit + digit) {
+				throw forInputString(s);
+			}
+			result -= digit;
+		}
+		
 		return negative ? result : -result;
 	}
 
@@ -230,8 +237,7 @@ public class NUUID {
 				}
 			}
 
-			return hexString + str.charAt(pixOne) + str.charAt(pixTwo)
-					+ str.charAt(pixThree) + str.charAt(pixFour);
+			return hexString + str.charAt(pixOne) + str.charAt(pixTwo) + str.charAt(pixThree) + str.charAt(pixFour);
 		}
 	}
 
