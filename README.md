@@ -2,51 +2,41 @@
 
 [TOC]
 
+**作者**：echo(李景枫/李茹钰)
 
-微服务架构中的神经组织，主要为分布式架构提供了集群容错的三大利刃：限流、降级和熔断。 
+微服务架构中的神经组织，主要为分布式架构提供了集群容错的三大利刃：限流、降级和熔断。并同时提供了SPI、过滤器、JWT、重试机制、插件机制。此外还提供了很多小的黑科技(如：IP黑白名单、UUID加强版、Snowflake和大并发时间戳获取等)。
 
-微服务基础设施<font color="red">QQ交流群：191958521</font>
-
-
-微服务的可靠性：
-1 流量限流
-2 集群容错
-	2.1 路由容错：失败重试、失败切换
-	2.2 服务降级：容错降级
-	2.3 熔断隔离
-
-http://www.51testing.com/html/87/n-3719887.html
+**QQ交流群**：<font color="red">191958521</font>(微服务基础设施)
 
 
 ## 1 NPI
 ### 1.1 JDK中SPI缺陷
 
-+ JDK标准的SPI会一次性实例化扩展点所有实现，如果有扩展实现初始化很耗时，但如果没用上也加载，会很浪费资源
-+ 不支持扩展点的IoC和AOP
-+ 不支持实现排序
-+ 不支持实现类分组
-+ 不支持单例/多例的选择
+- JDK标准的SPI会一次性实例化扩展点所有实现，如果有扩展实现初始化很耗时，但如果没用上也加载，会很浪费资源
+- 不支持扩展点的IoC和AOP
+- 不支持实现排序
+- 不支持实现类分组
+- 不支持单例/多例的选择
 
 ### 1.2 NPI功能特性
 
-+ 支持自定义实现类为单例/多例
+- 支持自定义实现类为单例/多例
+- 支持设置默认的实现类
+- 支持实现类order排序
+- 支持实现类定义特征属性category，用于区分多维度的不同类别
+- 支持根据category属性值来搜索实现类
+- 支持自动扫描实现类
+- 支持手动添加实现类
+- 支持获取所有实现类
+- 支持只创建所需实现类，解决JDK原生的全量方式
+- 支持自定义ClassLoader来加载class
 
-* 支持设置默认的实现类
-* 支持实现类order排序
-* 支持实现类定义特征属性category，用于区分多维度的不同类别
-* 支持根据category属性值来搜索实现类
-* 支持自动扫描实现类
-* 支持手动添加实现类
-* 支持获取所有实现类
-* 支持只创建所需实现类，解决JDK原生的全量方式
-* 支持自定义ClassLoader来加载class
-
-+ **TODO：**需要实现对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点。
+**TODO**：需要实现对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点。
 
 ### 1.3 使用方式
 
 ```java
-package cn.ms.neural.demo;
+package io.neural.demo;
 
 //第一步：定义接口
 @NPI
@@ -59,7 +49,7 @@ public class Demo1Impl implements IDemo {}
 public class Demo2Impl implements IDemo {}
 
 //第三步：使用接口全路径（包名+类名）创建接口资源文件
-src/main/resources/META-INF/services/cn.ms.neural.demo.IDemo
+src/main/resources/META-INF/neural/cn.ms.neural.demo.IDemo
 
 //第四步：在接口资源文件中写入实现类全路径（包名+类名）
 cn.ms.neural.demo.Demo1Impl
@@ -69,7 +59,6 @@ cn.ms.neural.demo.Demo2Impl
 IDemo demo1 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo1");
 IDemo demo2 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo2");
 ```
-
 
 
 ## 2 限流（Limiter）
@@ -94,8 +83,7 @@ RateLimiter limiter = RateLimiter.create(10.0); // 每秒不超过10个任务被
 limiter.acquire(); // 请求RateLimite
 ```
 
-### 2.2 cluster模式
-
+### 2.2 cluster模式（待完成）
 分布式限流主要适用于保护集群的安全或者用于严格控制用户的请求量（API经济）。
 
 
@@ -104,16 +92,14 @@ limiter.acquire(); // 请求RateLimite
 在分布式架构中，熔断的场景主要分为两种：injvm模式和cluster模式。
 
 ### 3.1事件统计熔断器（EventCountCircuitBreaker）
-
 在指定时间周期内根据事件发生的次数来实现精简版熔断器。如10秒之内触发5次事件，则进行熔断。
 
 ### 3.2 门限熔断器（ThresholdCircuitBreaker）
+TODO
 
 
-
-## 4 降级（Degrade）
+## 4 降级（Degrade）（待完成）
 服务降级是指当服务器压力剧增时，根据当前业务情况及流量对一些服务和页面有策略的降级，以此缓解了服务器资源压力，以保证核心任务的正常运行，同时也保证了部分甚至大部分客户得到正确响应。
-
 
 ### 4.1 管理方式
 #### 4.1.1 直觉管理方式：运维人员可以指定哪些模块降级
@@ -123,24 +109,15 @@ limiter.acquire(); // 请求RateLimite
 业务确定好对应业务的优先级别，指定好分级降级方案。当服务器检测到压力增大，服务检测自动发送通知给运维人员。运维人员根据情况选择运行等级。
 
 
-
-
 ## 5 重试（Retryer）
-
 ### 5.1 重试策略
-
 #### 5.1.1 块策略（BlockStrategy）
-
 使当前线程使用Thread.sleep()的方式进行休眠重试。
 
 #### 5.1.2 停止策略（StopStrategy）
 
 + NeverStopStrategy：从不停止策略
-
-
 + StopAfterAttemptStrategy：尝试后停止策略
-
-
 + StopAfterDelayStrategy：延迟后停止策略
 
 #### 5.1.3 等待策略（WaitStrategy）
@@ -154,7 +131,6 @@ limiter.acquire(); // 请求RateLimite
 + ExceptionWaitStrategy：异常等待策略
 
 ### 5.2 指定结果重试
-
 retryIfResult(Predicate< V> resultPredicate)：设置重试不满足条件的结果
 
 eg：如果返回结果为空则重试：retryIfResult(Predicates.< Boolean>isNull())
@@ -167,9 +143,30 @@ eg：如果返回结果为空则重试：retryIfResult(Predicates.< Boolean>isNu
 + retryIfException(Predicate< Throwable> exceptionPredicate) ：自定义过滤后的异常重试
 
 ### 5.4 重试监听器（RetryListener）
-
 withRetryListener(RetryListener listener)：添加重试监听器
 
 ### 5.5 尝试时间限制器（AttemptTimeLimiter）
-
 withAttemptTimeLimiter(AttemptTimeLimiter< V> attemptTimeLimiter)：添加尝试时间限制器
+
+## 6 JWT（JSON Web Token）
+功能来源于java-jwt项目，但有一定的调整，后续会继续简化。
+
+## 7 过滤器（Filter）
+基于@NPI扩展方式和责任链模式实现的过滤器机制。
+
+## 8 Micro
+
+- Base64：高性能的Base64生成算法
+- Beans：精简版资源拷贝
+- ConcurrentHashSet：基于ConcurrentHashMap实现的ConcurrentHashSet，线程安全
+- IpFilter：IP黑白名单过滤器
+- MultiHashMap：基于HashMap实现的三元Map
+- NUUID：UUID扩展版。支持36/32/22/19位的UUID生成方式(不牺牲精度)。牺牲一定精度后的15位超短UUID
+- Perf：性能测试工具
+- Snowflake：基于Snowflake算法实现的高性能Long型ID生成器。理论QPS > 400w/s
+- Systemclock：解决大并发场景中获取System.currentTimeMillis()的性能问题
+
+
+## 9 Plugin（待完成）
+TODO
+
