@@ -15,28 +15,46 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class RateLimiter {
 
-	public static final double TIME_GRIT = SECONDS.toMicros(1L);
-	protected volatile double timeGrit = TIME_GRIT;
+	public static final long TIME_GRIT = 1L;
+	protected volatile double timeGritSecond;
 	
-	public static RateLimiter create(double permitsPerSecond) {
-		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond);
+	protected final double getTimeGritSecond() {
+		return timeGritSecond;
+	}
+	
+	private final void setTimeGritSecond(long timeGritSecond) {
+		this.timeGritSecond = SECONDS.toMicros(timeGritSecond);
+	}
+	
+	public static RateLimiter create(long permitsPerSecond) {
+		return create(permitsPerSecond, TIME_GRIT);
+	}
+	
+	public static RateLimiter create(double permitsPerSecond, long timeGritSecond) {
+		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond, timeGritSecond);
 	}
 
-	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond) {
+	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long timeGritSecond) {
 		RateLimiter rateLimiter = new SmoothBursty(stopwatch, 1.0);
+		rateLimiter.setTimeGritSecond(timeGritSecond);
 		rateLimiter.setRate(permitsPerSecond);
 		return rateLimiter;
 	}
 
 	public static RateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit) {
+		return create(permitsPerSecond, warmupPeriod, unit, TIME_GRIT);
+	}
+	
+	public static RateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit, long timeGritSecond) {
 		if (warmupPeriod < 0) {
 			throw new IllegalArgumentException(String.format("warmupPeriod must not be negative: %s", warmupPeriod));
 		}
-		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond, warmupPeriod, unit, 3.0);
+		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond, warmupPeriod, unit, 3.0, timeGritSecond);
 	}
 
-	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long warmupPeriod, TimeUnit unit, double coldFactor) {
+	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long warmupPeriod, TimeUnit unit, double coldFactor, long timeGritSecond) {
 		RateLimiter rateLimiter = new SmoothWarmingUp(stopwatch, warmupPeriod, unit, coldFactor);
+		rateLimiter.setTimeGritSecond(timeGritSecond);
 		rateLimiter.setRate(permitsPerSecond);
 		return rateLimiter;
 	}
