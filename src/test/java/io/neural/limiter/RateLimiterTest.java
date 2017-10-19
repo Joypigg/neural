@@ -91,5 +91,13 @@ public class RateLimiterTest {
 			System.out.println(limiter.acquire());
 		}
 	}
+	
+	@Test
+	public void testTry() throws Exception {
+		RateLimiter rateLimiter = RateLimiter.create(1);
+		for (int i = 0; i < 10; i++) {
+			System.out.println(rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS));	
+		}
+	}
 
 }
