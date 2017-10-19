@@ -108,7 +108,7 @@ public abstract class RateLimiter {
 	public double acquire(int permits) {
 		long microsToWait = reserve(permits);
 		stopwatch.sleepMicrosUninterruptibly(microsToWait);
-		return 1.0 * microsToWait / SECONDS.toMicros(1L); //TODO
+		return 1.0 * microsToWait / SECONDS.toMicros(1L);
 	}
 	
 	final long reserve(int permits) {
