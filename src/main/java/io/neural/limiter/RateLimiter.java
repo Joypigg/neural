@@ -135,7 +135,9 @@ public abstract class RateLimiter {
 		checkPermits(permits);
 		long microsToWait;
 		synchronized (mutex()) { // 应对并发情况需要同步
+			System.out.println("t1:"+System.currentTimeMillis());
 			long nowMicros = stopwatch.readMicros();
+			System.out.println("t2:"+System.currentTimeMillis());
 			if (!canAcquire(nowMicros, timeoutMicros)) {
 				return false;
 			} else {
