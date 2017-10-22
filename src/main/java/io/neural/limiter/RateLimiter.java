@@ -13,6 +13,11 @@ import io.neural.limiter.SmoothRateLimiter.SmoothWarmingUp;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 支持设置时间窗大小(默认为1秒)
+ * 
+ * @author lry
+ */
 public abstract class RateLimiter {
 
 	public static final long TIME_GRIT = 1L;
