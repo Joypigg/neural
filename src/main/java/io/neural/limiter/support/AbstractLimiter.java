@@ -11,6 +11,7 @@ public abstract class AbstractLimiter implements ILimiter {
 
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractLimiter.class);
 	
+	protected LimiterConfig config = null;
 	protected volatile boolean isStart = false;
 	private final AtomicLong nowConcurrentCount = new AtomicLong(0);
 	
@@ -21,7 +22,12 @@ public abstract class AbstractLimiter implements ILimiter {
 
 	@Override
 	public void initialize() {
-		
+		this.isStart = true;
+	}
+	
+	@Override
+	public void refresh(LimiterConfig config) {
+		this.config = config;
 	}
 
 	@Override

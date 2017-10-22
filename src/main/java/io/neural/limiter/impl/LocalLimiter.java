@@ -1,6 +1,7 @@
 package io.neural.limiter.impl;
 
 import io.neural.limiter.support.AbstractLimiter;
+import io.neural.limiter.support.LimiterConfig;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +21,28 @@ public class LocalLimiter extends AbstractLimiter {
 	@Override
 	public void initialize() {
 		super.initialize();
-		this.semaphore = new Semaphore(10, true);
-		this.rateLimiter = RateLimiter.create(10000, 1000, TimeUnit.MILLISECONDS);
-		this.isStart = true;
+	}
+	
+	@Override
+	public void refresh(LimiterConfig config) {
+		super.refresh(config);
+		if(null == config){
+			return;
+		}
+		if(null == config.getEnable() || config.getEnable()){
+			semaphore = null;
+			rateLimiter = null;
+		}
+		if(null != config.getMaxConcurrent() && config.getMaxConcurrent() > 0){
+			semaphore = new Semaphore(config.getMaxConcurrent(), true);	
+		}
+		if(null != config.getMaxRate() && config.getMaxRate() > 0){
+			if(null == rateLimiter){
+				rateLimiter = RateLimiter.create(config.getMaxRate(), 1000, TimeUnit.MILLISECONDS);				
+			} else {
+				rateLimiter.setRate(config.getMaxRate());
+			}
+		}
 	}
 
 	@Override
