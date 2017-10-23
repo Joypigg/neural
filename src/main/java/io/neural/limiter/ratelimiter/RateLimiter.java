@@ -1,4 +1,4 @@
-package io.neural.limiter;
+package io.neural.limiter.ratelimiter;
 
 import static java.lang.Math.max;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -7,8 +7,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.Uninterruptibles;
 
-import io.neural.limiter.SmoothRateLimiter.SmoothBursty;
-import io.neural.limiter.SmoothRateLimiter.SmoothWarmingUp;
+import io.neural.limiter.ratelimiter.SmoothRateLimiter.SmoothBursty;
+import io.neural.limiter.ratelimiter.SmoothRateLimiter.SmoothWarmingUp;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;

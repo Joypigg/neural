@@ -1,4 +1,4 @@
-package io.neural.limiter;
+package io.neural.limiter.ratelimiter;
 
 import static java.lang.Math.min;
 import static java.util.concurrent.TimeUnit.SECONDS;

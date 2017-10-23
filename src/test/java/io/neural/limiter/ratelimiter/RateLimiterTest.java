@@ -1,4 +1,6 @@
-package io.neural.limiter;
+package io.neural.limiter.ratelimiter;
+
+import io.neural.limiter.ratelimiter.RateLimiter;
 
 import java.util.concurrent.TimeUnit;
 
