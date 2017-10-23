@@ -1,4 +1,4 @@
-package io.neural.limiter.impl;
+package io.neural.limiter.support;
 
 import io.neural.limiter.support.AbstractLimiter;
 import io.neural.limiter.support.LimiterConfig;
