@@ -5,16 +5,16 @@ package io.neural.isolation;
  * 
  * @author lry
  */
-public enum IsolationType {
+public enum IsolationStrategy {
 
 	/**
 	 * 线程池隔离
 	 */
-	THREADPOOL,
+	THREAD,
 
 	/**
 	 * 信号量隔离
 	 */
-	ISOLATION;
+	SEMAPHORE;
 
 }
