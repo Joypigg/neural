@@ -7,7 +7,7 @@ import com.google.common.math.LongMath;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class SmoothRateLimiter extends RateLimiter {
+public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
 
 	static final class SmoothWarmingUp extends SmoothRateLimiter {
 		

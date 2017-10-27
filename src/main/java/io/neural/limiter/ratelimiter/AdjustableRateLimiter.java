@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @author lry
  */
-public abstract class RateLimiter {
+public abstract class AdjustableRateLimiter {
 
 	public static final long TIME_GRIT = 1L;
 	protected volatile double timeGritSecond;
@@ -31,37 +31,37 @@ public abstract class RateLimiter {
 		this.timeGritSecond = SECONDS.toMicros(timeGritSecond);
 	}
 	
-	public static RateLimiter create(long permitsPerSecond) {
+	public static AdjustableRateLimiter create(long permitsPerSecond) {
 		return create(permitsPerSecond, TIME_GRIT);
 	}
 	
-	public static RateLimiter create(double permitsPerSecond, long timeGritSecond) {
+	public static AdjustableRateLimiter create(double permitsPerSecond, long timeGritSecond) {
 		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond, timeGritSecond);
 	}
 
-	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long timeGritSecond) {
-		RateLimiter rateLimiter = new SmoothBursty(stopwatch, 1.0);
-		rateLimiter.setTimeGritSecond(timeGritSecond);
-		rateLimiter.setRate(permitsPerSecond);
-		return rateLimiter;
+	static AdjustableRateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long timeGritSecond) {
+		AdjustableRateLimiter adjustableRateLimiter = new SmoothBursty(stopwatch, 1.0);
+		adjustableRateLimiter.setTimeGritSecond(timeGritSecond);
+		adjustableRateLimiter.setRate(permitsPerSecond);
+		return adjustableRateLimiter;
 	}
 
-	public static RateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit) {
+	public static AdjustableRateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit) {
 		return create(permitsPerSecond, warmupPeriod, unit, TIME_GRIT);
 	}
 	
-	public static RateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit, long timeGritSecond) {
+	public static AdjustableRateLimiter create(double permitsPerSecond, long warmupPeriod, TimeUnit unit, long timeGritSecond) {
 		if (warmupPeriod < 0) {
 			throw new IllegalArgumentException(String.format("warmupPeriod must not be negative: %s", warmupPeriod));
 		}
 		return create(SleepingStopwatch.createFromSystemTimer(), permitsPerSecond, warmupPeriod, unit, 3.0, timeGritSecond);
 	}
 
-	static RateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long warmupPeriod, TimeUnit unit, double coldFactor, long timeGritSecond) {
-		RateLimiter rateLimiter = new SmoothWarmingUp(stopwatch, warmupPeriod, unit, coldFactor);
-		rateLimiter.setTimeGritSecond(timeGritSecond);
-		rateLimiter.setRate(permitsPerSecond);
-		return rateLimiter;
+	static AdjustableRateLimiter create(SleepingStopwatch stopwatch, double permitsPerSecond, long warmupPeriod, TimeUnit unit, double coldFactor, long timeGritSecond) {
+		AdjustableRateLimiter adjustableRateLimiter = new SmoothWarmingUp(stopwatch, warmupPeriod, unit, coldFactor);
+		adjustableRateLimiter.setTimeGritSecond(timeGritSecond);
+		adjustableRateLimiter.setRate(permitsPerSecond);
+		return adjustableRateLimiter;
 	}
 
 	private final SleepingStopwatch stopwatch;
@@ -80,7 +80,7 @@ public abstract class RateLimiter {
 		return mutex;
 	}
 
-	RateLimiter(SleepingStopwatch stopwatch) {
+	AdjustableRateLimiter(SleepingStopwatch stopwatch) {
 		if (stopwatch == null) {
 			throw new NullPointerException();
 		}

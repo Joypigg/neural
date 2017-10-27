@@ -1,6 +1,6 @@
 package io.neural.limiter.ratelimiter;
 
-import io.neural.limiter.ratelimiter.RateLimiter;
+import io.neural.limiter.ratelimiter.AdjustableRateLimiter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,12 +9,12 @@ import org.junit.Test;
 public class RateLimiterTest {
 
 	public static void main(String[] args) throws Exception {
-		RateLimiter rateLimiter = RateLimiter.create(5, 2);
+		AdjustableRateLimiter adjustableRateLimiter = AdjustableRateLimiter.create(5, 2);
 		for (int i = 0; i < 10; i++) {
-			System.out.println(rateLimiter.acquire());
+			System.out.println(adjustableRateLimiter.acquire());
 		}
-		System.out.println(rateLimiter.toString());
-		System.out.println(rateLimiter.getRate());
+		System.out.println(adjustableRateLimiter.toString());
+		System.out.println(adjustableRateLimiter.getRate());
 	}
 
 	/**
@@ -24,13 +24,13 @@ public class RateLimiterTest {
 	 */
 	@Test
 	public void testAvgRate() throws Exception {
-		RateLimiter rateLimiter = RateLimiter.create(5);
-		assert 0 == rateLimiter.acquire();
-		assert 2 == Math.round(rateLimiter.acquire() * 10);
-		assert 2 == Math.round(rateLimiter.acquire() * 10);
-		assert 2 == Math.round(rateLimiter.acquire() * 10);
-		assert 2 == Math.round(rateLimiter.acquire() * 10);
-		assert 2 == Math.round(rateLimiter.acquire() * 10);
+		AdjustableRateLimiter adjustableRateLimiter = AdjustableRateLimiter.create(5);
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 2 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire() * 10);
 	}
 
 	/**
@@ -40,14 +40,14 @@ public class RateLimiterTest {
 	 */
 	@Test
 	public void burstTest() throws Exception {
-		RateLimiter rateLimiter = RateLimiter.create(5);
-		assert 0 == rateLimiter.acquire(5);
-		assert 1 == Math.round(rateLimiter.acquire(1));
-		assert 2 == Math.round(rateLimiter.acquire(1) * 10);
-		assert 2 == Math.round(rateLimiter.acquire(1) * 10);
-		assert 2 == Math.round(rateLimiter.acquire(1) * 10);
+		AdjustableRateLimiter adjustableRateLimiter = AdjustableRateLimiter.create(5);
+		assert 0 == adjustableRateLimiter.acquire(5);
+		assert 1 == Math.round(adjustableRateLimiter.acquire(1));
+		assert 2 == Math.round(adjustableRateLimiter.acquire(1) * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire(1) * 10);
+		assert 2 == Math.round(adjustableRateLimiter.acquire(1) * 10);
 
-		RateLimiter rateLimiter1 = RateLimiter.create(5);
+		AdjustableRateLimiter rateLimiter1 = AdjustableRateLimiter.create(5);
 		assert 0 == Math.round(rateLimiter1.acquire(10));
 		assert 2 == Math.round(rateLimiter1.acquire(1));
 		assert 2 == Math.round(rateLimiter1.acquire(1) * 10);
@@ -60,20 +60,20 @@ public class RateLimiterTest {
 	 */
 	@Test
 	public void accumulateTest() throws Exception {
-		RateLimiter rateLimiter = RateLimiter.create(2);
-		assert 0 == rateLimiter.acquire();
+		AdjustableRateLimiter adjustableRateLimiter = AdjustableRateLimiter.create(2);
+		assert 0 == adjustableRateLimiter.acquire();
 		Thread.sleep(4000);
-		assert 0 == rateLimiter.acquire();
-		assert 0 == rateLimiter.acquire();
-		assert 0 == rateLimiter.acquire();
-		assert 5 == Math.round(rateLimiter.acquire() * 10);
-		assert 5 == Math.round(rateLimiter.acquire() * 10);
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 5 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 5 == Math.round(adjustableRateLimiter.acquire() * 10);
 		Thread.sleep(2000);
-		assert 0 == rateLimiter.acquire();
-		assert 0 == rateLimiter.acquire();
-		assert 0 == rateLimiter.acquire();
-		assert 5 == Math.round(rateLimiter.acquire() * 10);
-		assert 5 == Math.round(rateLimiter.acquire() * 10);
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 0 == adjustableRateLimiter.acquire();
+		assert 5 == Math.round(adjustableRateLimiter.acquire() * 10);
+		assert 5 == Math.round(adjustableRateLimiter.acquire() * 10);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class RateLimiterTest {
 		 * <p>
 		 * 平均200ms新增一个
 		 */
-		RateLimiter limiter = RateLimiter.create(5, 1000, TimeUnit.MILLISECONDS);
+		AdjustableRateLimiter limiter = AdjustableRateLimiter.create(5, 1000, TimeUnit.MILLISECONDS);
 		for (int i = 0; i < 10; i++) {
 			System.out.println(limiter.acquire());
 
@@ -96,9 +96,9 @@ public class RateLimiterTest {
 	
 	@Test
 	public void testTry() throws Exception {
-		RateLimiter rateLimiter = RateLimiter.create(1);
+		AdjustableRateLimiter adjustableRateLimiter = AdjustableRateLimiter.create(1);
 		for (int i = 0; i < 10; i++) {
-			System.out.println(rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS));	
+			System.out.println(adjustableRateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS));	
 		}
 	}
 
