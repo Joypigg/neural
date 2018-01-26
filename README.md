@@ -17,13 +17,17 @@
 
 
 ### **交流群**
-**QQ交流群**：<font color="red">191958521</font>(微服务基础设施)
-
-<img title="QQ交流群-191958521" src="docs/QQ群-191958521.png" height="296" width="216"/>
-
-**微信交流群**：<font color="red">15828252029</font>(加我个人微信，备注加群信息)
-
-![QQ交流群-191958521](docs/个人微信-15828252029.png)
+<table border="0">
+    <tr>
+        <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
+        <td>微信交流群：<font color="red">15828252029</font>(加我个人微信，备注加群信息)</td>
+    </tr>
+    <tr>&nbsp;</tr>
+    <tr>
+        <td><img title="QQ交流群-191958521" src="docs/QQ群-191958521.png" height="296" width="216"/></td>
+        <td><img title="微信交流群-15828252029" src="docs/个人微信-15828252029.png" height="296" width="296"/></td>
+    </tr>
+</table
 
 
 ## 1 NPI
