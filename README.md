@@ -20,7 +20,7 @@
 <table border="0">
     <tr>
         <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
-        <td>微信交流群：<font color="red">15828252029</font>(加我个人微信，备注加群信息)</td>
+        <td>微信交流群：<font color="red">15828252029</font>(加我个人微信，备注拉群要求)</td>
     </tr>
     <tr>&nbsp;</tr>
     <tr>
