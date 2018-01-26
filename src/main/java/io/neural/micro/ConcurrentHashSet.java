@@ -5,48 +5,61 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The Concurrent HashSet
+ *
+ * @param <E>
+ * @author lry
+ */
 public class ConcurrentHashSet<E> extends AbstractSet<E> implements Set<E>, java.io.Serializable {
 
-	private static final long serialVersionUID = 1448787448892288353L;
+    private static final long serialVersionUID = 6856170550930856671L;
 
-	private static final Object PRESENT = new Object();
+    private static final Object PRESENT = new Object();
 
-	private final ConcurrentHashMap<E, Object> map;
+    private final ConcurrentHashMap<E, Object> map;
 
-	public ConcurrentHashSet() {
-		map = new ConcurrentHashMap<E, Object>();
-	}
+    public ConcurrentHashSet() {
+        map = new ConcurrentHashMap<E, Object>();
+    }
 
-	public ConcurrentHashSet(int initialCapacity) {
-		map = new ConcurrentHashMap<E, Object>(initialCapacity);
-	}
+    public ConcurrentHashSet(int initialCapacity) {
+        map = new ConcurrentHashMap<E, Object>(initialCapacity);
+    }
 
-	public Iterator<E> iterator() {
-		return map.keySet().iterator();
-	}
+    @Override
+    public Iterator<E> iterator() {
+        return map.keySet().iterator();
+    }
 
-	public int size() {
-		return map.size();
-	}
+    @Override
+    public int size() {
+        return map.size();
+    }
 
-	public boolean isEmpty() {
-		return map.isEmpty();
-	}
+    @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
 
-	public boolean contains(Object o) {
-		return map.containsKey(o);
-	}
+    @Override
+    public boolean contains(Object o) {
+        return map.containsKey(o);
+    }
 
-	public boolean add(E e) {
-		return map.put(e, PRESENT) == null;
-	}
+    @Override
+    public boolean add(E e) {
+        return map.put(e, PRESENT) == null;
+    }
 
-	public boolean remove(Object o) {
-		return map.remove(o) == PRESENT;
-	}
+    @Override
+    public boolean remove(Object o) {
+        return map.remove(o) == PRESENT;
+    }
 
-	public void clear() {
-		map.clear();
-	}
+    @Override
+    public void clear() {
+        map.clear();
+    }
 
 }

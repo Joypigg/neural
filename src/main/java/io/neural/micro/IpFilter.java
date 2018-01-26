@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
  */
 public class IpFilter {
 
-	// IP的正则
+	/**
+	 * IP的正则
+	 */
 	public static Pattern pattern = Pattern
 			.compile("(1\\d{1,2}|2[0-4]\\d|25[0-5]|\\d{1,2})\\."
 					+ "(1\\d{1,2}|2[0-4]\\d|25[0-5]|\\d{1,2})\\."

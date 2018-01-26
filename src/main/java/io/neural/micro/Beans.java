@@ -45,7 +45,7 @@ public class Beans {
         for (int i = 0; i < fromMethods.length; i++) {  
             fromMethod = fromMethods[i];  
             fromMethodName = fromMethod.getName();  
-            if (!fromMethodName.contains("get")){
+            if (!fromMethodName.contains("query")){
             	if (!fromMethodName.startsWith("is")){
             		continue;
             	}
@@ -100,7 +100,7 @@ public class Beans {
         for (int i = 0; i < fromMethods.length; i++) {
             fromMethod = fromMethods[i];
             fromMethodName = fromMethod.getName();
-            if (!fromMethodName.contains("get")){
+            if (!fromMethodName.contains("query")){
             	if (!fromMethodName.startsWith("is")){
             		continue;
             	}

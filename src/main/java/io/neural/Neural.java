@@ -1,5 +1,10 @@
 package io.neural;
 
-public class Neural {
+/**
+ * The Neural Interface.
+ *
+ * @author lry
+ */
+public interface Neural {
 
 }
