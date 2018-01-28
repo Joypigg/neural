@@ -1,19 +1,22 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="library/master.jsp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>限流统计 - 分布式限流</title>
-    <meta name="keywords" content=""/>
-    <meta name="description" content=""/>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
 
-    <link rel="shortcut icon" href="favicon.ico"/>
-    <link href="../static/res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
-    <link href="../static/res/css/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="${ctx}/res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="${ctx}/res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
     <!-- Data Tables -->
-    <link href="../static/res/css/animate.css" rel="stylesheet"/>
-    <link href="../static/res/css/style.css?v=4.1.0" rel="stylesheet"/>
+    <link href="${ctx}/res/css/animate.css" rel="stylesheet">
+    <link href="${ctx}/res/css/style.css?v=4.1.0" rel="stylesheet">
 </head>
 
 <body class="gray-bg">
@@ -74,15 +77,15 @@
     </div>
 </div>
 
-<script src="../static/res/chart/js/jquery.min.js"></script>
+<script src="${ctx}/res/chart/js/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
-<script src="../static/res/chart/js/common.js"></script>
-<script src="../static/res/echarts-theme/echarts-theme-walden.js"></script>
-<script src="../static/res/echarts-theme/echarts-theme-westeros.js"></script>
-<script src="../static/res/echarts-theme/echarts-theme-wonderland.js"></script>
-<script src="../static/res/echarts-theme/echarts-theme-macarons.js"></script>
-<script src="../static/res/echarts-theme/echarts-theme-essos.js"></script>
+<script src="${ctx}/res/chart/js/common.js"></script>
+<script src="${ctx}/res/echarts-theme/echarts-theme-walden.js"></script>
+<script src="${ctx}/res/echarts-theme/echarts-theme-westeros.js"></script>
+<script src="${ctx}/res/echarts-theme/echarts-theme-wonderland.js"></script>
+<script src="${ctx}/res/echarts-theme/echarts-theme-macarons.js"></script>
+<script src="${ctx}/res/echarts-theme/echarts-theme-essos.js"></script>
 
-<script src="../static/res/monitor/all-trade.js"></script>
+<script src="${ctx}/res/monitor/all-trade.js"></script>
 </body>
 </html>
