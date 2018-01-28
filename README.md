@@ -16,7 +16,7 @@
 微服务架构中的神经组织，主要为分布式架构提供了集群容错的三大利刃：限流、降级和熔断。并同时提供了SPI、过滤器、JWT、重试机制、插件机制。此外还提供了很多小的黑科技(如：IP黑白名单、UUID加强版、Snowflake和大并发时间戳获取等)。
 
 
-### 交流群
+**交流群**
 <table border="0">
     <tr>
         <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
@@ -29,7 +29,8 @@
     </tr>
 </table
 
-### Features
+
+**Features**
 
 - 分布式限流：`Limiter`
 - 服务降级：`Degrade`
@@ -37,7 +38,8 @@
 - 过滤器：`Filter`
 - 黑科技：`Perf`、`Snowflake`、`SystemClock`、`NUUID`、`IPFilter`
 
-### TODO
+
+**TODO**
 - 分布式限流 `Admin`
 - 服务降级 `Admin`
 - 熔断：`Circuit Breaker`
