@@ -1,16 +1,19 @@
 package org.ms.neural.admin.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
 
-@RestController
+@Controller
 public class WebController {
 
-    @RequestMapping("web")
-    public Object web() {
-        return new Date();
+    @RequestMapping("main")
+    public String main(HashMap<String, Object> map) {
+        map.put("hello", "欢迎进入HTML页面");
+        return "main";
     }
 
 }
