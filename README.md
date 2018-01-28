@@ -87,6 +87,7 @@ public class Demo2Impl implements IDemo {}
 ```
 
 **第三步**：使用接口全路径（包名+类名）创建接口资源文件
+
 `src/main/resources/META-INF/neural/cn.ms.neural.demo.IDemo`
 
 **第四步**：在接口资源文件中写入实现类全路径（包名+类名）
