@@ -16,7 +16,7 @@
 微服务架构中的神经组织，主要为分布式架构提供了集群容错的三大利刃：限流、降级和熔断。并同时提供了SPI、过滤器、JWT、重试机制、插件机制。此外还提供了很多小的黑科技(如：IP黑白名单、UUID加强版、Snowflake和大并发时间戳获取等)。
 
 
-### **交流群**
+### 交流群
 <table border="0">
     <tr>
         <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
@@ -28,6 +28,21 @@
         <td><img title="微信交流群-15828252029" src="docs/个人微信-15828252029.png" height="296" width="296"/></td>
     </tr>
 </table
+
+### Features
+
+- 分布式限流：`Limiter`
+- 服务降级：`Degrade`
+- 个性化重试：`Retryer`
+- 过滤器：`Filter`
+- 黑科技：`Perf`、`Snowflake`、`SystemClock`、`NUUID`、`IPFilter`
+
+### TODO
+- 分布式限流 `Admin`
+- 服务降级 `Admin`
+- 熔断：`Circuit Breaker`
+- 隔离：`Isolation`
+- JWT：`JSON Web Tokens`
 
 
 ## 1 NPI
@@ -238,11 +253,4 @@ withAttemptTimeLimiter(AttemptTimeLimiter< V> attemptTimeLimiter)：添加尝试
 - Perf：性能测试工具
 - Snowflake：基于Snowflake算法实现的高性能Long型ID生成器。理论QPS > 400w/s
 - Systemclock：解决大并发场景中获取System.currentTimeMillis()的性能问题
-
-
-## 9 TODO
-近期规划
-
-- 分布式限流统计接口
-- 服务降级统计接口
 
