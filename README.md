@@ -56,29 +56,38 @@
 
 ### 1.3 使用方式
 
+**第一步**：定义接口
 ```java
-package io.neural.demo;
-
-//第一步：定义接口
 @NPI
 public interface IDemo {}
+```
 
-//第二步：定义接口实现类
+**第二步**：定义接口实现类
+```java
 @Extension("demo1")
 public class Demo1Impl implements IDemo {}
+
 @Extension("demo2")
 public class Demo2Impl implements IDemo {}
+```
 
-//第三步：使用接口全路径（包名+类名）创建接口资源文件
-src/main/resources/META-INF/neural/cn.ms.neural.demo.IDemo
+**第三步**：使用接口全路径（包名+类名）创建接口资源文件
+`src/main/resources/META-INF/neural/cn.ms.neural.demo.IDemo`
 
-//第四步：在接口资源文件中写入实现类全路径（包名+类名）
+**第四步**：在接口资源文件中写入实现类全路径（包名+类名）
+```
 cn.ms.neural.demo.Demo1Impl
 cn.ms.neural.demo.Demo2Impl
+```
 
-//第五步：使用ExtensionLoader来获取接口实现类
-IDemo demo1 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo1");
-IDemo demo2 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo2");
+**第五步**：使用ExtensionLoader来获取接口实现类
+```java
+public class Demo{
+    public static void main(String[] args){
+        IDemo demo1 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo1");
+        IDemo demo2 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo2"); 
+    }
+}
 ```
 
 
@@ -90,18 +99,26 @@ IDemo demo2 =ExtensionLoader.getLoader(IDemo.class).getExtension("demo2");
 使用JDK中的信号量(Semaphore)进行控制。
 
 ```java
-Semaphore semaphore = new Semaphore(10,true);
-semaphore.acquire();
-//do something here
-semaphore.release();
+public class Test{
+    public static void main(String[] args){
+        Semaphore semaphore = new Semaphore(10,true);
+        semaphore.acquire();
+        //do something here
+        semaphore.release();
+    }
+}
 ```
 
 #### 2.1.2 速率控制（Rate）
 使用Google的Guava中的限速器(RateLimiter)进行控制。
 
 ```java
-RateLimiter limiter = RateLimiter.create(10.0); // 每秒不超过10个任务被提交
-limiter.acquire(); // 请求RateLimite
+public class Test{
+    public static void main(String[] args){
+        RateLimiter limiter = RateLimiter.create(10.0); // 每秒不超过10个任务被提交
+        limiter.acquire(); // 请求RateLimite
+    }
+}
 ```
 
 ### 2.2 cluster模式（待完成）
@@ -112,13 +129,17 @@ https://www.zybuluo.com/kay2/note/949160
 ### 2.3 限制瞬时并发数
 
 **定义**：瞬时并发数，系统同时处理的请求/事务数量
+
 **优点**：这个算法能够实现控制并发数的效果
+
 **缺点**：使用场景比较单一，一般用来对入流量进行控制
 
 ### 2.4 限制时间窗最大请求数
 
 **定义**：时间窗最大请求数，指定的时间范围内允许的最大请求数
+
 **优点**：这个算法能够满足绝大多数的流控需求，通过时间窗最大请求数可以直接换算出最大的QPS（QPS = 请求数/时间窗）
+
 **缺点**：这种方式可能会出现流量不平滑的情况，时间窗内一小段流量占比特别大
 
 ### 2.5 令牌桶
@@ -136,6 +157,7 @@ https://www.zybuluo.com/kay2/note/949160
     - M是以字节/秒为单位的最大可能传输速率。 M>r
     - T max = b/(M-r) 承受最大传输速率的时间
     - B max = T max * M 承受最大传输速率的时间内传输的流量
+
 **优点**：流量比较平滑，并且可以抵挡一定的流量突发情况
 
 
@@ -153,7 +175,7 @@ TODO
 服务降级是指当服务器压力剧增时，根据当前业务情况及流量对一些服务和页面有策略的降级，以此缓解了服务器资源压力，以保证核心任务的正常运行，同时也保证了部分甚至大部分客户得到正确响应。
 
 ### 4.1 管理方式
-#### 4.1.1 直觉管理方式：运维人员可以指定哪些模块降级
+#### 4.1.1 直接管理方式：运维人员可以指定哪些模块降级
 当服务器检测到压力增大，服务器监测自动发送通知给运维人员，运维人员根据自己或相关人员判断后通过配置平台设置当前运行等级来降级。降级首先可以对非核心业务进行接口降级。如果效果不显著，开始对一些页面进行降级，以此保证核心功能的正常运行。
 
 #### 4.1.2 分级管理方式：运维人员无需关心业务细节，直接按级别降低即可
