@@ -5,9 +5,10 @@
     <groupId>cn.ms.neural</groupId>
     <artifactId>parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+
     <packaging>pom</packaging>
     <name>The Micro Service Neural</name>
-    <description>The Micro Service Neural</description>
+    <description>The Micro Service Neural, the focus on solving distributed governance.</description>
 
     <modules>
         <module>admin</module>
