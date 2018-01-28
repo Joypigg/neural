@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cn.ms.neural</groupId>
+        <groupId>org.ms.neural</groupId>
         <artifactId>parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
