@@ -203,37 +203,37 @@ TODO
 
 #### 5.1.2 停止策略（StopStrategy）
 
-+ NeverStopStrategy：从不停止策略
-+ StopAfterAttemptStrategy：尝试后停止策略
-+ StopAfterDelayStrategy：延迟后停止策略
+- **NeverStopStrategy**：从不停止策略
+- **StopAfterAttemptStrategy**：尝试后停止策略
+- **StopAfterDelayStrategy**：延迟后停止策略
 
 #### 5.1.3 等待策略（WaitStrategy）
 
-+ FixedWaitStrategy：固定休眠时间等待策略
-+ RandomWaitStrategy：随机休眠时间等待策略，支持设置随机休眠时间的下限值（minmum）与上限值（maxmum）
-+ IncrementingWaitStrategy：定长递增休眠时间等待策略
-+ ExponentialWaitStrategy：指数函数（2^x，其中x表示尝试次数）递增休眠时间等待策略。支持设置休眠时间的上限值（maximumWait）
-+ FibonacciWaitStrategy：斐波那契数列递增休眠时间等待策略。支持设置休眠时间的上限值（maximumWait）
-+ CompositeWaitStrategy：复合等待策略，即支持以上等待策略的组合计算休眠时间，最终休眠时间是以上策略中休眠时间之和
-+ ExceptionWaitStrategy：异常等待策略
+- **FixedWaitStrategy**：固定休眠时间等待策略
+- **RandomWaitStrategy**：随机休眠时间等待策略，支持设置随机休眠时间的下限值（minmum）与上限值（maxmum）
+- **IncrementingWaitStrategy**：定长递增休眠时间等待策略
+- **ExponentialWaitStrategy**：指数函数（2^x，其中x表示尝试次数）递增休眠时间等待策略。支持设置休眠时间的上限值（maximumWait）
+- **FibonacciWaitStrategy**：斐波那契数列递增休眠时间等待策略。支持设置休眠时间的上限值（maximumWait）
+- **CompositeWaitStrategy**：复合等待策略，即支持以上等待策略的组合计算休眠时间，最终休眠时间是以上策略中休眠时间之和
+- **ExceptionWaitStrategy**：异常等待策略
 
 ### 5.2 指定结果重试
-retryIfResult(Predicate< V> resultPredicate)：设置重试不满足条件的结果
+**retryIfResult(Predicate< V> resultPredicate)**：设置重试不满足条件的结果
 
 eg：如果返回结果为空则重试：retryIfResult(Predicates.< Boolean>isNull())
 
 ### 5.3 指定异常重试
 
-+ retryIfException()：重试所有异常
-+ retryIfRuntimeException()：重试运行时异常
-+ retryIfExceptionOfType(Class<? extends Throwable> exceptionClass)：重试指定类型异常
-+ retryIfException(Predicate< Throwable> exceptionPredicate) ：自定义过滤后的异常重试
+- **retryIfException()**：重试所有异常
+- **retryIfRuntimeException()**：重试运行时异常
+- **retryIfExceptionOfType(Class<? extends Throwable> exceptionClass)**：重试指定类型异常
+- **retryIfException(Predicate< Throwable> exceptionPredicate)** ：自定义过滤后的异常重试
 
 ### 5.4 重试监听器（RetryListener）
-withRetryListener(RetryListener listener)：添加重试监听器
+**withRetryListener(RetryListener listener)**：添加重试监听器
 
 ### 5.5 尝试时间限制器（AttemptTimeLimiter）
-withAttemptTimeLimiter(AttemptTimeLimiter< V> attemptTimeLimiter)：添加尝试时间限制器
+**withAttemptTimeLimiter(AttemptTimeLimiter< V> attemptTimeLimiter)**：添加尝试时间限制器
 
 ## 6 JWT（JSON Web Token）
 功能来源于java-jwt项目，但有一定的调整，后续会继续简化。
@@ -241,15 +241,11 @@ withAttemptTimeLimiter(AttemptTimeLimiter< V> attemptTimeLimiter)：添加尝试
 ## 7 过滤器（Filter）
 基于@NPI扩展方式和责任链模式实现的过滤器机制。
 
-## 8 Micro
+## 8 黑科技（Micro）
 
-- Base64：高性能的Base64生成算法
-- Beans：精简版资源拷贝
-- ConcurrentHashSet：基于ConcurrentHashMap实现的ConcurrentHashSet，线程安全
-- IpFilter：IP黑白名单过滤器
-- MultiHashMap：基于HashMap实现的三元Map
-- NUUID：UUID扩展版。支持36/32/22/19位的UUID生成方式(不牺牲精度)。牺牲一定精度后的15位超短UUID
-- Perf：性能测试工具
-- Snowflake：基于Snowflake算法实现的高性能Long型ID生成器。理论QPS > 400w/s
-- Systemclock：解决大并发场景中获取System.currentTimeMillis()的性能问题
+- **IpFilter**：IP黑白名单过滤器
+- **NUUID**：UUID扩展版。支持36/32/22/19位的UUID生成方式(不牺牲精度)，支持牺牲一定精度后的15位超短UUID
+- **Perf**：性能测试工具
+- **Snowflake**：基于Snowflake算法实现的高性能Long型ID生成器。理论QPS > 400w/s
+- **Systemclock**：解决大并发场景中获取System.currentTimeMillis()的性能问题
 
