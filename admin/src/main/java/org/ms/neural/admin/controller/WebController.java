@@ -16,8 +16,22 @@ public class WebController {
 
     @RequestMapping("main")
     public String main(HashMap<String, Object> map) {
-        map.put("hello", "欢迎进入HTML页面");
         return "main";
+    }
+
+    @RequestMapping("limiter-configs")
+    public String limiterConfigs(HashMap<String, Object> map) {
+        return "limiter-configs";
+    }
+
+    @RequestMapping("limiter-config")
+    public String limiterConfig(HashMap<String, Object> map) {
+        return "limiter-config";
+    }
+
+    @RequestMapping("limiter-monitor")
+    public String limiterMonitor(HashMap<String, Object> map) {
+        return "limiter-monitor";
     }
 
 }
