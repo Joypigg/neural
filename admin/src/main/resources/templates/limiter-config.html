@@ -2,24 +2,23 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>分布式限流 - 限流配置变更</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
 
-    <link rel="shortcut icon" href="favicon.ico">
-    <link href="../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-    <link href="../static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+=    <link href="../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.css?v=4.4.0" rel="stylesheet"/>
 
     <!-- Data Tables -->
-    <link href="../static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="../static/css/animate.css" rel="stylesheet">
-    <link href="../static/css/style.css?v=4.1.0" rel="stylesheet">
-    <link href="../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="../static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet"/>
+    <link href="../static/css/animate.css" rel="stylesheet"/>
+    <link href="../static/css/style.css?v=4.1.0" rel="stylesheet"/>
+    <link href="../static/css/plugins/switchery/switchery.css" rel="stylesheet"/>
 
-    <link href="../static/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
-    <link href="../static/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <link href="../static/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet"/>
+    <link href="../static/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../static/ionRangeSliderDemo/css/normalize.css"/>
     <link rel="stylesheet" href="../static/ionRangeSliderDemo/css/ion.rangeSlider.css"/>
     <link rel="stylesheet" href="../static/ionRangeSliderDemo/css/ion.rangeSlider.skinFlat.css"/>
@@ -42,29 +41,29 @@
                         <label class="col-sm-2 control-label">限流标题</label>
                         <div class="col-sm-10 has-success">
                             <input type="text" placeholder="请输入限流名称" class="form-control" name="name"
-                                   required="" aria-required="true" value="${limiterConfig.config.name}">
+                                   required="" aria-required="true" value="${limiterConfig.config.name}"/>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">限流ID</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly name="resource" value="${limiterConfig.identity.resource}"
+                            <input type="text" name="resource" value="${limiterConfig.identity.resource}"
                                    class="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">所属组</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly name="group" value="${limiterConfig.identity.group}"
+                            <input type="text" name="group" value="${limiterConfig.identity.group}"
                                    class="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">所属应用</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly name="application" value="${limiterConfig.identity.application}"
-                                   class="form-control">
+                            <input type="text" name="application" value="${limiterConfig.identity.application}"
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -72,13 +71,13 @@
                         <label class="col-sm-2 control-label">限流开关</label>
                         <div class="col-sm-10">
                             <div class="radio i-checks">
-                                <label><input type="radio" ${limiterConfig.config.enable=='ON'?'checked':''} value="ON"
-                                              name="enableRadio"> <i></i> 启用</label>
-                                <label><input type="radio" ${limiterConfig.config.enable=='OFF'?'checked':''} value="OFF"
-                                              name="enableRadio"> <i></i> 禁用</label>
+                                <label><input type="radio" value="ON"
+                                              name="enableRadio"/> <i></i> 启用</label>
+                                <label><input type="radio" value="OFF"
+                                              name="enableRadio"/> <i></i> 禁用</label>
                             </div>
                             <input type="text" value="${limiterConfig.config.enable}" style="display: none"
-                                   name="enable">
+                                   name="enable"/>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -86,7 +85,7 @@
                         <label class="col-sm-2 control-label">并发校验超时时间</label>
                         <div class="col-sm-2 has-success">
                             <input type="text" placeholder="请输入并发获取超时时间" class="form-control" name="concurrencyTimeout" required="" aria-required="true"
-                                   value="${limiterConfig.config.concurrencyTimeout}">
+                                   value="${limiterConfig.config.concurrencyTimeout}"/>
                         </div>
                         <div class="col-sm-1 has-success">ms</div>
                     </div>
@@ -102,7 +101,7 @@
                         <label class="col-sm-2 control-label">速率校验超时时间</label>
                         <div class="col-sm-2 has-success">
                             <input type="text" placeholder="请输入速率获取超时时间" class="form-control" name="rateTimeout" required="" aria-required="true"
-                                   value="${limiterConfig.config.rateTimeout}">
+                                   value="${limiterConfig.config.rateTimeout}"/>
                         </div>
                         <div class="col-sm-1 has-success">ms</div>
                     </div>
@@ -110,14 +109,14 @@
                         <label class="col-sm-2 control-label">速率时间窗</label>
                         <div class="col-sm-2">
                             <input type="text" placeholder="请输入速率时间窗大小" class="form-control" name="granularity"
-                                   required="" aria-required="true" value="${limiterConfig.config.granularity}">
+                                   required="" aria-required="true" value="${limiterConfig.config.granularity}"/>
                         </div>
                         <div class="col-sm-2">
                             <select class="form-control m-b" name="unit" value="${limiterConfig.config.unit}">
-                                <option value="SEC" ${limiterConfig.config.unit=='SEC'?'selected':''}>秒</option>
-                                <option value="MIN" ${limiterConfig.config.unit=='MIN'?'selected':''}>分</option>
-                                <option value="HOU" ${limiterConfig.config.unit=='HOU'?'selected':''}>时</option>
-                                <option value="DAY" ${limiterConfig.config.unit=='DAY'?'selected':''}>天</option>
+                                <option value="SEC">秒</option>
+                                <option value="MIN">分</option>
+                                <option value="HOU">时</option>
+                                <option value="DAY">天</option>
                             </select>
                         </div>
                     </div>
@@ -132,13 +131,13 @@
                         <label class="col-sm-2 control-label">超额策略</label>
                         <div class="col-sm-10">
                             <div class="radio i-checks">
-                                <label><input type="radio" ${limiterConfig.config.strategy=='NON'?'checked':''}
-                                              value="NON" name="strategyRadio"> <i></i> 不处理</label>
-                                <label><input type="radio" ${limiterConfig.config.strategy=='EXCEPTION'?'checked':''}
-                                              value="EXCEPTION" name="strategyRadio"> <i></i> 抛异常</label>
+                                <label><input type="radio"
+                                              value="NON" name="strategyRadio"/> <i></i> 不处理</label>
+                                <label><input type="radio"
+                                              value="EXCEPTION" name="strategyRadio"/> <i></i> 抛异常</label>
                             </div>
                             <input type="text" value="${limiterConfig.config.strategy}" style="display: none"
-                                   name="strategy">
+                                   name="strategy"/>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
