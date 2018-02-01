@@ -34,4 +34,14 @@ public class WebController {
         return "limiter-monitor";
     }
 
+    @RequestMapping("degrade-configs")
+    public String degradeConfigs(HashMap<String, Object> map) {
+        return "degrade-configs";
+    }
+
+    @RequestMapping("degrade-config")
+    public String degradeConfig(HashMap<String, Object> map) {
+        return "degrade-config";
+    }
+
 }
