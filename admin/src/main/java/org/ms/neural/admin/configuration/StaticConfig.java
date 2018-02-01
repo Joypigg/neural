@@ -1,4 +1,4 @@
-package org.ms.neural.admin;
+package org.ms.neural.admin.configuration;
 
 import lombok.Data;
 import lombok.ToString;
