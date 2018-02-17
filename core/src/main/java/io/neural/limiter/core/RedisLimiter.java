@@ -1,4 +1,4 @@
-package io.neural.limiter.support;
+package io.neural.limiter.core;
 
 import io.neural.extension.Extension;
 

@@ -47,7 +47,7 @@ public enum EventProcessor implements EventListener {
      */
     public void addEventListener(EventListener eventListener) {
         if (eventListener instanceof EventProcessor) {
-            throw new IllegalArgumentException("The don't support adding " + EventProcessor.class);
+            throw new IllegalArgumentException("The don't core adding " + EventProcessor.class);
         }
 
         eventListeners.add(eventListener);
