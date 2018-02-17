@@ -1,4 +1,4 @@
-package io.neural.common.store;
+package io.neural.common.config;
 
 import java.util.Map;
 import java.util.Set;
@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import io.neural.NURL;
+import io.neural.common.SubscribeListener;
 import io.neural.extension.Extension;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

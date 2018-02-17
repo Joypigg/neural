@@ -9,7 +9,7 @@ import io.neural.common.Identity;
 import io.neural.common.Identity.Switch;
 import io.neural.common.OriginalCall;
 import io.neural.common.config.StoreConfig;
-import io.neural.common.store.IStore;
+import io.neural.common.config.IStore;
 import io.neural.extension.ExtensionLoader;
 import io.neural.limiter.LimiterConfig.Config;
 import io.neural.limiter.LimiterConfig.GlobalConfig;
