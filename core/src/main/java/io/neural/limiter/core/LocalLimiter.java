@@ -18,13 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Extension("local")
 public class LocalLimiter extends AbstractCallLimiter {
 
-    private final AdjustableSemaphore semaphore;
-    private final AdjustableRateLimiter rateLimiter;
-
-    public LocalLimiter() {
-        this.semaphore = new AdjustableSemaphore(1, true);
-        this.rateLimiter = AdjustableRateLimiter.create(1);
-    }
+    private final AdjustableSemaphore semaphore = new AdjustableSemaphore(1, true);
+    private final AdjustableRateLimiter rateLimiter = AdjustableRateLimiter.create(1);
 
     @Override
     public synchronized boolean refresh(LimiterConfig limiterConfig) throws Exception {
