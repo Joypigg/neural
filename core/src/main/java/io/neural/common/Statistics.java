@@ -27,6 +27,8 @@ import java.util.concurrent.atomic.LongAdder;
 @AllArgsConstructor
 public class Statistics implements Serializable {
 
+    private static final long serialVersionUID = 229092803354377500L;
+
     /**
      * The total request counter in the current time window: Calculation QPS
      */
