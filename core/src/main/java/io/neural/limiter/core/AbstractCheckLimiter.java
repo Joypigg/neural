@@ -1,4 +1,4 @@
-package io.neural.limiter.support;
+package io.neural.limiter.core;
 
 import io.neural.common.event.EventProcessor;
 import io.neural.limiter.Limiter;
