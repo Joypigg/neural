@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * The Abstract Check Limiter.
  *
  * @author lry
+ * @apiNote The main implementation of check limiting
  **/
 @Slf4j
 @Getter
@@ -21,10 +22,11 @@ public abstract class AbstractCheckLimiter implements ILimiter {
 
     private volatile LimiterConfig limiterConfig = null;
     private volatile LimiterStatistics statistics = new LimiterStatistics();
-    private final String module = "limiter";
-    private final String model;
 
-    public AbstractCheckLimiter() {
+    private final String model;
+    private final String module = "limiter";
+
+    AbstractCheckLimiter() {
         Extension extension = this.getClass().getAnnotation(Extension.class);
         if (null == extension) {
             throw new IllegalStateException("The " + this.getClass().getName() + " must has @Extension");
@@ -49,47 +51,43 @@ public abstract class AbstractCheckLimiter implements ILimiter {
     }
 
     /**
-     * The non need to process
+     * Whether the check does not need process
      *
-     * @return
+     * @return true indicates that it does not need to be handled
      */
-    protected boolean isNonProcess() {
+    boolean isNonProcess() {
         if (null == limiterConfig) {
             return true;
         }
 
         Config config = limiterConfig.getConfig();
-        if (null == config.getEnable() || Switch.OFF == config.getEnable()) {
-            return true;
-        }
-
-        return false;
+        return null == config || null == config.getEnable() || Switch.OFF == config.getEnable();
     }
 
     /**
-     * Is need concurrency limiter
+     * The check the need for concurrency limiting
      *
-     * @return
+     * @return true indicates that it need to be concurrency handled
      */
-    protected boolean isConcurrencyLimiter() {
+    boolean isConcurrencyLimiter() {
         return limiterConfig.getConfig().getConcurrency() > 0L;
     }
 
     /**
-     * Is need rate limiter
+     * The check the need for rate limiting
      *
-     * @return
+     * @return true indicates that it need to be rate handled
      */
-    protected boolean isRateLimiter() {
+    boolean isRateLimiter() {
         return limiterConfig.getConfig().getRate() > 0L;
     }
 
     /**
-     * The check or broadcast event
+     * The notify for broadcast event
      *
-     * @param eventType
+     * @param eventType The notify Event Type
      */
-    protected void notifyBroadcastEvent(EventType eventType) {
+    void notifyBroadcastEvent(EventType eventType) {
         try {
             EventProcessor.EVENT.notify(module, eventType, model, limiterConfig, statistics.getStatisticsData());
         } catch (Exception e) {
