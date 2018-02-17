@@ -5,21 +5,23 @@ package io.neural.common;
  *
  * @author lry
  */
-public abstract class OriginalCall {
+public class OriginalCall {
 
     /**
      * The process original call
      *
-     * @return
-     * @throws Throwable
+     * @return object for original call result
+     * @throws Throwable throw original call exception
      */
-    public abstract Object call() throws Throwable;
+    public Object call() throws Throwable {
+        return null;
+    }
 
     /**
      * The process fall back
      *
-     * @return
-     * @throws Throwable
+     * @return object for fallback result
+     * @throws Throwable throw fallback exception
      */
     public Object fallback() throws Throwable {
         return null;
