@@ -1,7 +1,7 @@
 package io.neural.limiter;
 
-import io.neural.common.config.AbstractConfigCenter;
 import io.neural.common.Identity;
+import io.neural.common.config.StoreConfig;
 import io.neural.common.event.EventProcessor;
 import io.neural.extension.Extension;
 import io.neural.limiter.LimiterConfig.Config;
@@ -19,10 +19,10 @@ import java.util.*;
  **/
 @Slf4j
 @Extension("limiter")
-public class LimiterConfigCenter extends AbstractConfigCenter<Config, GlobalConfig> {
+public class LimiterConfigCenter extends StoreConfig<Config, GlobalConfig> {
 
     @Override
-    protected Map<String, Long> collectStatistics() {
+    public Map<String, Long> collectStatistics() {
         Map<String, Long> dataMap = new HashMap<>();
         try {
             Limiter.LIMITER.getLimiters().forEach((identity, limiter) -> {
@@ -42,7 +42,7 @@ public class LimiterConfigCenter extends AbstractConfigCenter<Config, GlobalConf
     }
 
     @Override
-    protected synchronized void notify(Identity identity, Config config) {
+    public synchronized void notify(Identity identity, Config config) {
         try {
             ILimiter limiter = Limiter.LIMITER.getLimiters().get(identity);
             if (null == limiter) {

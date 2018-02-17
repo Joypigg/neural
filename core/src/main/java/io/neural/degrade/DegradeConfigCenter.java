@@ -1,7 +1,7 @@
 package io.neural.degrade;
 
 import io.neural.common.Identity;
-import io.neural.common.config.AbstractConfigCenter;
+import io.neural.common.config.StoreConfig;
 import io.neural.common.event.EventProcessor;
 import io.neural.extension.Extension;
 import io.neural.degrade.DegradeConfig.Config;
@@ -19,10 +19,10 @@ import java.util.Map;
  **/
 @Slf4j
 @Extension("degrade")
-public class DegradeConfigCenter extends AbstractConfigCenter<Config, GlobalConfig> {
+public class DegradeConfigCenter extends StoreConfig<Config, GlobalConfig> {
 
     @Override
-    protected Map<String, Long> collectStatistics() {
+    public Map<String, Long> collectStatistics() {
         Map<String, Long> dataMap = new HashMap<>();
         try {
             Degrade.DEGRADE.getDegradeStatistics().forEach((identity, statistics) -> {
@@ -42,7 +42,7 @@ public class DegradeConfigCenter extends AbstractConfigCenter<Config, GlobalConf
     }
 
     @Override
-    protected synchronized void notify(Identity identity, Config config) {
+    public synchronized void notify(Identity identity, Config config) {
         try {
             Object mockData = DegradeConfig.mockData(config.getMock(), config.getClazz(), config.getData());
             Degrade.DEGRADE.getMockDataMap().put(identity, mockData);
