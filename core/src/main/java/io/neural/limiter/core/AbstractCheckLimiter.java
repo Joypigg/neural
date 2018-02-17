@@ -8,6 +8,7 @@ import io.neural.common.Identity.Switch;
 import io.neural.limiter.LimiterConfig.GlobalConfig;
 import io.neural.limiter.LimiterConfig.EventType;
 import io.neural.limiter.LimiterStatistics;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -18,15 +19,12 @@ import java.util.Map;
  * @author lry
  **/
 @Slf4j
+@Getter
 public abstract class AbstractCheckLimiter implements ILimiter {
 
     private volatile LimiterConfig limiterConfig = null;
     private final LimiterStatistics statistics = new LimiterStatistics();
 
-    @Override
-    public LimiterConfig getLimiterConfig() {
-        return limiterConfig;
-    }
 
     @Override
     public boolean refresh(LimiterConfig limiterConfig) throws Exception {
@@ -41,11 +39,6 @@ public abstract class AbstractCheckLimiter implements ILimiter {
         }
 
         return false;
-    }
-
-    @Override
-    public LimiterStatistics getStatistics() {
-        return statistics;
     }
 
     @Override
