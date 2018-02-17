@@ -19,6 +19,8 @@ public final class Constants {
     public static final String DELIMITER = ":";
     public static final String SYMBOL = "%s";
     public static final String MATCHING_ALL = "*";
+
+    public static final String STATISTICS = "statistics";
     public static final String CONFIG = "config";
     public static final String GLOBAL_CONFIG = "global_config";
     public static final String SUBSCRIBE_CONFIG_CHANNEL = "subscribe_config";
@@ -28,53 +30,24 @@ public final class Constants {
     public static final String SUBSCRIBE_CONFIG = "subscribe-config";
     public static final String PUSH_STATISTICS = "push-statistics";
 
-    public static final String STATISTICS = "statistics";
-
-
     public static final String CONFIG_KEY = String.join(DELIMITER, CONFIG, SYMBOL, SYMBOL, SYMBOL);
     public static final String CONFIG_ALL_KEY = String.join(DELIMITER, CONFIG, MATCHING_ALL);
     public static final String CONFIG_APP_ALL_KEY = String.join(DELIMITER, CONFIG, SYMBOL, MATCHING_ALL);
-
-
-    public static final String SUBSCRIBE_CONFIG_CHANNEL_KEY =
-            String.join(DELIMITER, SUBSCRIBE_CONFIG_CHANNEL, SYMBOL, SYMBOL, SYMBOL);
-
-
+    public static final String SUBSCRIBE_CONFIG_CHANNEL_KEY = String.join(DELIMITER, SUBSCRIBE_CONFIG_CHANNEL, SYMBOL, SYMBOL, SYMBOL);
     public static final String IDENTITY = String.join(DELIMITER, SYMBOL, SYMBOL, SYMBOL, SYMBOL);
 
-
-    public static final String TOTAL_REQUEST =
-            String.join(DELIMITER, STATISTICS, "request", IDENTITY);
-    public static final String TOTAL_SUCCESS =
-            String.join(DELIMITER, STATISTICS, "success", IDENTITY);
-    public static final String TOTAL_FAILURE =
-            String.join(DELIMITER, STATISTICS, "failure", IDENTITY);
-    public static final String TOTAL_TIMEOUT =
-            String.join(DELIMITER, STATISTICS, "timeout", IDENTITY);
-    public static final String TOTAL_REJECTION =
-            String.join(DELIMITER, STATISTICS, "rejection", IDENTITY);
-
-
-    public static final String TOTAL_ELAPSED =
-            String.join(DELIMITER, STATISTICS, "elapsed", IDENTITY);
-    public static final String MAX_ELAPSED =
-            String.join(DELIMITER, STATISTICS, "max-elapsed", IDENTITY);
-
-
-    public static final String TOTAL_CONCURRENCY =
-            String.join(DELIMITER, STATISTICS, "concurrency", IDENTITY);
-    public static final String MAX_CONCURRENCY =
-            String.join(DELIMITER, STATISTICS, "max-concurrency", IDENTITY);
-
-
-    public static final String TOTAL_C_EXCEED =
-            String.join(DELIMITER, STATISTICS, "c-exceed", IDENTITY);
-    public static final String TOTAL_R_EXCEED =
-            String.join(DELIMITER, STATISTICS, "r-exceed", IDENTITY);
-
-
-    public static final String TOTAL_DEGRADE =
-            String.join(DELIMITER, STATISTICS, "degrade", IDENTITY);
+    public static final String TOTAL_REQUEST = String.join(DELIMITER, STATISTICS, "request", IDENTITY);
+    public static final String TOTAL_SUCCESS = String.join(DELIMITER, STATISTICS, "success", IDENTITY);
+    public static final String TOTAL_FAILURE = String.join(DELIMITER, STATISTICS, "failure", IDENTITY);
+    public static final String TOTAL_TIMEOUT = String.join(DELIMITER, STATISTICS, "timeout", IDENTITY);
+    public static final String TOTAL_REJECTION = String.join(DELIMITER, STATISTICS, "rejection", IDENTITY);
+    public static final String TOTAL_ELAPSED = String.join(DELIMITER, STATISTICS, "elapsed", IDENTITY);
+    public static final String MAX_ELAPSED = String.join(DELIMITER, STATISTICS, "max-elapsed", IDENTITY);
+    public static final String TOTAL_CONCURRENCY = String.join(DELIMITER, STATISTICS, "concurrency", IDENTITY);
+    public static final String MAX_CONCURRENCY = String.join(DELIMITER, STATISTICS, "max-concurrency", IDENTITY);
+    public static final String TOTAL_C_EXCEED = String.join(DELIMITER, STATISTICS, "c-exceed", IDENTITY);
+    public static final String TOTAL_R_EXCEED = String.join(DELIMITER, STATISTICS, "r-exceed", IDENTITY);
+    public static final String TOTAL_DEGRADE = String.join(DELIMITER, STATISTICS, "degrade", IDENTITY);
 
 
     /**
@@ -136,6 +109,20 @@ public final class Constants {
      */
     public static <T> T parseObject(Class<T> clz, Map<String, String> map) {
         return JSONObject.parseObject(JSON.toJSONString(map), clz);
+    }
+
+    public static <T> T parseObject(Class<T> clz, String json) {
+        return JSONObject.parseObject(json, clz);
+    }
+
+    /**
+     * The build JSON string
+     *
+     * @param object
+     * @return
+     */
+    public static String buildJSONString(Object object) {
+        return JSONObject.toJSONString(object);
     }
 
     /**

@@ -63,7 +63,7 @@ public class DegradeStatistics extends Statistics implements Serializable {
      */
     public synchronized Map<String, Long> getStatisticsAndReset(Identity identity) {
         Long time = super.buildStatisticsTime(
-                Degrade.DEGRADE.getConfigCenter().getGlobalConfig().getReportStatisticCycle().intValue());
+                Degrade.DEGRADE.getStoreConfig().getGlobalConfig().getReportStatisticCycle().intValue());
         Map<String, Long> map = super.getBaseStatisticsAndReset(identity, time);
 
         // statistics exceed

@@ -8,8 +8,7 @@ import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.Identity.Switch;
 import io.neural.common.OriginalCall;
-import io.neural.common.config.IConfigCenter;
-import io.neural.common.config.ConfigCenterStore;
+import io.neural.common.config.StoreConfig;
 import io.neural.common.store.IStore;
 import io.neural.extension.ExtensionLoader;
 import io.neural.limiter.LimiterConfig.Config;
@@ -33,8 +32,7 @@ public enum Limiter {
     private volatile boolean isStart = false;
 
     private IStore store = null;
-    private ConfigCenterStore<Config, GlobalConfig> governor = null;
-    private IConfigCenter<Config, GlobalConfig> configCenter = null;
+    private StoreConfig<Config, GlobalConfig> storeConfig = null;
 
     private final ConcurrentMap<Identity, Config> configs = new ConcurrentHashMap<>();
     private final ConcurrentMap<Identity, ILimiter> limiters = new ConcurrentHashMap<>();
@@ -72,23 +70,21 @@ public enum Limiter {
         this.store.start(nurl);
 
         // initialize config center and initialize config center store
-        this.configCenter = ExtensionLoader.getLoader(IConfigCenter.class).getExtension(nurl.getPath());
-        configCenter.initialize(store, Config.class, GlobalConfig.class);
-        this.governor = configCenter.getStore();
+        this.storeConfig = ExtensionLoader.getLoader(StoreConfig.class).getExtension(nurl.getPath());
 
         // add limiter global config data to remote
-        GlobalConfig globalConfig = governor.queryGlobalConfig();
+        GlobalConfig globalConfig = storeConfig.queryGlobalConfig();
         if (null == globalConfig) {
-            governor.addGlobalConfig(new GlobalConfig());
+            storeConfig.addGlobalConfig(new GlobalConfig());
         }
         // add limiter config data to remote
         configs.forEach(((identity, config) -> {
-            configCenter.putConfig(identity, config);
-            if (null == governor.queryConfig(identity)) {
-                governor.addConfig(identity, config);
+            storeConfig.putConfig(identity, config);
+            if (null == storeConfig.queryConfig(identity)) {
+                storeConfig.addConfig(identity, config);
             }
         }));
-        configCenter.start();
+        storeConfig.start();
 
         // add shutdown Hook
         Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
@@ -108,7 +104,7 @@ public enum Limiter {
             return originalCall.call();
         }
 
-        GlobalConfig globalConfig = configCenter.getGlobalConfig();
+        GlobalConfig globalConfig = storeConfig.getGlobalConfig();
         // The check global config of limiter
         if (null == globalConfig || null == globalConfig.getEnable() || Switch.OFF == globalConfig.getEnable()) {
             return originalCall.call();
@@ -127,8 +123,8 @@ public enum Limiter {
      */
     public void destroy() {
         this.isStart = false;
-        if (null != configCenter) {
-            configCenter.destroy();
+        if (null != storeConfig) {
+            storeConfig.destroy();
         }
         limiters.clear();
         if (null != store) {

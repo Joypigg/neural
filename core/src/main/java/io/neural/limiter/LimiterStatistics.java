@@ -78,7 +78,7 @@ public class LimiterStatistics extends Statistics implements Serializable {
      */
     public synchronized Map<String, Long> getStatisticsAndReset(Identity identity) {
         Long time = super.buildStatisticsTime(
-                Limiter.LIMITER.getConfigCenter().getGlobalConfig().getReportStatisticCycle().intValue());
+                Limiter.LIMITER.getStoreConfig().getGlobalConfig().getReportStatisticCycle().intValue());
         Map<String, Long> map = super.getBaseStatisticsAndReset(identity, time);
 
         // statistics exceed

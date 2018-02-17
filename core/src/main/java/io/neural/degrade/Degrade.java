@@ -5,8 +5,7 @@ import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.Identity.Switch;
 import io.neural.common.OriginalCall;
-import io.neural.common.config.ConfigCenterStore;
-import io.neural.common.config.IConfigCenter;
+import io.neural.common.config.StoreConfig;
 import io.neural.common.store.IStore;
 import io.neural.degrade.DegradeConfig.Config;
 import io.neural.degrade.DegradeConfig.GlobalConfig;
@@ -38,8 +37,7 @@ public enum Degrade {
     private volatile boolean isStart = false;
 
     private IStore store;
-    private ConfigCenterStore<Config, GlobalConfig> governor = null;
-    private IConfigCenter<Config, GlobalConfig> configCenter = null;
+    private StoreConfig<Config, GlobalConfig> storeConfig = null;
 
     private volatile Map<Identity, Object> mockDataMap = new HashMap<>();
     private final ConcurrentMap<Identity, Config> configs = new ConcurrentHashMap<>();
@@ -81,23 +79,21 @@ public enum Degrade {
 
 
         // initialize config center and initialize config center store
-        this.configCenter = ExtensionLoader.getLoader(IConfigCenter.class).getExtension(nurl.getPath());
-        configCenter.initialize(store, Config.class, GlobalConfig.class);
-        this.governor = configCenter.getStore();
+        this.storeConfig = ExtensionLoader.getLoader(StoreConfig.class).getExtension(nurl.getPath());
 
         // add degrade global config data to remote
-        GlobalConfig globalConfig = governor.queryGlobalConfig();
+        GlobalConfig globalConfig = storeConfig.queryGlobalConfig();
         if (null == globalConfig) {
-            governor.addGlobalConfig(new GlobalConfig());
+            storeConfig.addGlobalConfig(new GlobalConfig());
         }
         // add degrade config data to remote
         configs.forEach(((identity, config) -> {
-            configCenter.putConfig(identity, config);
-            if (null == governor.queryConfig(identity)) {
-                governor.addConfig(identity, config);
+            storeConfig.putConfig(identity, config);
+            if (null == storeConfig.queryConfig(identity)) {
+                storeConfig.addConfig(identity, config);
             }
         }));
-        configCenter.start();
+        storeConfig.start();
 
         // add shutdown Hook
         Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
@@ -118,7 +114,7 @@ public enum Degrade {
             return originalCall.call();
         }
 
-        GlobalConfig globalConfig = configCenter.getGlobalConfig();
+        GlobalConfig globalConfig = storeConfig.getGlobalConfig();
         // the check global config of degrade
         if (null == globalConfig || null == globalConfig.getEnable()) {
             return originalCall.call();
@@ -216,8 +212,8 @@ public enum Degrade {
      */
     public void destroy() {
         this.isStart = false;
-        if (null != configCenter) {
-            configCenter.destroy();
+        if (null != storeConfig) {
+            storeConfig.destroy();
         }
         if (null != store) {
             store.destroy();
