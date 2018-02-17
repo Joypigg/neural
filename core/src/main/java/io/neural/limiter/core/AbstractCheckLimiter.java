@@ -1,20 +1,17 @@
 package io.neural.limiter.core;
 
 import io.neural.common.event.EventProcessor;
-import io.neural.limiter.Limiter;
+import io.neural.extension.Extension;
 import io.neural.limiter.LimiterConfig;
 import io.neural.limiter.LimiterConfig.Config;
 import io.neural.common.Identity.Switch;
-import io.neural.limiter.LimiterConfig.GlobalConfig;
 import io.neural.limiter.LimiterConfig.EventType;
 import io.neural.limiter.LimiterStatistics;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
-
 /**
- * The Check Limiter.
+ * The Abstract Check Limiter.
  *
  * @author lry
  **/
@@ -23,22 +20,27 @@ import java.util.Map;
 public abstract class AbstractCheckLimiter implements ILimiter {
 
     private volatile LimiterConfig limiterConfig = null;
-    private final LimiterStatistics statistics = new LimiterStatistics();
+    private volatile LimiterStatistics statistics = new LimiterStatistics();
+    private final String module = "limiter";
+    private final String model;
 
+    public AbstractCheckLimiter() {
+        Extension extension = this.getClass().getAnnotation(Extension.class);
+        if (null == extension) {
+            throw new IllegalStateException("The " + this.getClass().getName() + " must has @Extension");
+        }
+
+        this.model = extension.value();
+    }
 
     @Override
     public boolean refresh(LimiterConfig limiterConfig) throws Exception {
-        GlobalConfig globalConfig = Limiter.LIMITER.getConfigCenter().getGlobalConfig();
-        if (null == globalConfig) {
-            throw new IllegalStateException("LimiterGlobalConfig = " + globalConfig);
-        }
-
         log.debug("The refresh {}", limiterConfig);
-        if (null == this.limiterConfig || !this.limiterConfig.equals(limiterConfig)) {
-            return null != (this.limiterConfig = limiterConfig);
+        if (null != limiterConfig && !this.limiterConfig.equals(limiterConfig)) {
+            this.limiterConfig = limiterConfig;
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -83,49 +85,15 @@ public abstract class AbstractCheckLimiter implements ILimiter {
     }
 
     /**
-     * Is need print exceed log
-     *
-     * @return
-     */
-    protected boolean isPrintExceedLog() {
-        GlobalConfig globalConfig = Limiter.LIMITER.getConfigCenter().getGlobalConfig();
-        if (null == globalConfig.getPrintExceedLog()) {
-            return true;
-        }
-
-        return Switch.ON == globalConfig.getPrintExceedLog();
-    }
-
-    /**
-     * Is need broadcast event
-     *
-     * @return
-     */
-    protected boolean isBroadcastEvent() {
-        GlobalConfig globalConfig = Limiter.LIMITER.getConfigCenter().getGlobalConfig();
-        if (null == globalConfig.getBroadcastEvent()) {
-            return true;
-        }
-
-        return Switch.ON == globalConfig.getBroadcastEvent();
-    }
-
-    /**
      * The check or broadcast event
      *
      * @param eventType
      */
-    protected void checkOrBroadcastEvent(EventType eventType) {
+    protected void notifyBroadcastEvent(EventType eventType) {
         try {
-            if (!this.isBroadcastEvent()) {
-                return;
-            }
-
-            Map<String, Long> dataMap = statistics.getStatisticsData();
-            String module = Limiter.LIMITER.getConfigCenter().getStore().getModule();
-            EventProcessor.EVENT.notify(module, eventType, limiterConfig, dataMap);
+            EventProcessor.EVENT.notify(module, eventType, model, limiterConfig, statistics.getStatisticsData());
         } catch (Exception e) {
-            log.error("The broadcast event is exception", e);
+            log.error("The notify broadcast event is exception", e);
         }
     }
 

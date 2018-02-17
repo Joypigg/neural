@@ -94,12 +94,10 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
 
         // print exceed log
         Config config = super.getLimiterConfig().getConfig();
-        if (super.isPrintExceedLog()) {
-            log.warn("The {} exceed, [{}]-[{}]", eventType, config, super.getStatistics());
-        }
+        log.warn("The {} exceed, [{}]-[{}]", eventType, config, super.getStatistics());
 
         // the broadcast event of traffic exceed
-        super.checkOrBroadcastEvent(eventType);
+        super.notifyBroadcastEvent(eventType);
 
         // the execute strategy with traffic exceed
         if (null != config.getStrategy()) {
