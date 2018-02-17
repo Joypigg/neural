@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 
 /**
  * Factory class for instances of {@link WaitStrategy}.
@@ -187,7 +188,7 @@ public final class WaitStrategies {
      * The new joined strategy will have a wait time which is total of all wait times computed one after another in order.
      *
      * @param waitStrategies Wait strategies that need to be applied one after another for computing the sleep time.
-     * @return 
+     * @return
      */
     public static WaitStrategy join(WaitStrategy... waitStrategies) {
         Preconditions.checkState(waitStrategies.length > 0, "Must have at least one wait strategy");
@@ -196,6 +197,11 @@ public final class WaitStrategies {
         return new CompositeWaitStrategy(waitStrategyList);
     }
 
+    /**
+     * The Fixed Wait Strategy
+     *
+     * @author lry
+     */
     private static final class FixedWaitStrategy implements WaitStrategy {
         private final long sleepTime;
 
@@ -204,12 +210,17 @@ public final class WaitStrategies {
             this.sleepTime = sleepTime;
         }
 
-		@Override
-        public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
+        @Override
+        public long computeSleepTime(Attempt failedAttempt) {
             return sleepTime;
         }
     }
 
+    /**
+     * The Random Wait Strategy
+     *
+     * @author lry
+     */
     private static final class RandomWaitStrategy implements WaitStrategy {
         private static final Random RANDOM = new Random();
         private final long minimum;
@@ -223,13 +234,18 @@ public final class WaitStrategies {
             this.maximum = maximum;
         }
 
-		@Override
+        @Override
         public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             long t = Math.abs(RANDOM.nextLong()) % (maximum - minimum);
             return t + minimum;
         }
     }
 
+    /**
+     * The Incrementing Wait Strategy
+     *
+     * @author lry
+     */
     private static final class IncrementingWaitStrategy implements WaitStrategy {
         private final long initialSleepTime;
         private final long increment;
@@ -240,13 +256,18 @@ public final class WaitStrategies {
             this.increment = increment;
         }
 
-		@Override
+        @Override
         public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             long result = initialSleepTime + (increment * (failedAttempt.getAttemptNumber() - 1));
             return result >= 0L ? result : 0L;
         }
     }
 
+    /**
+     * The Exponential Wait Strategy
+     *
+     * @author lry
+     */
     private static final class ExponentialWaitStrategy implements WaitStrategy {
         private final long multiplier;
         private final long maximumWait;
@@ -259,7 +280,7 @@ public final class WaitStrategies {
             this.maximumWait = maximumWait;
         }
 
-		@Override
+        @Override
         public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             double exp = Math.pow(2, failedAttempt.getAttemptNumber());
             long result = Math.round(multiplier * exp);
@@ -270,6 +291,11 @@ public final class WaitStrategies {
         }
     }
 
+    /**
+     * The Fibonacci Wait Strategy
+     *
+     * @author lry
+     */
     private static final class FibonacciWaitStrategy implements WaitStrategy {
         private final long multiplier;
         private final long maximumWait;
@@ -282,8 +308,8 @@ public final class WaitStrategies {
             this.maximumWait = maximumWait;
         }
 
-		@Override
-        public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
+        @Override
+        public long computeSleepTime(Attempt failedAttempt) {
             long fib = fib(failedAttempt.getAttemptNumber());
             long result = multiplier * fib;
 
@@ -295,8 +321,12 @@ public final class WaitStrategies {
         }
 
         private long fib(long n) {
-            if (n == 0L) return 0L;
-            if (n == 1L) return 1L;
+            if (n == 0L) {
+                return 0L;
+            }
+            if (n == 1L) {
+                return 1L;
+            }
 
             long prevPrev = 0L;
             long prev = 1L;
@@ -312,44 +342,48 @@ public final class WaitStrategies {
         }
     }
 
+    /**
+     * The Composite Wait Strategy
+     *
+     * @author lry
+     */
+    @AllArgsConstructor
     private static final class CompositeWaitStrategy implements WaitStrategy {
         private final List<WaitStrategy> waitStrategies;
 
-        public CompositeWaitStrategy(List<WaitStrategy> waitStrategies) {
-            Preconditions.checkState(!waitStrategies.isEmpty(), "Need at least one wait strategy");
-            this.waitStrategies = waitStrategies;
-        }
-
-		@Override
-        public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
+        @Override
+        public long computeSleepTime(Attempt failedAttempt) {
             long waitTime = 0L;
             for (WaitStrategy waitStrategy : waitStrategies) {
                 waitTime += waitStrategy.computeSleepTime(failedAttempt);
             }
+
             return waitTime;
         }
     }
 
+    /**
+     * The Exception Wait Strategy
+     *
+     * @param <T>
+     * @author lry
+     */
+    @AllArgsConstructor
     private static final class ExceptionWaitStrategy<T extends Throwable> implements WaitStrategy {
         private final Class<T> exceptionClass;
         private final Function<T, Long> function;
 
-        public ExceptionWaitStrategy(Class<T> exceptionClass, Function<T, Long> function) {
-            this.exceptionClass = exceptionClass;
-            this.function = function;
-        }
-
-		@SuppressWarnings("unchecked")
-		@Override
-        public long computeSleepTime(@SuppressWarnings("rawtypes") Attempt lastAttempt) {
+        @Override
+        public long computeSleepTime(Attempt lastAttempt) {
             if (lastAttempt.hasException()) {
                 Throwable cause = lastAttempt.getExceptionCause();
                 if (exceptionClass.isAssignableFrom(cause.getClass())) {
                     return function.apply((T) cause);
                 }
             }
+
             return 0L;
         }
     }
-    
+
 }
