@@ -71,6 +71,7 @@ public enum Limiter {
 
         // initialize config center and initialize config center store
         this.storeConfig = ExtensionLoader.getLoader(StoreConfig.class).getExtension(url.getPath());
+        storeConfig.setStore(store);
 
         // add limiter global config data to remote
         GlobalConfig globalConfig = storeConfig.queryGlobalConfig();

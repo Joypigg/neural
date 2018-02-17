@@ -8,6 +8,8 @@ import io.neural.common.SubscribeListener;
 import io.neural.common.Identity.EventType;
 import io.neural.extension.Extension;
 import io.neural.extension.NPI;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.ParameterizedType;
@@ -29,11 +31,13 @@ import java.util.concurrent.*;
 @Slf4j
 public class StoreConfig<C extends Identity.Config, G extends Identity.GlobalConfig> {
 
-    private IStore store;
     protected final String module;
     private final Class<C> configClass;
     private final Class<G> globalClass;
 
+    @Setter
+    private IStore store;
+    @Getter
     private volatile G globalConfig;
     private volatile ConcurrentMap<Identity, C> configs = new ConcurrentHashMap<>();
 
@@ -50,10 +54,6 @@ public class StoreConfig<C extends Identity.Config, G extends Identity.GlobalCon
         Type[] args = ((ParameterizedType) type).getActualTypeArguments();
         this.configClass = (Class<C>) args[0];
         this.globalClass = (Class<G>) args[1];
-    }
-
-    public G getGlobalConfig() {
-        return globalConfig;
     }
 
     public void putConfig(Identity identity, C config) {
