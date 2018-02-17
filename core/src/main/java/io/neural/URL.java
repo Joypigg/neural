@@ -21,11 +21,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * NURL - Uniform Resource Locator (Immutable, ThreadSafe)
+ * URL - Uniform Resource Locator
  *
  * @author lry
+ * @apiNote Immutable, ThreadSafe
  */
-public final class NURL implements Serializable {
+public final class URL implements Serializable {
 
     private static final long serialVersionUID = -1985165475234910535L;
 
@@ -37,22 +38,17 @@ public final class NURL implements Serializable {
     private final String path;
     private final Map<String, String> parameters;
 
-    /**
-     * ==== cache ====
-     */
     private volatile transient Map<String, Number> numbers;
-    private volatile transient Map<String, NURL> nurls;
+    private volatile transient Map<String, URL> urls;
     private volatile transient String ip;
     private volatile transient String parameter;
     private volatile transient String string;
 
     public static final Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
-    /**
-     * key value pair pattern.
-     */
+    public static final Pattern COMMA_LOCALHOST_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
     private static final Pattern KVP_PATTERN = Pattern.compile("([_.a-zA-Z0-9][-_.a-zA-Z0-9]*)[=](.*)");
 
-    protected NURL() {
+    protected URL() {
         this.protocol = null;
         this.username = null;
         this.password = null;
@@ -62,7 +58,7 @@ public final class NURL implements Serializable {
         this.parameters = null;
     }
 
-    public NURL(String protocol, String host, int port) {
+    public URL(String protocol, String host, int port) {
         this(protocol, null, null, host, port, null, (Map<String, String>) null);
     }
 
@@ -74,38 +70,38 @@ public final class NURL implements Serializable {
      * @param port
      * @param pairs
      */
-    public NURL(String protocol, String host, int port, String[] pairs) {
+    public URL(String protocol, String host, int port, String[] pairs) {
         this(protocol, null, null, host, port, null, toStringMap(pairs));
     }
 
-    public NURL(String protocol, String host, int port, Map<String, String> parameters) {
+    public URL(String protocol, String host, int port, Map<String, String> parameters) {
         this(protocol, null, null, host, port, null, parameters);
     }
 
-    public NURL(String protocol, String host, int port, String path) {
+    public URL(String protocol, String host, int port, String path) {
         this(protocol, null, null, host, port, path, (Map<String, String>) null);
     }
 
-    public NURL(String protocol, String host, int port, String path, String... pairs) {
+    public URL(String protocol, String host, int port, String path, String... pairs) {
         this(protocol, null, null, host, port, path, toStringMap(pairs));
     }
 
-    public NURL(String protocol, String host, int port, String path, Map<String, String> parameters) {
+    public URL(String protocol, String host, int port, String path, Map<String, String> parameters) {
         this(protocol, null, null, host, port, path, parameters);
     }
 
-    public NURL(String protocol, String username, String password, String host, int port, String path) {
+    public URL(String protocol, String username, String password, String host, int port, String path) {
         this(protocol, username, password, host, port, path, (Map<String, String>) null);
     }
 
-    public NURL(String protocol, String username, String password, String host, int port, String path, String... pairs) {
+    public URL(String protocol, String username, String password, String host, int port, String path, String... pairs) {
         this(protocol, username, password, host, port, path, toStringMap(pairs));
     }
 
-    public NURL(String protocol, String username, String password, String host, int port, String path, Map<String, String> parameters) {
+    public URL(String protocol, String username, String password, String host, int port, String path, Map<String, String> parameters) {
         if (username == null || username.length() == 0) {
             if (password != null && password.length() > 0) {
-                throw new IllegalArgumentException("Invalid nurl, password without username!");
+                throw new IllegalArgumentException("Invalid url, password without username!");
             }
         }
         this.protocol = protocol;
@@ -131,9 +127,9 @@ public final class NURL implements Serializable {
      *
      * @param murl URL string
      * @return URL instance
-     * @see NURL
+     * @see URL
      */
-    public static NURL valueOf(String murl) {
+    public static URL valueOf(String murl) {
         if (murl == null || (murl = murl.trim()).length() == 0) {
             throw new IllegalArgumentException("url == null");
         }
@@ -205,7 +201,7 @@ public final class NURL implements Serializable {
             host = murl;
         }
 
-        return new NURL(protocol, username, password, host, port, path, parameters);
+        return new URL(protocol, username, password, host, port, path, parameters);
     }
 
     public String getProtocol() {
@@ -282,8 +278,8 @@ public final class NURL implements Serializable {
         return address.toString();
     }
 
-    public List<NURL> getBackupUrls() {
-        List<NURL> murls = new ArrayList<NURL>();
+    public List<URL> getBackupUrls() {
+        List<URL> murls = new ArrayList<URL>();
         murls.add(this);
         String[] backups = getParameter("backup", new String[0]);
         if (backups != null && backups.length > 0) {
@@ -335,19 +331,19 @@ public final class NURL implements Serializable {
         return path;
     }
 
-    public NURL setProtocol(String protocol) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setProtocol(String protocol) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setUsername(String username) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setUsername(String username) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setPassword(String password) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setPassword(String password) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setAddress(String address) {
+    public URL setAddress(String address) {
         int i = address.lastIndexOf(':');
         String host;
         int port = this.port;
@@ -357,19 +353,19 @@ public final class NURL implements Serializable {
         } else {
             host = address;
         }
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setHost(String host) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setHost(String host) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setPort(int port) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setPort(int port) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
-    public NURL setPath(String path) {
-        return new NURL(protocol, username, password, host, port, path, getParameters());
+    public URL setPath(String path) {
+        return new URL(protocol, username, password, host, port, path, getParameters());
     }
 
     public Map<String, String> getParameters() {
@@ -409,21 +405,25 @@ public final class NURL implements Serializable {
     }
 
     private Map<String, Number> getNumbers() {
-        if (numbers == null) { // 允许并发重复创建
+        // 允许并发重复创建
+        if (numbers == null) {
             numbers = new ConcurrentHashMap<String, Number>();
         }
+
         return numbers;
     }
 
-    private Map<String, NURL> getNurls() {
-        if (nurls == null) { // 允许并发重复创建
-            nurls = new ConcurrentHashMap<String, NURL>();
+    private Map<String, URL> getURLs() {
+        // 允许并发重复创建
+        if (urls == null) {
+            urls = new ConcurrentHashMap<String, URL>();
         }
-        return nurls;
+
+        return urls;
     }
 
-    public NURL getNurlParameter(String key) {
-        NURL u = getNurls().get(key);
+    public URL getNULParameter(String key) {
+        URL u = getURLs().get(key);
         if (u != null) {
             return u;
         }
@@ -431,8 +431,8 @@ public final class NURL implements Serializable {
         if (value == null || value.length() == 0) {
             return null;
         }
-        u = NURL.valueOf(value);
-        getNurls().put(key, u);
+        u = URL.valueOf(value);
+        getURLs().put(key, u);
         return u;
     }
 
@@ -608,11 +608,11 @@ public final class NURL implements Serializable {
     }
 
     public String getMethodParameterAndDecoded(String method, String key) {
-        return NURL.decode(getMethodParameter(method, key));
+        return URL.decode(getMethodParameter(method, key));
     }
 
     public String getMethodParameterAndDecoded(String method, String key, String defaultValue) {
-        return NURL.decode(getMethodParameter(method, key, defaultValue));
+        return URL.decode(getMethodParameter(method, key, defaultValue));
     }
 
     public Map<String, String> getMethodParameters(String method) {
@@ -843,7 +843,7 @@ public final class NURL implements Serializable {
     }
 
     public boolean isLocalHost() {
-        return (host != null && (Pattern.compile("127(\\.\\d{1,3}){3}$").matcher(host).matches()
+        return (host != null && (COMMA_LOCALHOST_PATTERN.matcher(host).matches()
                 || host.equalsIgnoreCase("localhost"))) || getParameter("localhost", false);
     }
 
@@ -851,76 +851,83 @@ public final class NURL implements Serializable {
         return "0.0.0.0".equals(host) || getParameter("anyhost", false);
     }
 
-    public NURL addParameterAndEncoded(String key, String value) {
+    public URL addParameterAndEncoded(String key, String value) {
         if (value == null || value.length() == 0) {
             return this;
         }
         return addParameter(key, encode(value));
     }
 
-    public NURL addParameter(String key, boolean value) {
+    public URL addParameter(String key, boolean value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, char value) {
+    public URL addParameter(String key, char value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, byte value) {
+    public URL addParameter(String key, byte value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, short value) {
+    public URL addParameter(String key, short value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, int value) {
+    public URL addParameter(String key, int value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, long value) {
+    public URL addParameter(String key, long value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, float value) {
+    public URL addParameter(String key, float value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, double value) {
+    public URL addParameter(String key, double value) {
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, Enum<?> value) {
-        if (value == null) return this;
+    public URL addParameter(String key, Enum<?> value) {
+        if (value == null) {
+            return this;
+        }
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, Number value) {
-        if (value == null) return this;
+    public URL addParameter(String key, Number value) {
+        if (value == null) {
+            return this;
+        }
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, CharSequence value) {
-        if (value == null || value.length() == 0) return this;
+    public URL addParameter(String key, CharSequence value) {
+        if (value == null || value.length() == 0) {
+            return this;
+        }
         return addParameter(key, String.valueOf(value));
     }
 
-    public NURL addParameter(String key, String value) {
+    public URL addParameter(String key, String value) {
         if (key == null || key.length() == 0
                 || value == null || value.length() == 0) {
             return this;
         }
         // 如果没有修改，直接返回。
-        if (value.equals(getParameters().get(key))) { // value != null
+        // value != null
+        if (value.equals(getParameters().get(key))) {
             return this;
         }
 
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.put(key, value);
-        return new NURL(protocol, username, password, host, port, path, map);
+        return new URL(protocol, username, password, host, port, path, map);
     }
 
-    public NURL addParameterIfAbsent(String key, String value) {
+    public URL addParameterIfAbsent(String key, String value) {
         if (key == null || key.length() == 0
                 || value == null || value.length() == 0) {
             return this;
@@ -930,7 +937,7 @@ public final class NURL implements Serializable {
         }
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.put(key, value);
-        return new NURL(protocol, username, password, host, port, path, map);
+        return new URL(protocol, username, password, host, port, path, map);
     }
 
     /**
@@ -939,7 +946,7 @@ public final class NURL implements Serializable {
      * @param parameters
      * @return A new URL
      */
-    public NURL addParameters(Map<String, String> parameters) {
+    public URL addParameters(Map<String, String> parameters) {
         if (parameters == null || parameters.size() == 0) {
             return this;
         }
@@ -953,23 +960,25 @@ public final class NURL implements Serializable {
             }
         }
         // 如果没有修改，直接返回。
-        if (hasAndEqual) return this;
+        if (hasAndEqual) {
+            return this;
+        }
 
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.putAll(parameters);
-        return new NURL(protocol, username, password, host, port, path, map);
+        return new URL(protocol, username, password, host, port, path, map);
     }
 
-    public NURL addParametersIfAbsent(Map<String, String> parameters) {
+    public URL addParametersIfAbsent(Map<String, String> parameters) {
         if (parameters == null || parameters.size() == 0) {
             return this;
         }
         Map<String, String> map = new HashMap<String, String>(parameters);
         map.putAll(getParameters());
-        return new NURL(protocol, username, password, host, port, path, map);
+        return new URL(protocol, username, password, host, port, path, map);
     }
 
-    public NURL addParameters(String... pairs) {
+    public URL addParameters(String... pairs) {
         if (pairs == null || pairs.length == 0) {
             return this;
         }
@@ -984,7 +993,7 @@ public final class NURL implements Serializable {
         return addParameters(map);
     }
 
-    public NURL addParameterString(String query) {
+    public URL addParameterString(String query) {
         if (query == null || query.length() == 0) {
             return this;
         }
@@ -1006,21 +1015,21 @@ public final class NURL implements Serializable {
         return addParameters(parameters);
     }
 
-    public NURL removeParameter(String key) {
+    public URL removeParameter(String key) {
         if (key == null || key.length() == 0) {
             return this;
         }
         return removeParameters(key);
     }
 
-    public NURL removeParameters(Collection<String> keys) {
+    public URL removeParameters(Collection<String> keys) {
         if (keys == null || keys.size() == 0) {
             return this;
         }
         return removeParameters(keys.toArray(new String[0]));
     }
 
-    public NURL removeParameters(String... keys) {
+    public URL removeParameters(String... keys) {
         if (keys == null || keys.length == 0) {
             return this;
         }
@@ -1031,11 +1040,11 @@ public final class NURL implements Serializable {
         if (map.size() == getParameters().size()) {
             return this;
         }
-        return new NURL(protocol, username, password, host, port, path, map);
+        return new URL(protocol, username, password, host, port, path, map);
     }
 
-    public NURL clearParameters() {
-        return new NURL(protocol, username, password, host, port, path, new HashMap<String, String>());
+    public URL clearParameters() {
+        return new URL(protocol, username, password, host, port, path, new HashMap<String, String>());
     }
 
     public String getRawParameter(String key) {
@@ -1228,7 +1237,7 @@ public final class NURL implements Serializable {
         return getParameter("interface", path);
     }
 
-    public NURL setServiceInterface(String service) {
+    public URL setServiceInterface(String service) {
         return addParameter("interface", service);
     }
 
@@ -1280,7 +1289,7 @@ public final class NURL implements Serializable {
             return false;
         }
 
-        NURL other = (NURL) obj;
+        URL other = (URL) obj;
         if (host == null) {
             if (other.host != null) {
                 return false;

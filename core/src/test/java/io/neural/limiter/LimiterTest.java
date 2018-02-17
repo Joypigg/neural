@@ -2,7 +2,7 @@ package io.neural.limiter;
 
 import java.util.Random;
 
-import io.neural.NURL;
+import io.neural.URL;
 import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.OriginalCall;
@@ -37,8 +37,8 @@ public class LimiterTest {
         config3.setName("删除订单");
         limiter.addLimiter(new LimiterConfig(identity3, config3));
 
-        NURL nurl = NURL.valueOf("redis://localhost:6379/limiter?minIdle=2");
-        limiter.start(nurl);
+        URL url = URL.valueOf("redis://localhost:6379/limiter?minIdle=2");
+        limiter.start(url);
 
         for (int i = 0; i < 100000; i++) {
             Object result = limiter.doLimiter(identity1, new OriginalCall() {
@@ -56,7 +56,7 @@ public class LimiterTest {
             if (i == 50) {
                 config1.setRate(3000L);
                 System.out.println("1发布配置");
-                limiter.getGovernor().publish(identity1, config1);
+                limiter.getStoreConfig().publish(identity1, config1);
                 System.out.println("2发布配置");
             }
         }

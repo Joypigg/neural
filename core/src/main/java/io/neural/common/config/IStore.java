@@ -1,6 +1,6 @@
 package io.neural.common.config;
 
-import io.neural.NURL;
+import io.neural.URL;
 import io.neural.common.SubscribeListener;
 import io.neural.extension.NPI;
 
@@ -18,9 +18,9 @@ public interface IStore {
     /**
      * The start
      *
-     * @param nurl
+     * @param url
      */
-    void start(NURL nurl);
+    void start(URL url);
 
     /**
      * The batch update or add

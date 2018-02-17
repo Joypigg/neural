@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
-import io.neural.NURL;
+import io.neural.URL;
 import io.neural.common.SubscribeListener;
 import io.neural.extension.Extension;
 import redis.clients.jedis.Jedis;
@@ -26,10 +26,10 @@ public class RedisStore implements IStore {
     private final Map<SubscribeListener, JedisPubSub> subscribed = new ConcurrentHashMap<>();
 
     @Override
-    public void start(NURL nurl) {
-        String parametersJSON = JSON.toJSONString(nurl.getParameters());
+    public void start(URL url) {
+        String parametersJSON = JSON.toJSONString(url.getParameters());
         JedisPoolConfig jedisPoolConfig = JSON.parseObject(parametersJSON, JedisPoolConfig.class);
-        this.jedisPool = new JedisPool(jedisPoolConfig, nurl.getHost(), nurl.getPort());
+        this.jedisPool = new JedisPool(jedisPoolConfig, url.getHost(), url.getPort());
     }
 
     @Override
