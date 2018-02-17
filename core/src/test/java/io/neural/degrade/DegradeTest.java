@@ -4,7 +4,6 @@ import io.neural.NURL;
 import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.OriginalCall;
-import io.neural.common.config.IConfigCenter;
 import io.neural.degrade.DegradeConfig.Config;
 import io.neural.degrade.DegradeConfig.Level;
 import io.neural.degrade.DegradeConfig.Strategy;

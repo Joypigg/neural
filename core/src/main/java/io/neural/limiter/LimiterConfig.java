@@ -80,8 +80,6 @@ public class LimiterConfig implements Serializable {
      * @author lry
      */
     @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
     public static class GlobalConfig extends Identity.GlobalConfig {
