@@ -1,7 +1,7 @@
 package io.neural.degrade;
 
 import io.neural.common.Identity;
-import io.neural.common.config.AbstractExecutorConfigCenter;
+import io.neural.common.config.AbstractConfigCenter;
 import io.neural.common.event.EventProcessor;
 import io.neural.extension.Extension;
 import io.neural.degrade.DegradeConfig.Config;
@@ -19,7 +19,7 @@ import java.util.Map;
  **/
 @Slf4j
 @Extension("degrade")
-public class DegradeConfigCenter extends AbstractExecutorConfigCenter<Config, GlobalConfig> {
+public class DegradeConfigCenter extends AbstractConfigCenter<Config, GlobalConfig> {
 
     @Override
     protected Map<String, Long> collectStatistics() {
