@@ -1,7 +1,9 @@
-package io.neural.limiter;
+package io.neural.limiter.support;
 
 import io.neural.common.OriginalCall;
 import io.neural.extension.NPI;
+import io.neural.limiter.LimiterConfig;
+import io.neural.limiter.LimiterStatistics;
 
 /**
  * The Limiter Interface.
