@@ -7,9 +7,10 @@ import io.neural.limiter.LimiterConfig.Config;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The Abstract Limiter.
+ * The Abstract Call Limiter.
  *
  * @author lry
+ * @apiNote The main implementation of original call limiting
  */
 @Slf4j
 public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
@@ -31,62 +32,69 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
     /**
      * The concurrency limiter and original call
      *
-     * @param originalCall
-     * @return
-     * @throws Throwable
+     * @param originalCall The original call interface
+     * @return The original call result
+     * @throws Throwable throw original call exception
      */
     private Object doConcurrencyOriginalCall(OriginalCall originalCall) throws Throwable {
+        // the check concurrency limiting
         if (super.isConcurrencyLimiter()) {
+            // try acquire concurrency
             switch (this.tryAcquireConcurrency()) {
-                // the concurrent exceed
                 case FAILURE:
+                    // the concurrent exceed
                     return this.doStrategyProcess(EventType.LIMITER_CONCURRENT_EXCEED, originalCall);
-                // the concurrent success must be released
                 case SUCCESS:
+                    // the concurrent success must be released
                     try {
                         return this.doRateOriginalCall(originalCall);
                     } finally {
                         this.releaseAcquireConcurrency();
                     }
                 case EXCEPTION:
+                    // the skip exception case
                 default:
+                    // the skip other case
             }
         }
 
-        // if NON or other
+        // the skip non check ConcurrencyLimiter or exception or other
         return this.doRateOriginalCall(originalCall);
     }
 
     /**
      * The rate limiter and original call
      *
-     * @param originalCall
-     * @return
-     * @throws Throwable
+     * @param originalCall The original call interface
+     * @return The original call result
+     * @throws Throwable throw original call exception
      */
     private Object doRateOriginalCall(OriginalCall originalCall) throws Throwable {
         if (super.isRateLimiter()) {
             switch (this.tryAcquireRateLimiter()) {
-                // the rate exceed
                 case FAILURE:
+                    // the rate exceed
                     return this.doStrategyProcess(EventType.LIMITER_RATE_EXCEED, originalCall);
                 case SUCCESS:
+                    // the pass success case
                 case EXCEPTION:
+                    // the skip exception case
                 default:
+                    // the skip other case
             }
         }
 
-        // if NO or NON or other
+        // the skip non check RateLimiter or success or exception or other
         return this.doOriginalCallWrapper(originalCall);
     }
 
     /**
      * The execute strategy process of limiting exceed
      *
-     * @param eventType
-     * @param originalCall
-     * @return
-     * @throws Throwable
+     * @param eventType    The event type
+     * @param originalCall The original call interface
+     * @return The original call result
+     * @throws Throwable throw original call exception
      */
     private Object doStrategyProcess(EventType eventType, OriginalCall originalCall) throws Throwable {
         // the total exceed of statistical traffic
@@ -107,19 +115,22 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
                 case EXCEPTION:
                     throw new LimiterExcessException(eventType.name());
                 case NON:
+                    // the skip non case
                 default:
+                    // the skip other case
             }
         }
 
+        // the wrapper of original call
         return this.doOriginalCallWrapper(originalCall);
     }
 
     /**
      * The wrapper of original call
      *
-     * @param originalCall
-     * @return
-     * @throws Throwable
+     * @param originalCall The original call interface
+     * @return The original call result
+     * @throws Throwable throw original call exception
      */
     private Object doOriginalCallWrapper(OriginalCall originalCall) throws Throwable {
         // increment traffic
@@ -141,7 +152,7 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
     /**
      * The acquire of concurrency limiter.
      *
-     * @return
+     * @return The excess of limiting
      */
     protected abstract Acquire tryAcquireConcurrency();
 
@@ -153,9 +164,10 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
     /**
      * The acquire of rate limiter.
      *
-     * @return
+     * @return The excess of limiting
      */
     protected abstract Acquire tryAcquireRateLimiter();
+
 
     /**
      * The Excess of Limiter.
@@ -163,18 +175,22 @@ public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
      * @author lry
      */
     public enum Acquire {
-        /**
-         * The exception of limiter
-         */
-        EXCEPTION,
+
         /**
          * The success of limiter
          */
         SUCCESS,
+
         /**
          * The failure of limiter
          */
-        FAILURE;
+        FAILURE,
+
+        /**
+         * The exception of limiter
+         */
+        EXCEPTION;
+
     }
 
 }
