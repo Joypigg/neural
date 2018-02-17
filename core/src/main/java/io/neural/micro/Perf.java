@@ -51,6 +51,7 @@ public abstract class Perf implements Closeable {
         System.out.println("===done===");
     }
 
+    @Override
     public void close() throws IOException {
 
     }
@@ -62,15 +63,18 @@ public abstract class Perf implements Closeable {
             this.task = task;
         }
 
+        @Override
         public void run() {
             long logInterval = Perf.this.logInterval;
             if (logInterval <= 0) {
                 logInterval = threadCount * loopCount / 10;
             }
+
             for (int i = 0; i < loopCount; i++) {
                 try {
                     long count = counter.incrementAndGet();
                     task.doTask();
+
                     if (count % logInterval == 0) {
                         long end = System.currentTimeMillis();
                         long total = counter.get();
