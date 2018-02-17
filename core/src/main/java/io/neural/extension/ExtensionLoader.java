@@ -35,7 +35,7 @@ public class ExtensionLoader<T> {
     private ClassLoader classLoader;
     private volatile boolean init = false;
     private static final String PREFIX_DEFAULT = "META-INF/";
-    private static final String PREFIX_NEURALS = "META-INF/neurals/";
+    private static final String PREFIX_NEURAL = "META-INF/neural/";
     private static final String PREFIX_SERVICES = "META-INF/services/";
     private ConcurrentMap<String, T> singletonInstances = null;
     private ConcurrentMap<String, Class<T>> extensionClasses = null;
@@ -150,7 +150,7 @@ public class ExtensionLoader<T> {
         }
 
 		extensionClasses = this.loadExtensionClasses(PREFIX_DEFAULT);
-		ConcurrentMap<String, Class<T>> neuralExtensionClasses = this.loadExtensionClasses(PREFIX_NEURALS);
+		ConcurrentMap<String, Class<T>> neuralExtensionClasses = this.loadExtensionClasses(PREFIX_NEURAL);
 		if (!neuralExtensionClasses.isEmpty()) {
 			extensionClasses.putAll(neuralExtensionClasses);
 		}
