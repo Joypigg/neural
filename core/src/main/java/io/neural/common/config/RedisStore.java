@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import io.neural.URL;
-import io.neural.common.SubscribeListener;
 import io.neural.extension.Extension;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
