@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author lry
  */
 @Slf4j
-public abstract class AbstractLimiter extends BaseLimiter {
+public abstract class AbstractCallLimiter extends AbstractCheckLimiter {
 
     @Override
     public Object doOriginalCall(OriginalCall originalCall) throws Throwable {
