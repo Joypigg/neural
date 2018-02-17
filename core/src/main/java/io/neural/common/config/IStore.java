@@ -1,7 +1,6 @@
 package io.neural.common.config;
 
 import io.neural.URL;
-import io.neural.common.SubscribeListener;
 import io.neural.extension.NPI;
 
 import java.util.Map;
@@ -81,5 +80,22 @@ public interface IStore {
      * The destroy
      */
     void destroy();
+
+    /**
+     * The Subscribe Listener
+     *
+     * @author lry
+     **/
+    public static interface SubscribeListener {
+
+        /**
+         * The notify
+         *
+         * @param channel
+         * @param message
+         */
+        void notify(String channel, String message);
+
+    }
 
 }
