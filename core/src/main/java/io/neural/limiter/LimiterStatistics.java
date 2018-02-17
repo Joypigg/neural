@@ -7,9 +7,7 @@ import java.util.concurrent.atomic.LongAdder;
 import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.Statistics;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,10 +15,12 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author lry
  */
-@Slf4j
 @Data
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class LimiterStatistics extends Statistics implements Serializable {
 
     private static final long serialVersionUID = 5685475274387172658L;
