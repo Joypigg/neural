@@ -9,7 +9,7 @@ import java.util.concurrent.Semaphore;
  */
 public class AdjustableSemaphore extends Semaphore {
 
-    private static final long serialVersionUID = 8846543446070795047L;
+    private static final long serialVersionUID = -392487128996569342L;
 
     /**
      * 最大许可数
