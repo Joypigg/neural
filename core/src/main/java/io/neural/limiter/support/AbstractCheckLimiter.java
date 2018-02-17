@@ -1,7 +1,6 @@
 package io.neural.limiter.support;
 
 import io.neural.common.event.EventProcessor;
-import io.neural.limiter.ILimiter;
 import io.neural.limiter.Limiter;
 import io.neural.limiter.LimiterConfig;
 import io.neural.limiter.LimiterConfig.Config;
