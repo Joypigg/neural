@@ -1,4 +1,4 @@
-package io.neural.common.store;
+package io.neural.common;
 
 /**
  * The Subscribe Listener
