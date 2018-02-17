@@ -17,19 +17,18 @@ import java.util.ServiceConfigurationError;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The ExtensionLoader
- * 
- * @author lry
  *
  * @param <T>
+ * @author lry
  */
+@Slf4j
 public class ExtensionLoader<T> {
-
-	private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
 
     private Class<T> type;
     private ClassLoader classLoader;
@@ -58,13 +57,13 @@ public class ExtensionLoader<T> {
     }
 
     public T getExtension() {
-    	this.checkInit();
-    	 
-    	NPI npi = type.getAnnotation(NPI.class);
-    	if(npi.value() == null || npi.value().length() == 0){
-        	throw new RuntimeException(type.getName() + ": The default implementation ID(@NPI.value()) is not set");
+        this.checkInit();
+
+        NPI npi = type.getAnnotation(NPI.class);
+        if (npi.value() == null || npi.value().length() == 0) {
+            throw new RuntimeException(type.getName() + ": The default implementation ID(@NPI.value()) is not set");
         } else {
-        	try {
+            try {
                 if (npi.single()) {
                     return this.getSingletonInstance(npi.value());
                 } else {
@@ -76,13 +75,13 @@ public class ExtensionLoader<T> {
                     return clz.newInstance();
                 }
             } catch (Exception e) {
-            	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
+                throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
             }
         }
     }
-    
+
     public T getExtension(String name) {
-    	this.checkInit();
+        this.checkInit();
         if (name == null) {
             return null;
         }
@@ -100,7 +99,7 @@ public class ExtensionLoader<T> {
                 return clz.newInstance();
             }
         } catch (Exception e) {
-        	throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
+            throw new RuntimeException(type.getName() + ": Error when getExtension ", e);
         }
     }
 
@@ -137,7 +136,7 @@ public class ExtensionLoader<T> {
         String npiName = getSpiName(clz);
         synchronized (extensionClasses) {
             if (extensionClasses.containsKey(npiName)) {
-            	throw new RuntimeException(clz.getName() + ": Error npiName already exist " + npiName);
+                throw new RuntimeException(clz.getName() + ": Error npiName already exist " + npiName);
             } else {
                 extensionClasses.put(npiName, clz);
             }
@@ -149,45 +148,45 @@ public class ExtensionLoader<T> {
             return;
         }
 
-		extensionClasses = this.loadExtensionClasses(PREFIX_DEFAULT);
-		ConcurrentMap<String, Class<T>> neuralExtensionClasses = this.loadExtensionClasses(PREFIX_NEURAL);
-		if (!neuralExtensionClasses.isEmpty()) {
-			extensionClasses.putAll(neuralExtensionClasses);
-		}
-		ConcurrentMap<String, Class<T>> serviceExtensionClasses = this.loadExtensionClasses(PREFIX_SERVICES);
-		if (!serviceExtensionClasses.isEmpty()) {
-			extensionClasses.putAll(serviceExtensionClasses);
-		}
-        
+        extensionClasses = this.loadExtensionClasses(PREFIX_DEFAULT);
+        ConcurrentMap<String, Class<T>> neuralExtensionClasses = this.loadExtensionClasses(PREFIX_NEURAL);
+        if (!neuralExtensionClasses.isEmpty()) {
+            extensionClasses.putAll(neuralExtensionClasses);
+        }
+        ConcurrentMap<String, Class<T>> serviceExtensionClasses = this.loadExtensionClasses(PREFIX_SERVICES);
+        if (!serviceExtensionClasses.isEmpty()) {
+            extensionClasses.putAll(serviceExtensionClasses);
+        }
+
         singletonInstances = new ConcurrentHashMap<String, T>();
         init = true;
     }
 
     public static <T> ExtensionLoader<T> getLoader(Class<T> type) {
-    	return getLoader(type, Thread.currentThread().getContextClassLoader());
+        return getLoader(type, Thread.currentThread().getContextClassLoader());
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T> ExtensionLoader<T> getLoader(Class<T> type, ClassLoader classLoader) {
         if (type == null) {
-        	throw new RuntimeException("Error extension type is null");
+            throw new RuntimeException("Error extension type is null");
         }
         if (!type.isAnnotationPresent(NPI.class)) {
-        	throw new RuntimeException(type.getName() + ": Error extension type without @NPI annotation");
+            throw new RuntimeException(type.getName() + ": Error extension type without @NPI annotation");
         }
-        
+
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
         if (loader == null) {
             loader = initExtensionLoader(type, classLoader);
         }
-        
+
         return loader;
     }
 
     public static synchronized <T> ExtensionLoader<T> initExtensionLoader(Class<T> type) {
-    	return initExtensionLoader(type, Thread.currentThread().getContextClassLoader());
-	}
-    
+        return initExtensionLoader(type, Thread.currentThread().getContextClassLoader());
+    }
+
     @SuppressWarnings("unchecked")
     public static synchronized <T> ExtensionLoader<T> initExtensionLoader(Class<T> type, ClassLoader classLoader) {
         ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoaders.get(type);
@@ -201,18 +200,18 @@ public class ExtensionLoader<T> {
     }
 
     public List<T> getExtensions() {
-    	return this.getExtensions("");
+        return this.getExtensions("");
     }
-    
+
     /**
      * 有些地方需要npi的所有激活的instances，所以需要能返回一个列表的方法<br>
      * <br>
      * 注意：<br>
-     * 1 SpiMeta 中的active 为true<br> 
+     * 1 SpiMeta 中的active 为true<br>
      * 2 按照npiMeta中的order进行排序 <br>
      * <br>
      * FIXME： 是否需要对singleton来区分对待，后面再考虑 fishermen
-     * 
+     *
      * @return
      */
     public List<T> getExtensions(String key) {
@@ -226,7 +225,7 @@ public class ExtensionLoader<T> {
         // 多个实现，按优先级排序返回
         for (Map.Entry<String, Class<T>> entry : extensionClasses.entrySet()) {
             Extension extension = entry.getValue().getAnnotation(Extension.class);
-            if (key==null||key.length()==0) {
+            if (key == null || key.length() == 0) {
                 exts.add(getExtension(entry.getKey()));
             } else if (extension != null && extension.category() != null) {
                 for (String k : extension.category()) {
@@ -237,13 +236,13 @@ public class ExtensionLoader<T> {
                 }
             }
         }
-        
+
         // order 大的排在后面,如果没有设置order的排到最前面
         Collections.sort(exts, new Comparator<T>() {
-        	@Override
-        	public int compare(T o1, T o2) {
-        		Extension p1 = o1.getClass().getAnnotation(Extension.class);
-        		Extension p2 = o2.getClass().getAnnotation(Extension.class);
+            @Override
+            public int compare(T o1, T o2) {
+                Extension p1 = o1.getClass().getAnnotation(Extension.class);
+                Extension p2 = o2.getClass().getAnnotation(Extension.class);
                 if (p1 == null) {
                     return 1;
                 } else if (p2 == null) {
@@ -251,32 +250,32 @@ public class ExtensionLoader<T> {
                 } else {
                     return p1.order() - p2.order();
                 }
-        	}
-		});
-        
+            }
+        });
+
         return exts;
     }
 
     private void checkExtensionType(Class<T> clz) {
-    	// 1) is public class
-    	if (!type.isAssignableFrom(clz)) {
-        	throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
+        // 1) is public class
+        if (!type.isAssignableFrom(clz)) {
+            throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
         }
-    	
-    	// 2) contain public constructor and has not-args constructor
-    	Constructor<?>[] constructors = clz.getConstructors();
+
+        // 2) contain public constructor and has not-args constructor
+        Constructor<?>[] constructors = clz.getConstructors();
         if (constructors == null || constructors.length == 0) {
             throw new RuntimeException(clz.getName() + ": Error has no public no-args constructor");
         }
 
         for (Constructor<?> constructor : constructors) {
             if (Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterTypes().length == 0) {
-            	// 3) check extension clz instanceof Type.class
-            	if (!type.isAssignableFrom(clz)) {
-                	throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
+                // 3) check extension clz instanceof Type.class
+                if (!type.isAssignableFrom(clz)) {
+                    throw new RuntimeException(clz.getName() + ": Error is not instanceof " + type.getName());
                 }
-            	
-            	return;
+
+                return;
             }
         }
 
@@ -330,7 +329,7 @@ public class ExtensionLoader<T> {
                     map.put(npiName, clz);
                 }
             } catch (Exception e) {
-            	logger.error(type.getName() + ": Error load npi class", e);
+                log.error(type.getName() + ": Error load npi class", e);
             }
         }
 
@@ -350,14 +349,12 @@ public class ExtensionLoader<T> {
             inputStream = url.openStream();
             reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
-            String line = null;
-            int indexNumber = 0;
+            String line;
             while ((line = reader.readLine()) != null) {
-                indexNumber++;
-                this.parseLine(type, url, line, indexNumber, classNames);
+                this.parseLine(type, url, line, classNames);
             }
         } catch (Exception e) {
-        	logger.error(type.getName() + ": Error reading npi configuration file", e);
+            log.error(type.getName() + ": Error reading npi configuration file", e);
         } finally {
             try {
                 if (reader != null) {
@@ -367,12 +364,12 @@ public class ExtensionLoader<T> {
                     inputStream.close();
                 }
             } catch (IOException e) {
-            	logger.error(type.getName() + ": Error closing npi configuration file", e);
+                log.error(type.getName() + ": Error closing npi configuration file", e);
             }
         }
     }
 
-    private void parseLine(Class<T> type, URL url, String line, int lineNumber, List<String> names) throws IOException, ServiceConfigurationError {
+    private void parseLine(Class<T> type, URL url, String line, List<String> names) throws IOException, ServiceConfigurationError {
         int ci = line.indexOf('#');
         if (ci >= 0) {
             line = line.substring(0, ci);
@@ -382,9 +379,8 @@ public class ExtensionLoader<T> {
         if (line.length() <= 0) {
             return;
         }
-
         if ((line.indexOf(' ') >= 0) || (line.indexOf('\t') >= 0)) {
-        	throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal npi configuration-file syntax: " + line);
+            throw new RuntimeException(type.getName() + ": " + url + ":" + line + ": Illegal npi configuration-file syntax: " + line);
         }
 
         int cp = line.codePointAt(0);

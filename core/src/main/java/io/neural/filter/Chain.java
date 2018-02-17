@@ -3,40 +3,38 @@ package io.neural.filter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The Filter Chain.
- * 
- * @author lry
  *
  * @param <M>
+ * @author lry
  */
-@SuppressWarnings("rawtypes")
+@Slf4j
 public class Chain<M> extends Filter<M> {
 
-	private Logger logger = LoggerFactory.getLogger(Chain.class);
+    private final List<Filter> filters;
+    private final AtomicInteger index;
 
-	private final List<Filter> filters;
-	private final AtomicInteger index;
+    public Chain(List<Filter> filters) {
+        this.filters = filters;
+        this.index = new AtomicInteger(0);
+    }
 
-	public Chain(List<Filter> filters) {
-		this.filters = filters;
-		this.index = new AtomicInteger(0);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void doFilter(Chain<M> chain, M m) throws Exception {
+        if (index.get() == filters.size()) {
+            return;
+        }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void doFilter(Chain<M> chain, M m) throws Exception {
-		if (index.get() == filters.size()) {
-			return;
-		}
+        Filter<M> filter = filters.get(index.getAndIncrement());
+        log.debug("The next filter to be executed is: {}", filter.getId());
 
-		Filter<M> filter = filters.get(index.getAndIncrement());
-		logger.debug("The next filter to be executed is: {}", filter.getId());
-
-		filter.doFilter(chain, m);
-	}
+        filter.doFilter(chain, m);
+    }
 
 }

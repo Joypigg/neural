@@ -22,18 +22,22 @@ import java.lang.annotation.Target;
  * 10.支持自定义ClassLoader来加载class<br>
  * </font> <br>
  * TODO: 需要实现对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点
- * 
+ *
  * @author lry
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 public @interface NPI {
 
-	/** 自定义默认的实现类ID **/
-	String value() default "";
+    /**
+     * 自定义默认的实现类ID
+     **/
+    String value() default "";
 
-	/** 声明每次获取实现类时是否需要创建新对象,即是否单例 **/
-	boolean single() default false;
+    /**
+     * 声明每次获取实现类时是否需要创建新对象,即是否单例
+     **/
+    boolean single() default false;
 
 }
