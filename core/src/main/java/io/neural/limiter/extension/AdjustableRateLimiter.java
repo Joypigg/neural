@@ -142,15 +142,21 @@ public abstract class AdjustableRateLimiter {
         long timeoutMicros = max(unit.toMicros(timeout), 0);
         checkPermits(permits);
         long microsToWait;
-        synchronized (mutex()) { // 应对并发情况需要同步
+
+        // 应对并发情况需要同步
+        synchronized (mutex()) {
             long nowMicros = stopwatch.readMicros();
             if (!canAcquire(nowMicros, timeoutMicros)) {
                 return false;
             } else {
-                microsToWait = reserveAndGetWaitLength(permits, nowMicros); // 获得需要等待的时间
+                // 获得需要等待的时间
+                microsToWait = reserveAndGetWaitLength(permits, nowMicros);
             }
         }
-        stopwatch.sleepMicrosUninterruptibly(microsToWait); // 等待，当未达到限制时，microsToWait为0
+
+        // 等待，当未达到限制时，microsToWait为0
+        stopwatch.sleepMicrosUninterruptibly(microsToWait);
+
         return true;
     }
 
@@ -204,4 +210,5 @@ public abstract class AdjustableRateLimiter {
             throw new IllegalArgumentException(String.format("Requested permits (%s) must be positive", permits));
         }
     }
+
 }

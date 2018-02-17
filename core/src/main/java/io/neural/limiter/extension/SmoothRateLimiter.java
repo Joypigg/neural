@@ -31,9 +31,11 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
         void doSetRate(double permitsPerSecond, double stableIntervalMicros) {
             double oldMaxPermits = maxPermits;
             double coldIntervalMicros = stableIntervalMicros * coldFactor;
+
             thresholdPermits = 0.5 * warmupPeriodMicros / stableIntervalMicros;
             maxPermits = thresholdPermits + 2.0 * warmupPeriodMicros / (stableIntervalMicros + coldIntervalMicros);
             slope = (coldIntervalMicros - stableIntervalMicros) / (maxPermits - thresholdPermits);
+
             if (oldMaxPermits == Double.POSITIVE_INFINITY) {
                 storedPermits = 0.0;
             } else {
@@ -45,6 +47,7 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
         long storedPermitsToWaitTime(double storedPermits, double permitsToTake) {
             double availablePermitsAboveThreshold = storedPermits - thresholdPermits;
             long micros = 0;
+
             if (availablePermitsAboveThreshold > 0.0) {
                 double permitsAboveThresholdToTake = min(availablePermitsAboveThreshold, permitsToTake);
                 double length = permitsToTime(availablePermitsAboveThreshold) +
@@ -52,7 +55,9 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
                 micros = (long) (permitsAboveThresholdToTake * length / 2.0);
                 permitsToTake -= permitsAboveThresholdToTake;
             }
+
             micros += (stableIntervalMicros * permitsToTake);
+
             return micros;
         }
 
@@ -67,6 +72,7 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
     }
 
     static final class SmoothBursty extends SmoothRateLimiter {
+
         final double maxBurstSeconds;
 
         SmoothBursty(SleepingStopwatch stopwatch, double maxBurstSeconds) {
@@ -78,6 +84,7 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
         void doSetRate(double permitsPerSecond, double stableIntervalMicros) {
             double oldMaxPermits = this.maxPermits;
             maxPermits = maxBurstSeconds * permitsPerSecond;
+
             if (oldMaxPermits == Double.POSITIVE_INFINITY) {
                 storedPermits = maxPermits;
             } else {
@@ -127,15 +134,20 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
 
     @Override
     final long reserveEarliestAvailable(int requiredPermits, long nowMicros) {
-        resync(nowMicros); // 补充令牌
+        // 补充令牌
+        resync(nowMicros);
+
         long returnValue = nextFreeTicketMicros;
-        double storedPermitsToSpend = min(requiredPermits, this.storedPermits); // 获取这次请求消耗的令牌数目
+        // 获取这次请求消耗的令牌数目
+        double storedPermitsToSpend = min(requiredPermits, this.storedPermits);
         double freshPermits = requiredPermits - storedPermitsToSpend;
-        long waitMicros = storedPermitsToWaitTime(
-                this.storedPermits, storedPermitsToSpend) + (long) (freshPermits * stableIntervalMicros);
+        long waitMicros = storedPermitsToWaitTime(this.storedPermits,
+                storedPermitsToSpend) + (long) (freshPermits * stableIntervalMicros);
 
         this.nextFreeTicketMicros = LongMath.saturatedAdd(nextFreeTicketMicros, waitMicros);
-        this.storedPermits -= storedPermitsToSpend; // 减去消耗的令牌
+        // 减去消耗的令牌
+        this.storedPermits -= storedPermitsToSpend;
+
         return returnValue;
     }
 
@@ -150,4 +162,5 @@ public abstract class SmoothRateLimiter extends AdjustableRateLimiter {
             nextFreeTicketMicros = nowMicros;
         }
     }
+    
 }
