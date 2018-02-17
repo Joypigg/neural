@@ -40,8 +40,8 @@ public class Beans {
 
         Method[] fromMethods = from.getClass().getDeclaredMethods();
         Method[] toMethods = to.getClass().getDeclaredMethods();
-        Method fromMethod = null, toMethod = null;
-        String fromMethodName = null, toMethodName = null;
+        Method fromMethod, toMethod;
+        String fromMethodName, toMethodName;
         for (int i = 0; i < fromMethods.length; i++) {
             fromMethod = fromMethods[i];
             fromMethodName = fromMethod.getName();
@@ -86,7 +86,7 @@ public class Beans {
      * @throws Exception
      */
     public static void copyPropertiesInclude(Object from, Object to, String[] includsArray) throws Exception {
-        List<String> includesList = null;
+        List<String> includesList;
         if (includsArray != null && includsArray.length > 0) {
             includesList = Arrays.asList(includsArray);
         } else {
@@ -95,8 +95,8 @@ public class Beans {
 
         Method[] fromMethods = from.getClass().getDeclaredMethods();
         Method[] toMethods = to.getClass().getDeclaredMethods();
-        Method fromMethod = null, toMethod = null;
-        String fromMethodName = null, toMethodName = null;
+        Method fromMethod, toMethod;
+        String fromMethodName, toMethodName;
         for (int i = 0; i < fromMethods.length; i++) {
             fromMethod = fromMethods[i];
             fromMethodName = fromMethod.getName();
