@@ -88,10 +88,6 @@ public class LimiterConfig implements Serializable {
 
         private static final long serialVersionUID = -4103412814609503453L;
 
-        /**
-         * The print warn log when limiter exceeds, default is Switch.ON
-         */
-        private Switch printExceedLog = Switch.ON;
     }
 
     /**
