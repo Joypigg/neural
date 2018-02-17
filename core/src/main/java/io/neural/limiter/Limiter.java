@@ -3,7 +3,7 @@ package io.neural.limiter;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import io.neural.NURL;
+import io.neural.URL;
 import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.Identity.Switch;
@@ -28,7 +28,7 @@ public enum Limiter {
 
     LIMITER;
 
-    private NURL nurl = null;
+    private URL url = null;
     private volatile boolean isStart = false;
 
     private IStore store = null;
@@ -55,22 +55,22 @@ public enum Limiter {
     /**
      * The start of limiter
      *
-     * @param nurl
+     * @param url
      */
-    public void start(NURL nurl) {
+    public void start(URL url) {
         if (isStart) {
             log.warn("The limiter already is started");
             return;
         }
 
-        this.nurl = nurl;
+        this.url = url;
 
         // starting store
-        this.store = ExtensionLoader.getLoader(IStore.class).getExtension(nurl.getProtocol());
-        this.store.start(nurl);
+        this.store = ExtensionLoader.getLoader(IStore.class).getExtension(url.getProtocol());
+        this.store.start(url);
 
         // initialize config center and initialize config center store
-        this.storeConfig = ExtensionLoader.getLoader(StoreConfig.class).getExtension(nurl.getPath());
+        this.storeConfig = ExtensionLoader.getLoader(StoreConfig.class).getExtension(url.getPath());
 
         // add limiter global config data to remote
         GlobalConfig globalConfig = storeConfig.queryGlobalConfig();

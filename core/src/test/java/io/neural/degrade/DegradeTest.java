@@ -1,6 +1,6 @@
 package io.neural.degrade;
 
-import io.neural.NURL;
+import io.neural.URL;
 import io.neural.common.Constants;
 import io.neural.common.Identity;
 import io.neural.common.OriginalCall;
@@ -30,8 +30,8 @@ public class DegradeTest {
         config2.setName("发送邮件");
         degrade.addDegrade(new DegradeConfig(identity2, config2));
 
-        NURL nurl = NURL.valueOf("redis://localhost:6379/degrade?minIdle=2");
-        degrade.start(nurl);
+        URL url = URL.valueOf("redis://localhost:6379/degrade?minIdle=2");
+        degrade.start(url);
 
         for (int i = 0; i < 100000; i++) {
             Object result = degrade.doDegrade(identity1, new OriginalCall() {

@@ -1,6 +1,6 @@
 package io.neural.micro;
 
-import io.neural.NURL;
+import io.neural.URL;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -78,8 +78,8 @@ public class Router {
 			ConcurrentMap<String, String> categories,
 			ConcurrentMap<String, ConcurrentMap<String, Store<String, String>>> rules) {
 		for (Map.Entry<String, ConcurrentMap<String, Store<String, String>>> entry:rules.entrySet()) {
-			NURL nurl = NURL.valueOf("/?" + entry.getKey());
-			for (Map.Entry<String, String> tempEntry:nurl.getParameters().entrySet()) {
+			URL url = URL.valueOf("/?" + entry.getKey());
+			for (Map.Entry<String, String> tempEntry: url.getParameters().entrySet()) {
 				System.out.println(tempEntry.getKey());
 			}
 		}
