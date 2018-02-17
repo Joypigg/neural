@@ -12,8 +12,8 @@ import com.google.common.base.Preconditions;
  * @author lry
  */
 public final class StopStrategies {
-    
-	private static final StopStrategy NEVER_STOP = new NeverStopStrategy();
+
+    private static final StopStrategy NEVER_STOP = new NeverStopStrategy();
 
     private StopStrategies() {
     }
@@ -55,13 +55,24 @@ public final class StopStrategies {
         return new StopAfterDelayStrategy(timeUnit.toMillis(duration));
     }
 
+
+    /**
+     * The Never Stop Strategy
+     *
+     * @author lry
+     */
     private static final class NeverStopStrategy implements StopStrategy {
-		@Override
+        @Override
         public boolean shouldStop(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             return false;
         }
     }
 
+    /**
+     * The Stop After Attempt Strategy
+     *
+     * @author lry
+     */
     private static final class StopAfterAttemptStrategy implements StopStrategy {
         private final int maxAttemptNumber;
 
@@ -70,12 +81,17 @@ public final class StopStrategies {
             this.maxAttemptNumber = maxAttemptNumber;
         }
 
-		@Override
+        @Override
         public boolean shouldStop(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             return failedAttempt.getAttemptNumber() >= maxAttemptNumber;
         }
     }
 
+    /**
+     * The Stop After Delay Strategy
+     *
+     * @author lry
+     */
     private static final class StopAfterDelayStrategy implements StopStrategy {
         private final long maxDelay;
 
@@ -84,10 +100,10 @@ public final class StopStrategies {
             this.maxDelay = maxDelay;
         }
 
-		@Override
+        @Override
         public boolean shouldStop(@SuppressWarnings("rawtypes") Attempt failedAttempt) {
             return failedAttempt.getDelaySinceFirstAttempt() >= maxDelay;
         }
     }
-    
+
 }

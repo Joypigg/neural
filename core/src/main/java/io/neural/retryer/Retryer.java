@@ -15,9 +15,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * A retryer, which executes a call, and retries it until it succeeds, or
@@ -30,12 +31,11 @@ import com.google.common.base.Predicate;
  * Retryer instances are better constructed with a {@link RetryerBuilder}. A retryer
  * is thread-safe, provided the arguments passed to its constructor are thread-safe.
  *
- *
  * @param <V> the type of the call return value
  * @author lry
  */
 public final class Retryer<V> {
-	
+
     private final StopStrategy stopStrategy;
     private final WaitStrategy waitStrategy;
     private final BlockStrategy blockStrategy;
@@ -48,18 +48,17 @@ public final class Retryer<V> {
     }
 
     public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy,
-    		WaitStrategy waitStrategy, Predicate<Attempt<V>> rejectionPredicate) {
+                   WaitStrategy waitStrategy, Predicate<Attempt<V>> rejectionPredicate) {
         this(attemptTimeLimiter, stopStrategy, waitStrategy, BlockStrategies.threadSleepStrategy(), rejectionPredicate);
     }
 
     public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy,
-    		WaitStrategy waitStrategy, BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate) {
+                   WaitStrategy waitStrategy, BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate) {
         this(attemptTimeLimiter, stopStrategy, waitStrategy, blockStrategy, rejectionPredicate, new ArrayList<RetryListener>());
     }
 
-    @Beta
-    public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy, WaitStrategy waitStrategy, 
-    		BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate, Collection<RetryListener> listeners) {
+    public Retryer(AttemptTimeLimiter<V> attemptTimeLimiter, StopStrategy stopStrategy, WaitStrategy waitStrategy,
+                   BlockStrategy blockStrategy, Predicate<Attempt<V>> rejectionPredicate, Collection<RetryListener> listeners) {
         Preconditions.checkNotNull(attemptTimeLimiter, "timeLimiter may not be null");
         Preconditions.checkNotNull(stopStrategy, "stopStrategy may not be null");
         Preconditions.checkNotNull(waitStrategy, "waitStrategy may not be null");
@@ -81,9 +80,9 @@ public final class Retryer<V> {
             Attempt<V> attempt;
             try {
                 V result = attemptTimeLimiter.call(callable);
-                attempt = new ResultAttempt<V>(result, attemptNumber, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+                attempt = new ResultAttempt<>(result, attemptNumber, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
             } catch (Throwable t) {
-                attempt = new ExceptionAttempt<V>(t, attemptNumber, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+                attempt = new ExceptionAttempt<>(t, attemptNumber, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
             }
 
             for (RetryListener listener : listeners) {
@@ -111,17 +110,19 @@ public final class Retryer<V> {
         return new RetryerCallable<V>(this, callable);
     }
 
+    /**
+     * The Result Attempt
+     *
+     * @param <R>
+     * @author lry
+     */
+    @Getter
+    @AllArgsConstructor
     public static final class ResultAttempt<R> implements Attempt<R> {
-        
-    	private final R result;
+
+        private final R result;
         private final long attemptNumber;
         private final long delaySinceFirstAttempt;
-
-        public ResultAttempt(R result, long attemptNumber, long delaySinceFirstAttempt) {
-            this.result = result;
-            this.attemptNumber = attemptNumber;
-            this.delaySinceFirstAttempt = delaySinceFirstAttempt;
-        }
 
         @Override
         public R get() throws ExecutionException {
@@ -139,29 +140,21 @@ public final class Retryer<V> {
         }
 
         @Override
-        public R getResult() throws IllegalStateException {
-            return result;
-        }
-
-        @Override
         public Throwable getExceptionCause() throws IllegalStateException {
             throw new IllegalStateException("The attempt resulted in a result, not in an exception");
         }
-
-        @Override
-        public long getAttemptNumber() {
-            return attemptNumber;
-        }
-
-        @Override
-        public long getDelaySinceFirstAttempt() {
-            return delaySinceFirstAttempt;
-        }
     }
 
+    /**
+     * The Exception Attempt
+     *
+     * @param <R>
+     * @author lry
+     */
+    @Getter
     public static final class ExceptionAttempt<R> implements Attempt<R> {
-        
-    	private final ExecutionException e;
+
+        private final ExecutionException e;
         private final long attemptNumber;
         private final long delaySinceFirstAttempt;
 
@@ -196,31 +189,24 @@ public final class Retryer<V> {
             return e.getCause();
         }
 
-        @Override
-        public long getAttemptNumber() {
-            return attemptNumber;
-        }
-
-        @Override
-        public long getDelaySinceFirstAttempt() {
-            return delaySinceFirstAttempt;
-        }
     }
 
+    /**
+     * The Retryer Callable
+     *
+     * @param <X>
+     * @author lry
+     */
+    @AllArgsConstructor
     public static class RetryerCallable<X> implements Callable<X> {
-        
-    	private Retryer<X> retryer;
-        private Callable<X> callable;
 
-        private RetryerCallable(Retryer<X> retryer, Callable<X> callable) {
-            this.retryer = retryer;
-            this.callable = callable;
-        }
+        private Retryer<X> retryer;
+        private Callable<X> callable;
 
         @Override
         public X call() throws ExecutionException, RetryException {
             return retryer.call(callable);
         }
     }
-    
+
 }

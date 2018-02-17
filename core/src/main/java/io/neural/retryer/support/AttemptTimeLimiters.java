@@ -20,7 +20,7 @@ public class AttemptTimeLimiters {
 
     /**
      * @param <V> The type of the computation result.
-     * @return 
+     * @return
      */
     public static <V> AttemptTimeLimiter<V> noTimeLimit() {
         return new NoAttemptTimeLimit<V>();
@@ -28,7 +28,7 @@ public class AttemptTimeLimiters {
 
     /**
      * For control over thread management
-     * 
+     *
      * @param duration that an attempt may persist before being circumvented
      * @param timeUnit of the 'duration' arg
      * @param <V>      the type of the computation result
@@ -51,6 +51,12 @@ public class AttemptTimeLimiters {
         return new FixedAttemptTimeLimit<V>(duration, timeUnit, executorService);
     }
 
+    /**
+     * The No Attempt Time Limit
+     *
+     * @param <V>
+     * @author lry
+     */
     private static final class NoAttemptTimeLimit<V> implements AttemptTimeLimiter<V> {
         @Override
         public V call(Callable<V> callable) throws Exception {
@@ -58,6 +64,12 @@ public class AttemptTimeLimiters {
         }
     }
 
+    /**
+     * The Fixed Attempt Time Limit
+     *
+     * @param <V>
+     * @author lry
+     */
     private static final class FixedAttemptTimeLimit<V> implements AttemptTimeLimiter<V> {
 
         private final TimeLimiter timeLimiter;
@@ -84,7 +96,7 @@ public class AttemptTimeLimiters {
         public V call(Callable<V> callable) throws Exception {
             return timeLimiter.callWithTimeout(callable, duration, timeUnit, true);
         }
-        
+
     }
-    
+
 }

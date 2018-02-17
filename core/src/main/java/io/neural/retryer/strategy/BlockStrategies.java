@@ -2,7 +2,7 @@ package io.neural.retryer.strategy;
 
 /**
  * Factory class for {@link BlockStrategy} instances.
- * 
+ *
  * @author lry
  */
 public final class BlockStrategies {
@@ -12,15 +12,15 @@ public final class BlockStrategies {
     private BlockStrategies() {
     }
 
-    /**
-     * Returns a block strategy that puts the current thread to sleep between retries.
-     *
-     * @return
-     */
     public static BlockStrategy threadSleepStrategy() {
         return THREAD_SLEEP_STRATEGY;
     }
 
+    /**
+     * The Thread Sleep Strategy
+     *
+     * @author lry
+     */
     private static class ThreadSleepStrategy implements BlockStrategy {
 
         @Override
@@ -28,5 +28,5 @@ public final class BlockStrategies {
             Thread.sleep(sleepTime);
         }
     }
-    
+
 }

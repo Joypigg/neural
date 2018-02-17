@@ -2,11 +2,19 @@ package io.neural.retryer;
 
 import io.neural.retryer.support.Attempt;
 
-import com.google.common.annotations.Beta;
-
-@Beta
+/**
+ * The Retry Listener
+ *
+ * @author lry
+ */
 public interface RetryListener {
 
+    /**
+     * The on retry
+     *
+     * @param attempt
+     * @param <V>
+     */
     <V> void onRetry(Attempt<V> attempt);
-    
+
 }

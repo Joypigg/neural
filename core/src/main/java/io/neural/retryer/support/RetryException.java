@@ -1,12 +1,20 @@
 package io.neural.retryer.support;
 
+import lombok.Getter;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * The Retry Exception
+ *
+ * @author lry
+ */
+@Getter
 public final class RetryException extends Exception {
 
-	private static final long serialVersionUID = 7141592192046324632L;
-	
-	private final int numberOfFailedAttempts;
+    private static final long serialVersionUID = 5397356900902505417L;
+
+    private final int numberOfFailedAttempts;
     private final Attempt<?> lastFailedAttempt;
 
     public RetryException(int numberOfFailedAttempts, Attempt<?> lastFailedAttempt) {
@@ -19,12 +27,4 @@ public final class RetryException extends Exception {
         this.lastFailedAttempt = lastFailedAttempt;
     }
 
-    public int getNumberOfFailedAttempts() {
-        return numberOfFailedAttempts;
-    }
-
-    public Attempt<?> getLastFailedAttempt() {
-        return lastFailedAttempt;
-    }
-    
 }
