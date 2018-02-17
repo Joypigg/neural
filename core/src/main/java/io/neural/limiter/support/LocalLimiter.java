@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Extension("local")
-public class LocalLimiter extends AbstractLimiter {
+public class LocalLimiter extends AbstractCallLimiter {
 
     private final AdjustableSemaphore semaphore;
     private final AdjustableRateLimiter rateLimiter;
