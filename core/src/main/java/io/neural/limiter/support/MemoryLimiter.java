@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.LongAdder;
  */
 @Slf4j
 @Extension("memory")
-public class MemoryLimiter extends AbstractOriginalCallLimiter {
+public class MemoryLimiter extends AbstractLimiter {
 
     private final LongAdder concurrencyCounter = new LongAdder();
     private final CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
