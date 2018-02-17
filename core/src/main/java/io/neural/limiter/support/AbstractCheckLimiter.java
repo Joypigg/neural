@@ -19,7 +19,7 @@ import java.util.Map;
  * @author lry
  **/
 @Slf4j
-public abstract class BaseLimiter implements ILimiter {
+public abstract class AbstractCheckLimiter implements ILimiter {
 
     private volatile LimiterConfig limiterConfig = null;
     private final LimiterStatistics statistics = new LimiterStatistics();

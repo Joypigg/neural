@@ -8,7 +8,7 @@ import io.neural.extension.Extension;
  * @author lry
  **/
 @Extension("redis")
-public class RedisLimiter extends AbstractLimiter {
+public class RedisLimiter extends AbstractCallLimiter {
     @Override
     protected Acquire tryAcquireConcurrency() {
         return null;
