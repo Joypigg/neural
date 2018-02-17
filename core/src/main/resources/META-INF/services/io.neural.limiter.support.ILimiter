@@ -1,3 +1,0 @@
-io.neural.limiter.support.LocalLimiter
-io.neural.limiter.support.MemoryLimiter
-io.neural.limiter.support.RedisLimiter

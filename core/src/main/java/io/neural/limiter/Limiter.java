@@ -14,7 +14,7 @@ import io.neural.common.store.IStore;
 import io.neural.extension.ExtensionLoader;
 import io.neural.limiter.LimiterConfig.Config;
 import io.neural.limiter.LimiterConfig.GlobalConfig;
-import io.neural.limiter.support.ILimiter;
+import io.neural.limiter.core.ILimiter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

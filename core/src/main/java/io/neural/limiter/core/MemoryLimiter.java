@@ -1,4 +1,4 @@
-package io.neural.limiter.support;
+package io.neural.limiter.core;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -30,7 +30,7 @@ public class MemoryLimiter extends AbstractCallLimiter {
             return false;
         }
 
-        // The support limiter granularity is SECOND
+        // The core limiter granularity is SECOND
         Config config = super.getLimiterConfig().getConfig();
         if (null == config.getGranularity() || LimiterConfig.Unit.SEC != config.getUnit()) {
             return false;
