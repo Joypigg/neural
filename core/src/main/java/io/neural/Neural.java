@@ -8,5 +8,4 @@ package io.neural;
 public interface Neural {
 
 
-
 }
