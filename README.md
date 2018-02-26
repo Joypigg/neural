@@ -40,16 +40,13 @@
 	- 致力于打造更加智能的重试机制，带你见证重试AI！
 - 服务鉴权：`Auth`
 	- 致力于保证每次分布式调用鉴定，可在服务注册、订阅及调用环节进行服务鉴权！
-- 黑科技：`Filter`、`Perf`、`Snowflake`、`SystemClock`、`NUUID`、`IPFilter`
-
-
-**TODO**
-- 分布式限流 `Admin`
-- 服务降级 `Admin`
-- 熔断：`Circuit Breaker`
-- 隔离：`Isolation`
-- JWT：`JSON Web Tokens`
-
+- 黑科技
+    - `Perf`
+    - `NUUID`
+    - `Filter`
+    - `IPFilter`
+    - `Snowflake`
+    - `SystemClock`
 
 ## 1 NPI
 ### 1.1 JDK中SPI缺陷
