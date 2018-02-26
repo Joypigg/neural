@@ -27,7 +27,7 @@
     <tr>
         <td><img title="QQ交流群-191958521" src="docs/QQ群-191958521.png" height="250" width="200"/></td>
         <td><img title="微信交流群-echo-lry" src="docs/个人微信-echo-lry.png" height="250" width="250"/></td>
-        <td><img title="微信公众号-蚂蚁技术栈" src="docs/蚂蚁技术栈-公众号.jpg" height="250" width="250"/></td>
+        <td><img title="微信公众号-蚂蚁技术栈" src="docs/蚂蚁技术栈-公众号.jpg" height="220" width="250"/></td>
     </tr>
 </table
 
