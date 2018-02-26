@@ -41,12 +41,12 @@
 - 服务鉴权：`Auth`
 	- 致力于保证每次分布式调用鉴定，可在服务注册、订阅及调用环节进行服务鉴权！
 - 黑科技
-    - `Perf`
-    - `NUUID`
-    - `Filter`
-    - `IPFilter`
-    - `Snowflake`
-    - `SystemClock`
+    - `Perf`：性能测试神器，可以用于为单个方法或代码块进行性能测试
+    - `NUUID`：UUID扩展版，提供更丰富的UUID生产规则
+    - `Filter`：基于责任链模式的过滤器
+    - `IPFilter`：IP黑白名单过滤器
+    - `Snowflake`：基于Snowflake算法的分布式ID生成器
+    - `SystemClock`：解决大并发场景下获取时间戳时的性能问题
 
 ## 1 NPI
 ### 1.1 JDK中SPI缺陷
