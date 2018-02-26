@@ -35,6 +35,8 @@
 - 分布式限流：`Limiter`
 - 服务降级：`Degrade`
 - 个性化重试：`Retryer`
+- 服务鉴权：`Retryer`
+	- 致力于保证用户每次分布式调用的稳定与安全。可以在服务注册、服务订阅及服务调用等环节，进行严格的服务鉴权！
 - 过滤器：`Filter`
 - 黑科技：`Perf`、`Snowflake`、`SystemClock`、`NUUID`、`IPFilter`
 
