@@ -20,12 +20,12 @@
 <table border="0">
     <tr>
         <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
-        <td>微信交流群：<font color="red">15828252029</font>(加我个人微信，备注拉群要求)</td>
+        <td>微信交流群：<font color="red">echo-lry</font>(加我个人微信，备注拉群要求)</td>
     </tr>
     <tr>&nbsp;</tr>
     <tr>
         <td><img title="QQ交流群-191958521" src="docs/QQ群-191958521.png" height="296" width="216"/></td>
-        <td><img title="微信交流群-15828252029" src="docs/个人微信-15828252029.png" height="296" width="296"/></td>
+        <td><img title="微信交流群-echo-lry" src="docs/个人微信-echo-lry.png" height="296" width="296"/></td>
     </tr>
 </table
 
