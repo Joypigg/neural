@@ -11,7 +11,7 @@
 	|  | \   |  |  `---.\  '-'(_ .'|  |\  \  |  | |  | |     |' 
 	`--'  `--'  `------' `-----'   `--' '--' `--' `--' `-----'  
 
-**作者**：echo(李景枫)
+**作者**：echo(李景枫 or 李茹钰)
 
 微服务架构中的神经组织，主要为分布式架构提供了集群容错的三大利刃：限流、降级和熔断。并同时提供了SPI、过滤器、JWT、重试机制、插件机制。此外还提供了很多小的黑科技(如：IP黑白名单、UUID加强版、Snowflake和大并发时间戳获取等)。
 
@@ -21,11 +21,13 @@
     <tr>
         <td>QQ交流群：<font color="red">191958521</font>(微服务基础设施)</td>
         <td>微信交流群：<font color="red">echo-lry</font>(加我个人微信，备注拉群要求)</td>
+        <td>微信公众号：<font color="red">蚂蚁技术栈</font></td>
     </tr>
     <tr>&nbsp;</tr>
     <tr>
         <td><img title="QQ交流群-191958521" src="docs/QQ群-191958521.png" height="296" width="216"/></td>
         <td><img title="微信交流群-echo-lry" src="docs/个人微信-echo-lry.png" height="296" width="296"/></td>
+        <td><img title="微信公众号-蚂蚁技术栈" src="docs/蚂蚁技术栈-公众号.jpg" height="296" width="296"/></td>
     </tr>
 </table
 
