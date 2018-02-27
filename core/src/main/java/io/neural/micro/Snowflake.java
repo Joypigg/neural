@@ -10,37 +10,37 @@ public class Snowflake {
     /**
      * 起始标记点，作为基准
      */
-    private final long twepoch = 1288834974657L;
+    private final long startTime = 1288834974657L;
     /**
      * 只允许work id的范围为：0-1023
      */
     private final long workerIdBits = 5L;
-    private final long datacenterIdBits = 5L;
+    private final long dataCenterIdBits = 5L;
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-    private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
+    private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
     private final long sequenceBits = 12L;
     private final long workerIdShift = sequenceBits;
-    private final long datacenterIdShift = sequenceBits + workerIdBits;
-    private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
+    private final long dataCenterIdShift = sequenceBits + workerIdBits;
+    private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
     private long workerId;
-    private long datacenterId;
+    private long dataCenterId;
     private long sequence = 0L;
     private long lastTimestamp = -1L;
 
-    public void init(long workerId, long datacenterId) {
+    public void init(long workerId, long dataCenterId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format(
                     "worker Id can't be greater than %d or less than 0", maxWorkerId));
         }
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
+        if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
             throw new IllegalArgumentException(String.format(
-                    "datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
+                    "dataCenter Id can't be greater than %d or less than 0", maxDataCenterId));
         }
 
         this.workerId = workerId;
-        this.datacenterId = datacenterId;
+        this.dataCenterId = dataCenterId;
     }
 
     public Long nextLong() {
@@ -85,8 +85,8 @@ public class Snowflake {
 
         lastTimestamp = timestamp;
 
-        return ((timestamp - twepoch) << timestampLeftShift) | (
-                datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
+        return ((timestamp - startTime) << timestampLeftShift) | (
+                dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | sequence;
     }
 
     /**
@@ -95,7 +95,7 @@ public class Snowflake {
      * @param lastTimestamp
      * @return
      */
-    protected long tilNextMillis(long lastTimestamp) {
+    private long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
         while (timestamp <= lastTimestamp) {
             timestamp = timeGen();
@@ -108,7 +108,7 @@ public class Snowflake {
      *
      * @return
      */
-    protected long timeGen() {
+    private long timeGen() {
         return System.currentTimeMillis();
     }
 
