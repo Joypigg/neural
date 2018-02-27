@@ -8,20 +8,39 @@ package io.neural.micro;
 public class Snowflake {
 
     /**
-     * 起始标记点，作为基准
-     */
-    private final long startTime = 1288834974657L;
+     * 起始时间戳，用于用当前时间戳减去这个时间戳，算出偏移量
+     **/
+    private final long startTime = 1519740777809L;
+
     /**
-     * 只允许work id的范围为：0-1023
-     */
+     * workerId占用的位数5（表示只允许workId的范围为：0-1023）
+     **/
     private final long workerIdBits = 5L;
+    /**
+     * dataCenterId占用的位数：5
+     */
     private final long dataCenterIdBits = 5L;
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-    private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
+    /**
+     * 序列号占用的位数：12（表示只允许workId的范围为：0-4095）
+     */
     private final long sequenceBits = 12L;
+
+    /**
+     * workerId可以使用的最大数值：31
+     */
+    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    /**
+     * dataCenterId可以使用的最大数值：31
+     */
+    private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
+
     private final long workerIdShift = sequenceBits;
     private final long dataCenterIdShift = sequenceBits + workerIdBits;
     private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
+
+    /**
+     * 用mask防止溢出:位与运算保证计算的结果范围始终是 0-4095
+     */
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
     private long workerId;
@@ -75,6 +94,7 @@ public class Snowflake {
         }
 
         if (lastTimestamp == timestamp) {
+            //通过位与运算保证计算的结果范围始终是 0-4095
             sequence = (sequence + 1) & sequenceMask;
             if (sequence == 0) {
                 timestamp = tilNextMillis(lastTimestamp);
@@ -85,8 +105,15 @@ public class Snowflake {
 
         lastTimestamp = timestamp;
 
-        return ((timestamp - startTime) << timestampLeftShift) | (
-                dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | sequence;
+        /*
+         * 1.左移运算是为了将数值移动到对应的段(41、5、5，12那段因为本来就在最右，因此不用左移)
+         * 2.然后对每个左移后的值(la、lb、lc、sequence)做位或运算，是为了把各个短的数据合并起来，合并成一个二进制数
+         * 3.最后转换成10进制，就是最终生成的id
+         */
+        return ((timestamp - startTime) << timestampLeftShift) |
+                (dataCenterId << dataCenterIdShift) |
+                (workerId << workerIdShift) |
+                sequence;
     }
 
     /**
