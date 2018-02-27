@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  *
  * @author lry
  */
-public class IpFilter {
+public class IPFilter {
 
     /**
      * IP的正则

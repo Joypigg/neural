@@ -249,8 +249,8 @@ eg：如果返回结果为空则重试：retryIfResult(Predicates.< Boolean>isNu
 
 ## 8 黑科技（Micro）
 - **Perf**：性能测试工具
-- **IpFilter**：IP黑白名单过滤器
-- **Systemclock**：解决大并发场景中获取System.currentTimeMillis()的性能问题
+- **IPFilter**：IP黑白名单过滤器
+- **SystemClock**：解决大并发场景中获取System.currentTimeMillis()的性能问题
 - **Snowflake**：基于Snowflake算法实现的高性能Long型ID生成器。理论QPS > 400w/s
 - **NUUID**：UUID扩展版。支持36/32/22/19位的UUID生成方式(不牺牲精度)，支持牺牲一定精度后的15位超短UUID
 
